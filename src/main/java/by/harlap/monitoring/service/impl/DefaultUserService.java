@@ -1,7 +1,5 @@
 package by.harlap.monitoring.service.impl;
 
-import by.harlap.monitoring.exception.AuthenticationException;
-import by.harlap.monitoring.exception.EntityNotFoundException;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.UserRepository;
 import by.harlap.monitoring.service.UserService;
@@ -25,7 +23,7 @@ public class DefaultUserService implements UserService {
      * @return The created user.
      */
     @Override
-    public User createUser(User user) {
+    public Optional<User> createUser(User user) {
         return userRepository.save(user);
     }
 
@@ -37,6 +35,6 @@ public class DefaultUserService implements UserService {
      */
     @Override
     public Optional<User> findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+        return Optional.ofNullable(userRepository.findUserByUsername(username));
     }
 }

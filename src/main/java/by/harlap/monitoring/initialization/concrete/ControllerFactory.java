@@ -2,10 +2,7 @@ package by.harlap.monitoring.initialization.concrete;
 
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.in.controller.impl.*;
-import by.harlap.monitoring.service.AuditService;
-import by.harlap.monitoring.service.AuthService;
-import by.harlap.monitoring.service.DeviceService;
-import by.harlap.monitoring.service.MeterReadingsService;
+import by.harlap.monitoring.service.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,10 +32,10 @@ public class ControllerFactory {
         final WelcomeController welcomeController = new WelcomeController(initializationData);
         final UserMainMenuController userMainMenuController = new UserMainMenuController(initializationData);
         final AdminMainMenuController adminMainMenuController = new AdminMainMenuController(initializationData);
-        final MeterReadingsRelevantInfoController meterReadingsInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService);
+        final MeterReadingsRelevantInfoController meterReadingsInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService);
         final MeterReadingsInputController meterReadingsInputController = new MeterReadingsInputController(initializationData, meterReadingsService, deviceService);
-        final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService);
-        final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService);
+        final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService);
+        final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService);
         final AuditController auditController = new AuditController(initializationData, auditService);
         final AddNewDeviceController addController = new AddNewDeviceController(initializationData, deviceService);
 

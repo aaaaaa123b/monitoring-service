@@ -3,6 +3,7 @@ package by.harlap.monitoring.service;
 import by.harlap.monitoring.model.Device;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The DeviceService interface defines methods for managing devices.
@@ -22,4 +23,6 @@ public interface DeviceService {
      * @param abstractDevice The abstract information representing the new device.
      */
     void save(String abstractDevice);
+
+    Optional<Device> findById(Long deviceId);
 }

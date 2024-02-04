@@ -1,0 +1,18 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="006-populate-devices-table" author="Diana Harlap">
+        <sql>
+            INSERT INTO monitoring_service_schema.devices (name) VALUES ('горячая вода');
+        </sql>
+        <sql>
+            INSERT INTO monitoring_service_schema.devices (name) VALUES ('холодная вода');
+        </sql>
+        <sql>
+            INSERT INTO monitoring_service_schema.devices (name) VALUES ('отопление');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

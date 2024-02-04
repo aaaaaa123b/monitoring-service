@@ -1,0 +1,18 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="008-populate-meter-reading-records-table" author="Diana Harlap">
+        <sql>
+            INSERT INTO monitoring_service_schema.meter_reading_records (user_id, device_id, value, date) VALUES (2, 1, 100.5, '2024-01-01');
+        </sql>
+        <sql>
+            INSERT INTO monitoring_service_schema.meter_reading_records (user_id, device_id, value, date) VALUES (2, 2, 200.3, '2024-01-01');
+        </sql>
+        <sql>
+            INSERT INTO monitoring_service_schema.meter_reading_records (user_id, device_id, value, date) VALUES (2, 3, 150.7, '2024-01-01');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

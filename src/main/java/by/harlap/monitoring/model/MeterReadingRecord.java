@@ -1,15 +1,31 @@
 package by.harlap.monitoring.model;
 
+import lombok.*;
+
 import java.time.LocalDate;
 import java.util.Map;
 
 /**
- * The MeterReadingRecord record represents a record of meter readings submitted by a user.
- *
- * @param user   The user associated with the meter readings.
- * @param values A map containing pairs of Device and corresponding meter reading values.
- * @param date   The date when the meter readings were recorded.
+ * Represents a meter reading record, storing information about a specific reading.
  */
-public record MeterReadingRecord(User user, Map<Device, Double> values, LocalDate date) {
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
+public class MeterReadingRecord {
+
+    private Long id;
+    private Long userId;
+    private Long deviceId;
+    private Double value;
+    private LocalDate date;
+
+    public MeterReadingRecord(Long userId, Long deviceId, Double value, LocalDate date) {
+        this.userId = userId;
+        this.deviceId = deviceId;
+        this.value = value;
+        this.date = date;
+    }
 }
+
 

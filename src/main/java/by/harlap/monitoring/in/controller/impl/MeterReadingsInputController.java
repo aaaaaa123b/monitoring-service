@@ -69,8 +69,7 @@ public class MeterReadingsInputController extends AbstractController {
             values.put(device, value);
         });
 
-        MeterReadingRecord record = new MeterReadingRecord(activeUser, values, LocalDate.now());
-        meterReadingsService.createMeterReadingRecord(record);
+        meterReadingsService.createMeterReadingRecord(activeUser, values, LocalDate.now());
 
         console.print("Показания счётчиков успешно добавлены");
     }

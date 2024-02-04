@@ -32,9 +32,9 @@ class DefaultUserServiceTest {
     void createUser() {
         User testUser = new User("test", "test", Role.USER);
 
-        when(userRepository.save(testUser)).thenReturn(testUser);
+        when(userRepository.save(testUser)).thenReturn(Optional.of(testUser));
 
-        User actual = userService.createUser(testUser);
+        Optional<User> actual = userService.createUser(testUser);
 
         assertNotNull(actual);
         assertEquals(testUser, actual);
@@ -46,7 +46,7 @@ class DefaultUserServiceTest {
     void findUserByUsername() {
         User testUser = new User("test", "test", Role.USER);
 
-        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(testUser);
 
         Optional<User> actual = userService.findUserByUsername(testUser.getUsername());
 

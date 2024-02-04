@@ -2,6 +2,7 @@ package by.harlap.monitoring.repository;
 
 import by.harlap.monitoring.model.UserEvent;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -12,9 +13,11 @@ public interface AuditRepository {
     /**
      * Saves a user audit event to the repository.
      *
-     * @param event The user audit event to be saved.
+     * @param userId the ID of the user
+     * @param action the action performed
+     * @param date   the date of the audit event
      */
-    void save(UserEvent event);
+    void save( Long userId,String action,LocalDate date);
 
     /**
      * Retrieves a list of all user audit events stored in the repository.

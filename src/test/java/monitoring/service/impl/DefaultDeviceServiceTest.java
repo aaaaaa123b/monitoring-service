@@ -30,11 +30,7 @@ class DefaultDeviceServiceTest {
     @Test
     @DisplayName("Should find all available devices")
     void listAvailableDevices() {
-        List<Device> mockDevices = Arrays.asList(
-                new Device("отопление"),
-                new Device("холодная вода"),
-                new Device("горячая вода")
-        );
+        List<Device> mockDevices = deviceService.listAvailableDevices();
 
         when(deviceRepository.findAll()).thenReturn(mockDevices);
 

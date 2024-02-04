@@ -1,5 +1,6 @@
 package by.harlap.monitoring.service.impl;
 
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
@@ -10,7 +11,9 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The DefaultMeterReadingsService class implements the MeterReadingsService interface
@@ -40,16 +43,16 @@ public class DefaultMeterReadingsService implements MeterReadingsService {
         return !records.isEmpty();
     }
 
-    /**
-     * Creates a meter reading record and logs the corresponding event.
-     *
-     * @param record The meter reading record to be created.
-     */
-    @Override
-    public void createMeterReadingRecord(MeterReadingRecord record) {
-        auditService.createEvent(record.user(), "Пользователь внёс показания счётчиков");
-        metricsRecordRepository.add(record);
-    }
+//    /**
+//     * Creates a meter reading record and logs the corresponding event.
+//     *
+//     * @param record The meter reading record to be created.
+//     */
+//    @Override
+//    public void createMeterReadingRecord(MeterReadingRecord record) {
+//        auditService.createEvent(record.getUserId(), "Пользователь внёс показания счётчиков");
+//        metricsRecordRepository.add(record.getUserId(), record.getDeviceId(), record.getValue(), record.getDate());
+//    }
 
     /**
      * Retrieves and returns a list of all meter reading records for the specified user.
@@ -93,8 +96,18 @@ public class DefaultMeterReadingsService implements MeterReadingsService {
     public List<MeterReadingRecord> findRelevantRecords(User user) {
         auditService.createEvent(user, "Пользователь запросил последние внесения данных со счётчиков");
         return switch (user.getRole()) {
-            case USER -> metricsRecordRepository.findLatestForUser(user);
+            case USER -> metricsRecordRepository.findLatestForUser(user.getId());
             case ADMIN -> metricsRecordRepository.findLatest();
         };
+    }
+
+    @Override
+    public void createMeterReadingRecord(User user, Map<Device, Double> values, LocalDate now) {
+        auditService.createEvent(user, "Пользователь внёс показания счётчиков");
+
+        values.forEach((device, value) -> {
+            MeterReadingRecord record = new MeterReadingRecord(user.getId(), device.getId(), value, LocalDate.now());
+            metricsRecordRepository.save(record);
+        });
     }
 }

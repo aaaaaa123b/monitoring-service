@@ -4,10 +4,8 @@ import by.harlap.monitoring.repository.AuditRepository;
 import by.harlap.monitoring.repository.DeviceRepository;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
 import by.harlap.monitoring.repository.UserRepository;
-import by.harlap.monitoring.repository.impl.InMemoryAuditRepository;
-import by.harlap.monitoring.repository.impl.InMemoryDeviceRepository;
-import by.harlap.monitoring.repository.impl.InMemoryMetricsRecordRepository;
-import by.harlap.monitoring.repository.impl.InMemoryUserRepository;
+import by.harlap.monitoring.repository.impl.*;
+import by.harlap.monitoring.util.ConnectionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +22,11 @@ public class RepositoryFactory {
      * Constructor for RepositoryFactory. Registers various repositories with their corresponding implementations.
      */
     public RepositoryFactory() {
-        final AuditRepository auditRepository = new InMemoryAuditRepository();
-        final UserRepository userRepository = new InMemoryUserRepository();
-        final DeviceRepository deviceRepository = new InMemoryDeviceRepository();
-        final MetricsRecordRepository metricsRecordRepository = new InMemoryMetricsRecordRepository();
+        final ConnectionManager connectionManager = new ConnectionManager();
+        final AuditRepository auditRepository = new JdbcAuditRepository(connectionManager);
+        final UserRepository userRepository = new JdbcUserRepository(connectionManager);
+        final DeviceRepository deviceRepository = new JdbcDeviceRepository(connectionManager);
+        final MetricsRecordRepository metricsRecordRepository = new JdbcMetricsRecordRepository(connectionManager);
 
         repositories.put(AuditRepository.class, auditRepository);
         repositories.put(UserRepository.class, userRepository);

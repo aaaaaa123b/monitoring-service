@@ -33,14 +33,12 @@ public class ServiceFactory {
         final AuthService authService = new DefaultAuthService(userService, auditService);
         final MeterReadingsService meterReadingsService = new DefaultMeterReadingsService(metricsRecordRepository, auditService);
         final DeviceService deviceService = new DefaultDeviceService(repositoryFactory.findRepository(DeviceRepository.class));
-        final InitializationService initializationService = new DefaultInitializationService(userService);
 
         services.put(AuditService.class, auditService);
         services.put(UserService.class, userService);
         services.put(AuthService.class, authService);
         services.put(MeterReadingsService.class, meterReadingsService);
         services.put(DeviceService.class, deviceService);
-        services.put(InitializationService.class, initializationService);
     }
 
     /**

@@ -5,6 +5,7 @@ import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.in.controller.impl.MeterReadingsRelevantInfoController;
 import by.harlap.monitoring.model.User;
+import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,19 +25,22 @@ class MeterReadingsRelevantInfoControllerTest {
     @Mock
     private MeterReadingsService meterReadingsService;
 
+    @Mock
+    DeviceService deviceService;
+
     private User activeUser;
 
     private MeterReadingsRelevantInfoController meterReadingsRelevantInfoController;
 
     @BeforeEach
     public void prepareController() {
-        activeUser = new User("test", "test", Role.USER);
+        activeUser = new User(1L,"test", "test", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
         final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(null, context);
-        meterReadingsRelevantInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService);
+        meterReadingsRelevantInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService);
     }
 
     @Test

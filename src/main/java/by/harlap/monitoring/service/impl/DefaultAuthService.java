@@ -84,8 +84,9 @@ public class DefaultAuthService implements AuthService {
         user.setPassword(password);
         user.setRole(Role.USER);
 
+        User userInDb = userService.createUser(user).orElseThrow(() -> new AuthenticationException("Не удалось зарегестрировать пользователя"));
         auditService.createEvent(user, "Пользователь зарегистрировался в системе");
 
-        return userService.createUser(user);
+        return userInDb;
     }
 }

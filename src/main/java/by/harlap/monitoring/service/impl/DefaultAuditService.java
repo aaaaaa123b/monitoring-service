@@ -27,8 +27,7 @@ public class DefaultAuditService implements AuditService {
      */
     @Override
     public void createEvent(User user, String message) {
-        final UserEvent event = new UserEvent(user, message, LocalDate.now());
-        auditRepository.save(event);
+        auditRepository.save(user.getId(), message,LocalDate.now());
     }
 
     /**

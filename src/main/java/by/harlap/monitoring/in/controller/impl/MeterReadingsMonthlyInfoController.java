@@ -3,6 +3,7 @@ package by.harlap.monitoring.in.controller.impl;
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
+import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 
 import java.time.Month;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MeterReadingsMonthlyInfoController extends AbstractController {
 
     private final MeterReadingsService meterReadingsService;
+    private final DeviceService deviceService;
 
     /**
      * Constructs a new MeterReadingsMonthlyInfoController with the specified initialization data
@@ -26,10 +28,11 @@ public class MeterReadingsMonthlyInfoController extends AbstractController {
      * @param initializationData   The data needed for initializing the controller.
      * @param meterReadingsService The MeterReadingsService used for retrieving meter reading records.
      */
-    public MeterReadingsMonthlyInfoController(InitializationData initializationData, MeterReadingsService meterReadingsService) {
+    public MeterReadingsMonthlyInfoController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService) {
         super(initializationData);
 
         this.meterReadingsService = meterReadingsService;
+        this.deviceService = deviceService;
     }
 
     /**
@@ -51,11 +54,14 @@ public class MeterReadingsMonthlyInfoController extends AbstractController {
         final List<MeterReadingRecord> records = meterReadingsService.findRecordsForSpecifiedMonth(user, month, year);
 
         for (MeterReadingRecord record : records) {
-            console.print("Дата внесения показаний для пользователя '%s': %s".formatted(record.user().getUsername(), record.date()));
-            record.values().forEach((device, value) -> {
-                final String message = "Счётчик: %s. Значение счётчика: %f".formatted(device.getName(), value);
-                console.print(message);
-            });
+            console.print("Дата внесения показаний для пользователя '%s': %s".formatted(user.getUsername(), record.getDate()));
+
+            deviceService.findById(record.getDeviceId())
+                    .ifPresent(device -> {
+                        final String message = "Счётчик: %s. Значение счётчика: %f".formatted(device.getName(), record.getValue());
+                        console.print(message);
+                    });
         }
+
     }
 }

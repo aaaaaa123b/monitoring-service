@@ -1,0 +1,15 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="007-populate-devices-table" author="Diana Harlap">
+        <sql>
+            INSERT INTO monitoring_service_schema.users (username, password, role) VALUES ('admin', 'admin', 'ADMIN');
+        </sql>
+        <sql>
+            INSERT INTO monitoring_service_schema.users (username, password, role) VALUES ('user', 'user', 'USER');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

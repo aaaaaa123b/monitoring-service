@@ -1,6 +1,7 @@
 package by.harlap.monitoring.in.controller.impl;
 
 import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.service.DeviceService;
 
 /**

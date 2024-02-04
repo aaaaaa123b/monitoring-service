@@ -1,17 +1,17 @@
 package by.harlap.monitoring.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 /**
  * The Device class represents a generic device with a name.
  * Subclasses should extend this class to define specific types of devices.
  */
-@EqualsAndHashCode
+@Data
 @AllArgsConstructor
-@Getter
+@NoArgsConstructor
 public class Device {
 
-    private final String name;
+    private Long id;
+    private String name;
+
 }

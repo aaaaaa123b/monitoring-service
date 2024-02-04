@@ -6,6 +6,7 @@ import by.harlap.monitoring.service.DeviceService;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The DefaultDeviceService class implements the DeviceService interface
@@ -30,11 +31,16 @@ public class DefaultDeviceService implements DeviceService {
      * Saves a new device with the given device name by creating a Device instance and delegating the save operation
      * to the underlying deviceRepository.
      *
-     * @param device The device name to be saved as a new Device.
+     * @param device The device to be saved as a new Device.
      */
     @Override
     public void save(String device) {
-        deviceRepository.save(new Device(device));
+        deviceRepository.save(device);
+    }
+
+    @Override
+    public Optional<Device> findById(Long deviceId) {
+        return deviceRepository.findById(deviceId);
     }
 
 }

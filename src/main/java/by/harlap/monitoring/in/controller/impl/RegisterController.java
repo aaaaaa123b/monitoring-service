@@ -1,6 +1,5 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;

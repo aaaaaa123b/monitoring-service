@@ -1,11 +1,14 @@
 package by.harlap.monitoring.service;
 
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The MeterReadingsService interface defines methods for managing meter readings and records.
@@ -20,12 +23,12 @@ public interface MeterReadingsService {
      */
     boolean checkMetricReadingRecordExistence(User user);
 
-    /**
-     * Creates a meter reading record.
-     *
-     * @param record The meter reading record to be created.
-     */
-    void createMeterReadingRecord(MeterReadingRecord record);
+//    /**
+//     * Creates a meter reading record.
+//     *
+//     * @param record The meter reading record to be created.
+//     */
+//    void createMeterReadingRecord(MeterReadingRecord record);
 
     /**
      * Retrieves and returns a list of all meter reading records for the specified user.
@@ -52,4 +55,6 @@ public interface MeterReadingsService {
      * @return A list of relevant meter reading records for the specified user or all users (for admin).
      */
     List<MeterReadingRecord> findRelevantRecords(User user);
+
+    void createMeterReadingRecord(User activeUser, Map<Device, Double> values, LocalDate now);
 }

@@ -30,9 +30,9 @@ public class AuditController extends AbstractController {
     @Override
     public void show() {
         for (UserEvent event : auditService.findUserEvents()) {
-            final String message = "%s - Пользователь '%s': %s".formatted(
+            final String message = "%s - Пользователь c id = '%s': %s".formatted(
                     event.getDate(),
-                    event.getUser().getUsername(),
+                    event.getUserId(),
                     event.getAction()
             );
 

@@ -1,5 +1,6 @@
 package by.harlap.monitoring.repository;
 
+import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.model.User;
 
 import java.util.Optional;
@@ -10,18 +11,26 @@ import java.util.Optional;
 public interface UserRepository {
 
     /**
-     * Saves a user in the repository.
+     * Finds a user by their ID in the database.
      *
-     * @param user The user to be saved in the repository.
-     * @return The saved User object.
+     * @param id the user's ID
+     * @return the user object.
      */
-    User save(User user);
+    User findById(Long id);
 
     /**
-     * Retrieves a user by their username from the repository.
+     * Saves a new user to the database.
      *
-     * @param username The username of the user to be retrieved.
-     * @return The User object associated with the specified username, or null if not found.
+     * @param user the user to be saved
+     * @return Optional containing the saved user or Optional.empty() if not saved.
      */
-    Optional<User> findUserByUsername(String username);
+    Optional<User> save(User user);
+
+    /**
+     * Finds and returns a user by their username.
+     *
+     * @param username The username of the user to be found.
+     * @return The found user or Optional.empty() if not found.
+     */
+    User findUserByUsername(String username);
 }
