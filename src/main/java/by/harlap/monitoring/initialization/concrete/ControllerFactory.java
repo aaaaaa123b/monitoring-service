@@ -26,6 +26,7 @@ public class ControllerFactory {
         final AuditService auditService = serviceFactory.findService(AuditService.class);
         final DeviceService deviceService = serviceFactory.findService(DeviceService.class);
         final MeterReadingsService meterReadingsService = serviceFactory.findService(MeterReadingsService.class);
+        final UserService userService = serviceFactory.findService(UserService.class);
 
         final LoginController loginController = new LoginController(initializationData, authService);
         final RegisterController registerController = new RegisterController(initializationData, authService);
@@ -36,7 +37,7 @@ public class ControllerFactory {
         final MeterReadingsInputController meterReadingsInputController = new MeterReadingsInputController(initializationData, meterReadingsService, deviceService);
         final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService);
         final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService);
-        final AuditController auditController = new AuditController(initializationData, auditService);
+        final AuditController auditController = new AuditController(initializationData, auditService, userService);
         final AddNewDeviceController addController = new AddNewDeviceController(initializationData, deviceService);
 
         registerController(loginController);

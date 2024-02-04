@@ -37,4 +37,9 @@ public class DefaultUserService implements UserService {
     public Optional<User> findUserByUsername(String username) {
         return Optional.ofNullable(userRepository.findUserByUsername(username));
     }
+
+    @Override
+    public User findUserById(Long id) {
+        return userRepository.findById(id);
+    }
 }

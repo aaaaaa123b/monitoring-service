@@ -24,4 +24,6 @@ public interface UserService {
      * @return The found user or null if not found.
      */
     Optional<User> findUserByUsername(String username);
+
+    User findUserById(Long id);
 }
