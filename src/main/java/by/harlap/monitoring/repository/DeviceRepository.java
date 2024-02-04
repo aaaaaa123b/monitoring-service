@@ -1,6 +1,6 @@
 package by.harlap.monitoring.repository;
 
-import by.harlap.monitoring.model.base.AbstractDevice;
+import by.harlap.monitoring.model.Device;
 
 import java.util.List;
 
@@ -12,7 +12,14 @@ public interface DeviceRepository {
     /**
      * Retrieves a list of all available devices.
      *
-     * @return A list of AbstractDevice objects representing all available devices.
+     * @return A list of Device objects representing all available devices.
      */
-    List<AbstractDevice> findAll();
+    List<Device> findAll();
+
+    /**
+     * Saves a new device.
+     *
+     * @param device The device to be saved.
+     */
+    void save(Device device);
 }

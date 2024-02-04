@@ -15,9 +15,6 @@ import java.util.Map;
  */
 public class InMemoryAuditRepository implements AuditRepository {
 
-    /**
-     * The map to store user events, where each user is associated with a list of events.
-     */
     private final Map<User, List<UserEvent>> events = new HashMap<>();
 
     /**

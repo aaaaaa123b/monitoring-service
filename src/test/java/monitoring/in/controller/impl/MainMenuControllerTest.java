@@ -3,26 +3,24 @@ package monitoring.in.controller.impl;
 import by.harlap.monitoring.config.ApplicationContext;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
-import by.harlap.monitoring.in.controller.RequestDispatcher;
 import by.harlap.monitoring.in.controller.impl.*;
+import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.util.ConsoleDecorator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for UserMainMenuController")
 class MainMenuControllerTest {
 
     @Mock
     private ConsoleDecorator console;
-
-    @Mock
-    private RequestDispatcher dispatcher;
 
     @Mock
     private MeterReadingsRelevantInfoController meterReadingsRelevantInfoController;
@@ -36,24 +34,30 @@ class MainMenuControllerTest {
     @Mock
     private MeterReadingsHistoryController meterReadingsHistoryController;
 
-    private User activeUser;
+    private UserMainMenuController mainMenuController;
 
-    private MainMenuController mainMenuController;
+    private static MockedStatic<DependencyFactory> factoryMockedStatic;
+
+    @BeforeAll
+    public static void init() {
+        factoryMockedStatic = mockStatic(DependencyFactory.class);
+    }
 
     @BeforeEach
     public void prepareController() {
-        activeUser = new User("test", "test", Role.USER);
+        User activeUser = new User("test", "test", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
-        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context, dispatcher);
-        mainMenuController = new MainMenuController(initializationData);
+        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context);
+        mainMenuController = new UserMainMenuController(initializationData);
     }
 
     @Test
+    @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsRelevantInfoController")
     void testShowAndNavigateToRelevantInfoController() {
-        when(dispatcher.getController(MeterReadingsRelevantInfoController.class)).thenReturn(meterReadingsRelevantInfoController);
+        when(DependencyFactory.findController(MeterReadingsRelevantInfoController.class)).thenReturn(meterReadingsRelevantInfoController);
         when(console.readInt()).thenReturn(1, 5);
 
         mainMenuController.show();
@@ -62,8 +66,9 @@ class MainMenuControllerTest {
     }
 
     @Test
+    @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsInputController")
     void testShowAndNavigateToInputController() {
-        when(dispatcher.getController(MeterReadingsInputController.class)).thenReturn(meterReadingsInputController);
+        when(DependencyFactory.findController(MeterReadingsInputController.class)).thenReturn(meterReadingsInputController);
         when(console.readInt()).thenReturn(2, 5);
 
         mainMenuController.show();
@@ -72,8 +77,9 @@ class MainMenuControllerTest {
     }
 
     @Test
+    @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsMonthlyInfoController")
     void testShowAndNavigateToMonthlyInfoController() {
-        when(dispatcher.getController(MeterReadingsMonthlyInfoController.class)).thenReturn(meterReadingsMonthlyInfoController);
+        when(DependencyFactory.findController(MeterReadingsMonthlyInfoController.class)).thenReturn(meterReadingsMonthlyInfoController);
         when(console.readInt()).thenReturn(3, 5);
 
         mainMenuController.show();
@@ -82,8 +88,9 @@ class MainMenuControllerTest {
     }
 
     @Test
+    @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsHistoryController")
     void testShowAndNavigateToHistoryController() {
-        when(dispatcher.getController(MeterReadingsHistoryController.class)).thenReturn(meterReadingsHistoryController);
+        when(DependencyFactory.findController(MeterReadingsHistoryController.class)).thenReturn(meterReadingsHistoryController);
         when(console.readInt()).thenReturn(4, 5);
 
         mainMenuController.show();
@@ -91,10 +98,8 @@ class MainMenuControllerTest {
         verify(meterReadingsHistoryController, times(1)).show();
     }
 
-    @Test
-    void testShowAndLogout() {
-        when(console.readInt()).thenReturn(5);
-
-        mainMenuController.show();
+    @AfterAll
+    public static void close() {
+        factoryMockedStatic.close();
     }
 }

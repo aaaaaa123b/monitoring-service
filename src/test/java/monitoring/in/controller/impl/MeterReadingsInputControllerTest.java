@@ -4,15 +4,13 @@ import by.harlap.monitoring.config.ApplicationContext;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.in.controller.impl.MeterReadingsInputController;
-import by.harlap.monitoring.model.ColdWaterDevice;
-import by.harlap.monitoring.model.HeatingDevice;
-import by.harlap.monitoring.model.HotWaterDevice;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.model.base.AbstractDevice;
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 import by.harlap.monitoring.util.ConsoleDecorator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -25,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for MeterReadingsInputController")
 class MeterReadingsInputControllerTest {
 
     @Mock
@@ -47,16 +46,17 @@ class MeterReadingsInputControllerTest {
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
-        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context, null);
+        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context);
         meterReadingsInputController = new MeterReadingsInputController(initializationData, meterReadingsService, deviceService);
     }
 
     @Test
+    @DisplayName("Should create meter reading record")
     void testShow() {
-        List<AbstractDevice> devices = new ArrayList<>();
-        devices.add(new HeatingDevice("отопление"));
-        devices.add(new ColdWaterDevice("холодная вода"));
-        devices.add(new HotWaterDevice("горячая вода"));
+        List<Device> devices = new ArrayList<>();
+        devices.add(new Device("отопление"));
+        devices.add(new Device("холодная вода"));
+        devices.add(new Device("горячая вода"));
 
         when(deviceService.listAvailableDevices()).thenReturn(devices);
         when(meterReadingsService.checkMetricReadingRecordExistence(activeUser)).thenReturn(false);

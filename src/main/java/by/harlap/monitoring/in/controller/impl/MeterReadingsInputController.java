@@ -4,7 +4,7 @@ import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.model.base.AbstractDevice;
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 
@@ -21,14 +21,8 @@ import java.util.Map;
  */
 public class MeterReadingsInputController extends AbstractController {
 
-    /**
-     * The MeterReadingsService used for storing and retrieving meter reading records.
-     */
     private final MeterReadingsService meterReadingsService;
 
-    /**
-     * The DeviceService used for listing available devices.
-     */
     private final DeviceService deviceService;
 
     /**
@@ -66,9 +60,9 @@ public class MeterReadingsInputController extends AbstractController {
             return;
         }
 
-        final List<AbstractDevice> devices = deviceService.listAvailableDevices();
+        final List<Device> devices = deviceService.listAvailableDevices();
 
-        final Map<AbstractDevice, Double> values = new HashMap<>();
+        final Map<Device, Double> values = new HashMap<>();
         devices.forEach(device -> {
             console.print("Введите показания для счётчика '%s'".formatted(device.getName()));
             final double value = console.readDouble();

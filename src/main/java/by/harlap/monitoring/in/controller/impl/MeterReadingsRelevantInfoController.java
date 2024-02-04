@@ -14,9 +14,6 @@ import java.util.List;
  */
 public class MeterReadingsRelevantInfoController extends AbstractController {
 
-    /**
-     * The MeterReadingsService used for retrieving meter reading records.
-     */
     private final MeterReadingsService meterReadingsService;
 
     /**

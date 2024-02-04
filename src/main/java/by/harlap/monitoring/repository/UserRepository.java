@@ -2,6 +2,8 @@ package by.harlap.monitoring.repository;
 
 import by.harlap.monitoring.model.User;
 
+import java.util.Optional;
+
 /**
  * The UserRepository interface defines methods for managing user information.
  */
@@ -21,5 +23,5 @@ public interface UserRepository {
      * @param username The username of the user to be retrieved.
      * @return The User object associated with the specified username, or null if not found.
      */
-    User findUserByUsername(String username);
+    Optional<User> findUserByUsername(String username);
 }

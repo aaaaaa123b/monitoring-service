@@ -8,14 +8,8 @@ import java.util.Scanner;
  */
 public class ConsoleDecorator {
 
-    /**
-     * The Scanner used for reading input from the console.
-     */
     private final Scanner scanner;
 
-    /**
-     * Constructs a new ConsoleDecorator with a new Scanner for System.in.
-     */
     public ConsoleDecorator() {
         this.scanner = new Scanner(System.in);
     }
@@ -56,9 +50,15 @@ public class ConsoleDecorator {
      * @return The read double.
      */
     public double readDouble() {
+        double result;
         while (true) {
             try {
-                return scanner.nextDouble();
+                result = scanner.nextDouble();
+                if (result > 0) {
+                    return result;
+                } else {
+                    print("Введите положительное значение");
+                }
             } catch (InputMismatchException ignored) {
                 scanner.nextLine();
             }

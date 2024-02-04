@@ -22,11 +22,6 @@ public abstract class AbstractController {
     protected final ApplicationContext context;
 
     /**
-     * The request dispatcher used for managing controllers.
-     */
-    protected final RequestDispatcher dispatcher;
-
-    /**
      * Constructs a new AbstractController with the specified initialization data.
      *
      * @param initializationData The data needed for initializing the controller.
@@ -34,7 +29,6 @@ public abstract class AbstractController {
     public AbstractController(InitializationData initializationData) {
         this.console = initializationData.console;
         this.context = initializationData.context;
-        this.dispatcher = initializationData.dispatcher;
     }
 
     /**
@@ -80,7 +74,6 @@ public abstract class AbstractController {
      * A record containing the initialization data for the controller.
      */
     public record InitializationData(ConsoleDecorator console,
-                                     ApplicationContext context,
-                                     RequestDispatcher dispatcher) {
+                                     ApplicationContext context) {
     }
 }

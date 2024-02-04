@@ -1,6 +1,6 @@
 package by.harlap.monitoring.service;
 
-import by.harlap.monitoring.model.base.AbstractDevice;
+import by.harlap.monitoring.model.Device;
 
 import java.util.List;
 
@@ -14,5 +14,12 @@ public interface DeviceService {
      *
      * @return A list of all available devices.
      */
-    List<AbstractDevice> listAvailableDevices();
+    List<Device> listAvailableDevices();
+
+    /**
+     * Saves a new device with the given abstract device information.
+     *
+     * @param abstractDevice The abstract information representing the new device.
+     */
+    void save(String abstractDevice);
 }

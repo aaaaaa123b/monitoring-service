@@ -2,6 +2,8 @@ package by.harlap.monitoring.service;
 
 import by.harlap.monitoring.model.User;
 
+import java.util.Optional;
+
 /**
  * The UserService interface defines methods for managing user-related operations.
  */
@@ -21,5 +23,5 @@ public interface UserService {
      * @param username The username of the user to be found.
      * @return The found user or null if not found.
      */
-    User findUserByUsername(String username);
+    Optional<User> findUserByUsername(String username);
 }

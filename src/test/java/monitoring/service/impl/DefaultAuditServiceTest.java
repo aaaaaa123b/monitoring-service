@@ -4,6 +4,7 @@ import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.AuditRepository;
 import by.harlap.monitoring.service.impl.DefaultAuditService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for DefaultAuditService")
 class DefaultAuditServiceTest {
 
     @Mock
@@ -24,6 +26,7 @@ class DefaultAuditServiceTest {
     private DefaultAuditService auditService;
 
     @Test
+    @DisplayName("Should create an audit event")
     void testCreateEvent() {
         User testUser = new User("testUser", "password", Role.USER);
         String message = "Test message";

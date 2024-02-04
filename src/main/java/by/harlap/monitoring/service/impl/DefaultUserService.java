@@ -1,28 +1,22 @@
 package by.harlap.monitoring.service.impl;
 
+import by.harlap.monitoring.exception.AuthenticationException;
+import by.harlap.monitoring.exception.EntityNotFoundException;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.UserRepository;
 import by.harlap.monitoring.service.UserService;
+import lombok.AllArgsConstructor;
+
+import java.util.Optional;
 
 /**
  * The DefaultUserService class implements the UserService interface
  * and provides operations related to user management.
  */
+@AllArgsConstructor
 public class DefaultUserService implements UserService {
 
-    /**
-     * The UserRepository used for user-related operations.
-     */
     private final UserRepository userRepository;
-
-    /**
-     * Constructs a new DefaultUserService with the specified UserRepository.
-     *
-     * @param userRepository The UserRepository used for user-related operations.
-     */
-    public DefaultUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     /**
      * Creates a new user by saving it to the UserRepository.
@@ -42,7 +36,7 @@ public class DefaultUserService implements UserService {
      * @return The found user or null if not found.
      */
     @Override
-    public User findUserByUsername(String username) {
+    public Optional<User> findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 }

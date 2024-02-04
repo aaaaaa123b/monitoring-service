@@ -4,6 +4,7 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.model.UserEvent;
 import by.harlap.monitoring.repository.AuditRepository;
 import by.harlap.monitoring.service.AuditService;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,21 +13,10 @@ import java.util.List;
  * The DefaultAuditService class implements the AuditService interface
  * and provides functionality to create user events and save them to the AuditRepository.
  */
+@AllArgsConstructor
 public class DefaultAuditService implements AuditService {
 
-    /**
-     * The AuditRepository used for saving user events.
-     */
     private final AuditRepository auditRepository;
-
-    /**
-     * Constructs a new DefaultAuditService with the specified AuditRepository.
-     *
-     * @param auditRepository The AuditRepository used for saving user events.
-     */
-    public DefaultAuditService(AuditRepository auditRepository) {
-        this.auditRepository = auditRepository;
-    }
 
     /**
      * Creates a user event with the provided user, message, and the current date,

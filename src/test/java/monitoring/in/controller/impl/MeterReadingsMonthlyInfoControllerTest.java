@@ -8,6 +8,7 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.MeterReadingsService;
 import by.harlap.monitoring.util.ConsoleDecorator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,9 +18,10 @@ import java.time.Month;
 import java.time.Year;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for MeterReadingsMonthlyInfoController")
 class MeterReadingsMonthlyInfoControllerTest {
 
     @Mock
@@ -39,11 +41,12 @@ class MeterReadingsMonthlyInfoControllerTest {
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
-        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context, null);
+        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context);
         meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService);
     }
 
     @Test
+    @DisplayName("Should display monthly information for specified month and year")
     void show() {
         final Month month = Month.JANUARY;
         final Year year = Year.of(2024);
@@ -52,5 +55,7 @@ class MeterReadingsMonthlyInfoControllerTest {
         when(meterReadingsService.findRecordsForSpecifiedMonth(activeUser, month, year)).thenReturn(List.of());
 
         meterReadingsMonthlyInfoController.show();
+
+        verify(meterReadingsService, times(1)).findRecordsForSpecifiedMonth(activeUser,month,year);
     }
 }

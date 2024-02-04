@@ -1,11 +1,9 @@
 package monitoring.service.impl;
 
-import by.harlap.monitoring.model.ColdWaterDevice;
-import by.harlap.monitoring.model.HeatingDevice;
-import by.harlap.monitoring.model.HotWaterDevice;
-import by.harlap.monitoring.model.base.AbstractDevice;
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.repository.DeviceRepository;
 import by.harlap.monitoring.service.impl.DefaultDeviceService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for DefaultDeviceService")
 class DefaultDeviceServiceTest {
 
     @Mock
@@ -29,16 +28,17 @@ class DefaultDeviceServiceTest {
     DefaultDeviceService deviceService;
 
     @Test
+    @DisplayName("Should find all available devices")
     void listAvailableDevices() {
-        List<AbstractDevice> mockDevices = Arrays.asList(
-                new HeatingDevice("отопление"),
-                new ColdWaterDevice("холодная вода"),
-                new HotWaterDevice("горячая вода")
+        List<Device> mockDevices = Arrays.asList(
+                new Device("отопление"),
+                new Device("холодная вода"),
+                new Device("горячая вода")
         );
 
         when(deviceRepository.findAll()).thenReturn(mockDevices);
 
-        List<AbstractDevice> result = deviceService.listAvailableDevices();
+        List<Device> result = deviceService.listAvailableDevices();
 
         assertNotNull(result);
         assertEquals(mockDevices.size(), result.size());

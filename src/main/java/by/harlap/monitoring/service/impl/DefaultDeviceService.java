@@ -1,8 +1,9 @@
 package by.harlap.monitoring.service.impl;
 
-import by.harlap.monitoring.model.base.AbstractDevice;
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.repository.DeviceRepository;
 import by.harlap.monitoring.service.DeviceService;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
@@ -10,21 +11,10 @@ import java.util.List;
  * The DefaultDeviceService class implements the DeviceService interface
  * and provides operations related to devices.
  */
+@AllArgsConstructor
 public class DefaultDeviceService implements DeviceService {
 
-    /**
-     * The DeviceRepository used for device-related operations.
-     */
     private final DeviceRepository deviceRepository;
-
-    /**
-     * Constructs a new DefaultDeviceService with the specified DeviceRepository.
-     *
-     * @param deviceRepository The DeviceRepository used for device-related operations.
-     */
-    public DefaultDeviceService(DeviceRepository deviceRepository) {
-        this.deviceRepository = deviceRepository;
-    }
 
     /**
      * Retrieves and returns a list of all available devices from the DeviceRepository.
@@ -32,7 +22,19 @@ public class DefaultDeviceService implements DeviceService {
      * @return A list of all available devices.
      */
     @Override
-    public List<AbstractDevice> listAvailableDevices() {
+    public List<Device> listAvailableDevices() {
         return deviceRepository.findAll();
     }
+
+    /**
+     * Saves a new device with the given device name by creating a Device instance and delegating the save operation
+     * to the underlying deviceRepository.
+     *
+     * @param device The device name to be saved as a new Device.
+     */
+    @Override
+    public void save(String device) {
+        deviceRepository.save(new Device(device));
+    }
+
 }

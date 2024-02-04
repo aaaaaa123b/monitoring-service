@@ -1,12 +1,11 @@
 package by.harlap.monitoring.in.controller.impl;
 
+import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.in.controller.AbstractController;
 
 /**
  * The WelcomeController class represents the initial controller for user interaction.
  * It prompts the user to choose between login, registration, or exiting the application.
- * It handles the corresponding actions by redirecting to LoginController, RegisterController,
- * or exiting the application based on user input.
  */
 public class WelcomeController extends AbstractController {
 
@@ -47,25 +46,15 @@ public class WelcomeController extends AbstractController {
         } while (!finished);
     }
 
-    /**
-     * Handles the login action by redirecting to the LoginController and catching any generic exceptions.
-     *
-     * @return True if the login action was successful, false otherwise.
-     */
     private boolean handleLogin() {
         return handleGenericException(
-                () -> dispatcher.getController(LoginController.class).show()
+                () -> DependencyFactory.findController(LoginController.class).show()
         );
     }
 
-    /**
-     * Handles the registration action by redirecting to the RegisterController and catching any generic exceptions.
-     *
-     * @return True if the registration action was successful, false otherwise.
-     */
     private boolean handleRegister() {
         return handleGenericException(
-                () -> dispatcher.getController(RegisterController.class).show()
+                () -> DependencyFactory.findController(RegisterController.class).show()
         );
     }
 }

@@ -5,6 +5,7 @@ import by.harlap.monitoring.repository.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * The InMemoryUserRepository class provides an in-memory implementation of the UserRepository interface.
@@ -12,9 +13,6 @@ import java.util.Map;
  */
 public class InMemoryUserRepository implements UserRepository {
 
-    /**
-     * The map to store user entities in memory.
-     */
     private final Map<String, User> users = new HashMap<>();
 
     /**
@@ -36,7 +34,7 @@ public class InMemoryUserRepository implements UserRepository {
      * @return The user entity with the specified username, or null if not found.
      */
     @Override
-    public User findUserByUsername(String username) {
-        return users.get(username);
+    public Optional<User> findUserByUsername(String username) {
+        return Optional.ofNullable(users.get(username));
     }
 }

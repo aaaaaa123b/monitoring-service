@@ -6,33 +6,20 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuditService;
 import by.harlap.monitoring.service.AuthService;
 import by.harlap.monitoring.service.UserService;
+import lombok.AllArgsConstructor;
+
+import java.util.Optional;
 
 /**
  * The DefaultAuthService class implements the AuthService interface
  * and provides authentication and registration services for users.
  */
+@AllArgsConstructor
 public class DefaultAuthService implements AuthService {
 
-    /**
-     * The UserService used for user-related operations.
-     */
     private final UserService userService;
 
-    /**
-     * The AuditService used for logging authentication and registration events.
-     */
     private final AuditService auditService;
-
-    /**
-     * Constructs a new DefaultAuthService with the specified UserService and AuditService.
-     *
-     * @param userService  The UserService used for user-related operations.
-     * @param auditService The AuditService used for logging authentication and registration events.
-     */
-    public DefaultAuthService(UserService userService, AuditService auditService) {
-        this.userService = userService;
-        this.auditService = auditService;
-    }
 
     /**
      * Authenticates a user based on the provided username and password.
@@ -45,12 +32,13 @@ public class DefaultAuthService implements AuthService {
      */
     @Override
     public User login(String username, String password) {
-        final User user = userService.findUserByUsername(username);
+        final Optional<User> optionalUser = userService.findUserByUsername(username);
 
-        if (user == null) {
+        if (optionalUser.isEmpty()) {
             throw new AuthenticationException("Пользователя с таким именем не существует.");
         }
 
+        final User user = optionalUser.get();
         if (!user.getPassword().equals(password)) {
             throw new AuthenticationException("Проверьте пароль и повторите попытку.");
         }
@@ -67,8 +55,9 @@ public class DefaultAuthService implements AuthService {
      */
     @Override
     public void logout(String username) {
-        final User user = userService.findUserByUsername(username);
-        auditService.createEvent(user, "Пользователь вышел из системы");
+        final Optional<User> optionalUser = userService.findUserByUsername(username);
+
+        optionalUser.ifPresent(user -> auditService.createEvent(user, "Пользователь вышел из системы"));
 
         throw new AuthenticationException("Вы вышли из аккаунта. Для доступа к счётчикам войдите в аккаунт повторно.");
     }
@@ -84,13 +73,13 @@ public class DefaultAuthService implements AuthService {
      */
     @Override
     public User register(String username, String password) {
-        User user = userService.findUserByUsername(username);
+        final Optional<User> optionalUser = userService.findUserByUsername(username);
 
-        if (user != null) {
+        if (optionalUser.isPresent()) {
             throw new AuthenticationException("Пользователь с таким именем уже существует.");
         }
 
-        user = new User();
+        final User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(Role.USER);

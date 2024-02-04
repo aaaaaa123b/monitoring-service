@@ -3,21 +3,22 @@ package monitoring.in.controller.impl;
 import by.harlap.monitoring.config.ApplicationContext;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
-import by.harlap.monitoring.in.controller.RequestDispatcher;
-import by.harlap.monitoring.in.controller.impl.MainMenuController;
 import by.harlap.monitoring.in.controller.impl.RegisterController;
+import by.harlap.monitoring.in.controller.impl.UserMainMenuController;
+import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
 import by.harlap.monitoring.util.ConsoleDecorator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Tests for RegisterController")
 class RegisterControllerTest {
 
     @Mock
@@ -27,14 +28,18 @@ class RegisterControllerTest {
     private ConsoleDecorator console;
 
     @Mock
-    private RequestDispatcher dispatcher;
+    private UserMainMenuController mainMenuController;
 
     private RegisterController registerController;
 
     private User createdUser;
 
-    @Mock
-    private MainMenuController mainMenuController;
+    private static MockedStatic<DependencyFactory> factoryMockedStatic;
+
+    @BeforeAll
+    public static void init() {
+        factoryMockedStatic = mockStatic(DependencyFactory.class);
+    }
 
     @BeforeEach
     public void prepareController() {
@@ -43,14 +48,15 @@ class RegisterControllerTest {
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(null);
 
-        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context, dispatcher);
+        final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context);
 
-        when(dispatcher.getController(MainMenuController.class)).thenReturn(mainMenuController);
+        when(DependencyFactory.findController(UserMainMenuController.class)).thenReturn(mainMenuController);
 
         registerController = new RegisterController(initializationData, authService);
     }
 
     @Test
+    @DisplayName("Should register a new user and show the main menu")
     void testShow() {
         when(console.readLine()).thenReturn("test", "test");
         when(authService.register("test", "test")).thenReturn(createdUser);
@@ -58,5 +64,10 @@ class RegisterControllerTest {
         registerController.show();
 
         verify(mainMenuController, times(1)).show();
+    }
+
+    @AfterAll
+    public static void close() {
+        factoryMockedStatic.close();
     }
 }

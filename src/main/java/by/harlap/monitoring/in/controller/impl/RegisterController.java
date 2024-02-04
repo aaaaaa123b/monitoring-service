@@ -1,6 +1,8 @@
 package by.harlap.monitoring.in.controller.impl;
 
+import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
 
@@ -12,9 +14,6 @@ import by.harlap.monitoring.service.AuthService;
  */
 public class RegisterController extends AbstractController {
 
-    /**
-     * The AuthService used for handling user registration and logout.
-     */
     private final AuthService authService;
 
     /**
@@ -47,9 +46,8 @@ public class RegisterController extends AbstractController {
         context.setActiveUser(user);
 
         console.print("Добрый день, " + username + "!");
-        dispatcher.getController(MainMenuController.class).show();
+        DependencyFactory.findController(UserMainMenuController.class).show();
 
-        // выход из аккаунта
         context.clearActiveUser();
         authService.logout(username);
     }

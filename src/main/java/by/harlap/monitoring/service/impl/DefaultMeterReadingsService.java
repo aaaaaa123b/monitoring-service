@@ -5,6 +5,7 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
 import by.harlap.monitoring.service.AuditService;
 import by.harlap.monitoring.service.MeterReadingsService;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -15,28 +16,12 @@ import java.util.List;
  * The DefaultMeterReadingsService class implements the MeterReadingsService interface
  * and provides services related to meter readings and records.
  */
+@AllArgsConstructor
 public class DefaultMeterReadingsService implements MeterReadingsService {
 
-    /**
-     * The MetricsRecordRepository used for meter readings and records operations.
-     */
     private final MetricsRecordRepository metricsRecordRepository;
 
-    /**
-     * The AuditService used for logging events related to meter readings and records.
-     */
     private final AuditService auditService;
-
-    /**
-     * Constructs a new DefaultMeterReadingsService with the specified MetricsRecordRepository and AuditService.
-     *
-     * @param metricsRecordRepository The MetricsRecordRepository used for meter readings and records operations.
-     * @param auditService            The AuditService used for logging events related to meter readings and records.
-     */
-    public DefaultMeterReadingsService(MetricsRecordRepository metricsRecordRepository, AuditService auditService) {
-        this.metricsRecordRepository = metricsRecordRepository;
-        this.auditService = auditService;
-    }
 
     /**
      * Checks if a metric reading record exists for the specified user in the current month and year.

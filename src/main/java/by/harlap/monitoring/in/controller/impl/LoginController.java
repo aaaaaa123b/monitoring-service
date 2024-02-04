@@ -1,6 +1,8 @@
 package by.harlap.monitoring.in.controller.impl;
 
+import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
 
@@ -12,9 +14,6 @@ import by.harlap.monitoring.service.AuthService;
  */
 public class LoginController extends AbstractController {
 
-    /**
-     * The AuthService used for handling user authentication and logout.
-     */
     private final AuthService authService;
 
     /**
@@ -46,10 +45,17 @@ public class LoginController extends AbstractController {
         context.setActiveUser(user);
 
         console.print("Добрый день, " + username + "!");
-        dispatcher.getController(MainMenuController.class).show();
+        getMainMenuController(user.getRole()).show();
 
-        // выход из аккаунта
         context.clearActiveUser();
         authService.logout(username);
+    }
+
+    private AbstractController getMainMenuController(Role role) {
+        return switch (role) {
+            case ADMIN -> DependencyFactory.findController(AdminMainMenuController.class);
+            case USER -> DependencyFactory.findController(UserMainMenuController.class);
+            default -> throw new IllegalStateException("No controller type corresponding to specified role.");
+        };
     }
 }

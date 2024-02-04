@@ -5,10 +5,14 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.UserRepository;
 import by.harlap.monitoring.repository.impl.InMemoryUserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("Tests for InMemoryUserRepository")
 class InMemoryUserRepositoryTest {
 
     private UserRepository userRepository;
@@ -26,7 +30,8 @@ class InMemoryUserRepositoryTest {
     }
 
     @Test
-    void findUserByUsername() {
+    @DisplayName("Should successfully find user by username in the repository")
+    void testFindUserByUsername() {
         final String requiredUsername = "default";
 
         final User requiredUser = new User();
@@ -34,13 +39,14 @@ class InMemoryUserRepositoryTest {
         requiredUser.setPassword("default");
         requiredUser.setRole(Role.USER);
 
-        final User actualUser = userRepository.findUserByUsername(requiredUsername);
+        final Optional<User> actualUser = userRepository.findUserByUsername(requiredUsername);
 
-        assertEquals(requiredUser, actualUser);
+        assertEquals(requiredUser, actualUser.get());
     }
 
     @Test
-    void save() {
+    @DisplayName("Should successfully save a new user in the repository")
+    void testSave() {
         final User requiredUser = new User();
         requiredUser.setUsername("not-default");
         requiredUser.setPassword("not-default");

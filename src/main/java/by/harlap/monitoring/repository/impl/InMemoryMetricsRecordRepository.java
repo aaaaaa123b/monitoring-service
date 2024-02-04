@@ -16,10 +16,7 @@ import java.util.stream.Collectors;
  */
 public class InMemoryMetricsRecordRepository implements MetricsRecordRepository {
 
-    /**
-     * The list to store meter reading records in memory.
-     */
-    List<MeterReadingRecord> records = new ArrayList<>();
+    private final List<MeterReadingRecord> records = new ArrayList<>();
 
     /**
      * Adds a meter reading record to the list.
@@ -116,14 +113,6 @@ public class InMemoryMetricsRecordRepository implements MetricsRecordRepository 
         return optionalRecord.map(List::of).orElseGet(List::of);
     }
 
-    /**
-     * Checks if the month and year of a given date match the specified month and year.
-     *
-     * @param month The month to be checked.
-     * @param year  The year to be checked.
-     * @param date  The date to check against.
-     * @return True if the month and year match, false otherwise.
-     */
     private boolean monthAndYearMatches(Month month, Year year, LocalDate date) {
         boolean yearsMatches = date.getYear() == year.getValue();
         return yearsMatches && (date.getMonth().equals(month));
