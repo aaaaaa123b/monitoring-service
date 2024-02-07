@@ -45,7 +45,7 @@ class MainMenuControllerTest {
 
     @BeforeEach
     public void prepareController() {
-        User activeUser = new User("test", "test", Role.USER);
+        User activeUser = new User("liquibase", "liquibase", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
@@ -56,7 +56,7 @@ class MainMenuControllerTest {
 
     @Test
     @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsRelevantInfoController")
-    void testShowAndNavigateToRelevantInfoController() {
+    void showAndNavigateToRelevantInfoControllerTest() {
         when(DependencyFactory.findController(MeterReadingsRelevantInfoController.class)).thenReturn(meterReadingsRelevantInfoController);
         when(console.readInt()).thenReturn(1, 5);
 
@@ -67,7 +67,7 @@ class MainMenuControllerTest {
 
     @Test
     @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsInputController")
-    void testShowAndNavigateToInputController() {
+    void showAndNavigateToInputControllerTest() {
         when(DependencyFactory.findController(MeterReadingsInputController.class)).thenReturn(meterReadingsInputController);
         when(console.readInt()).thenReturn(2, 5);
 
@@ -78,7 +78,7 @@ class MainMenuControllerTest {
 
     @Test
     @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsMonthlyInfoController")
-    void testShowAndNavigateToMonthlyInfoController() {
+    void showAndNavigateToMonthlyInfoControllerTest() {
         when(DependencyFactory.findController(MeterReadingsMonthlyInfoController.class)).thenReturn(meterReadingsMonthlyInfoController);
         when(console.readInt()).thenReturn(3, 5);
 
@@ -89,7 +89,7 @@ class MainMenuControllerTest {
 
     @Test
     @DisplayName("UserMainMenuController should redirect to the method show of MeterReadingsHistoryController")
-    void testShowAndNavigateToHistoryController() {
+    void showAndNavigateToHistoryControllerTest() {
         when(DependencyFactory.findController(MeterReadingsHistoryController.class)).thenReturn(meterReadingsHistoryController);
         when(console.readInt()).thenReturn(4, 5);
 

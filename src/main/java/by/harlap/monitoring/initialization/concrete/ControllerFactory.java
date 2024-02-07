@@ -2,10 +2,7 @@ package by.harlap.monitoring.initialization.concrete;
 
 import by.harlap.monitoring.in.controller.AbstractController;
 import by.harlap.monitoring.in.controller.impl.*;
-import by.harlap.monitoring.service.AuditService;
-import by.harlap.monitoring.service.AuthService;
-import by.harlap.monitoring.service.DeviceService;
-import by.harlap.monitoring.service.MeterReadingsService;
+import by.harlap.monitoring.service.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,25 +18,26 @@ public class ControllerFactory {
     /**
      * Constructor for ControllerFactory. Registers various controllers with the provided services.
      *
-     * @param initializationData The initialization data for controllers.
-     * @param serviceFactory      The factory for retrieving service instances.
+     * @param initializationData the initialization data for controllers
+     * @param serviceFactory     the factory for retrieving service instances
      */
     public ControllerFactory(AbstractController.InitializationData initializationData, ServiceFactory serviceFactory) {
         final AuthService authService = serviceFactory.findService(AuthService.class);
         final AuditService auditService = serviceFactory.findService(AuditService.class);
         final DeviceService deviceService = serviceFactory.findService(DeviceService.class);
         final MeterReadingsService meterReadingsService = serviceFactory.findService(MeterReadingsService.class);
+        final UserService userService = serviceFactory.findService(UserService.class);
 
         final LoginController loginController = new LoginController(initializationData, authService);
         final RegisterController registerController = new RegisterController(initializationData, authService);
         final WelcomeController welcomeController = new WelcomeController(initializationData);
         final UserMainMenuController userMainMenuController = new UserMainMenuController(initializationData);
         final AdminMainMenuController adminMainMenuController = new AdminMainMenuController(initializationData);
-        final MeterReadingsRelevantInfoController meterReadingsInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService);
+        final MeterReadingsRelevantInfoController meterReadingsInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService, userService);
         final MeterReadingsInputController meterReadingsInputController = new MeterReadingsInputController(initializationData, meterReadingsService, deviceService);
-        final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService);
-        final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService);
-        final AuditController auditController = new AuditController(initializationData, auditService);
+        final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService, userService);
+        final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService, userService);
+        final AuditController auditController = new AuditController(initializationData, auditService, userService);
         final AddNewDeviceController addController = new AddNewDeviceController(initializationData, deviceService);
 
         registerController(loginController);
@@ -62,8 +60,8 @@ public class ControllerFactory {
     /**
      * Retrieves a registered controller based on its class.
      *
-     * @param controllerClass The class of the controller to retrieve.
-     * @return The instance of the controller, or {@code null} if not found.
+     * @param controllerClass the class of the controller to retrieve
+     * @return the instance of the controller, or {@code null} if not found
      */
     public <T> T getController(Class<? extends T> controllerClass) {
         return (T) controllers.get(controllerClass);

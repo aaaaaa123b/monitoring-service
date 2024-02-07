@@ -11,7 +11,7 @@ public class AuthenticationException extends GenericException {
     /**
      * Constructs a new AuthenticationException with the specified detail message.
      *
-     * @param message A String providing details about the exception.
+     * @param message a String providing details about the exception
      */
     public AuthenticationException(String message) {
         super(message);

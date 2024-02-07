@@ -19,8 +19,8 @@ public class LoginController extends AbstractController {
     /**
      * Constructs a new LoginController with the specified initialization data and AuthService.
      *
-     * @param initializationData The data needed for initializing the controller.
-     * @param authService        The AuthService used for user authentication and logout.
+     * @param initializationData the data needed for initializing the controller
+     * @param authService        the AuthService used for user authentication and logout
      */
     public LoginController(InitializationData initializationData, AuthService authService) {
         super(initializationData);

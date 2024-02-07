@@ -17,7 +17,7 @@ public class ConsoleDecorator {
     /**
      * Reads a non-empty line of text from the console.
      *
-     * @return The non-empty line of text.
+     * @return the non-empty line of text
      */
     public String readLine() {
         String line = scanner.nextLine();
@@ -32,7 +32,7 @@ public class ConsoleDecorator {
     /**
      * Reads an integer from the console, handling input mismatch exceptions.
      *
-     * @return The read integer.
+     * @return the read integer
      */
     public int readInt() {
         while (true) {
@@ -47,7 +47,7 @@ public class ConsoleDecorator {
     /**
      * Reads a double from the console, handling input mismatch exceptions.
      *
-     * @return The read double.
+     * @return the read double
      */
     public double readDouble() {
         double result;
@@ -68,7 +68,7 @@ public class ConsoleDecorator {
     /**
      * Prints the specified message to the console followed by a newline.
      *
-     * @param message The message to be printed.
+     * @param message the message to be printed
      */
     public void print(String message) {
         System.out.println(message);

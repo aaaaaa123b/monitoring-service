@@ -10,12 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for DefaultDeviceService")
@@ -29,22 +29,16 @@ class DefaultDeviceServiceTest {
 
     @Test
     @DisplayName("Should find all available devices")
-    void listAvailableDevices() {
-        List<Device> mockDevices = Arrays.asList(
-                new Device("отопление"),
-                new Device("холодная вода"),
-                new Device("горячая вода")
-        );
+    void listAvailableDevicesTest() {
+        List<Device> required = new ArrayList<>();
+        Device device = new Device(1L, "холодная вода");
+        required.add(device);
 
-        when(deviceRepository.findAll()).thenReturn(mockDevices);
+        when(deviceRepository.findAll()).thenReturn(required);
 
-        List<Device> result = deviceService.listAvailableDevices();
+        List<Device> actual = deviceService.listAvailableDevices();
 
-        assertNotNull(result);
-        assertEquals(mockDevices.size(), result.size());
-        assertEquals(mockDevices, result);
-
-        verify(deviceRepository, times(1)).findAll();
+        assertEquals(required,actual);
     }
 
 }

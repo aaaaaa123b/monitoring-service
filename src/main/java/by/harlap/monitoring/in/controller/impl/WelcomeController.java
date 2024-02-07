@@ -12,7 +12,7 @@ public class WelcomeController extends AbstractController {
     /**
      * Constructs a new WelcomeController with the specified initialization data.
      *
-     * @param initializationData The data needed for initializing the controller.
+     * @param initializationData the data needed for initializing the controller
      */
     public WelcomeController(AbstractController.InitializationData initializationData) {
         super(initializationData);

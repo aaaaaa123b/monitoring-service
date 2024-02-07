@@ -1,8 +1,8 @@
 package by.harlap.monitoring;
 
+import by.harlap.monitoring.in.controller.impl.WelcomeController;
 import by.harlap.monitoring.initialization.DependencyFactory;
-import by.harlap.monitoring.in.controller.impl.*;
-import by.harlap.monitoring.service.InitializationService;
+import by.harlap.monitoring.liquibase.LiquibaseMigrationRunner;
 
 /**
  * The MonitoringServiceApplication class is the entry point of application.
@@ -15,7 +15,8 @@ public class MonitoringServiceApplication {
      * and then shows the welcome screen using the WelcomeController.
      */
     public static void main(String[] args) {
-        DependencyFactory.findService(InitializationService.class).createDefaultUser();
+        LiquibaseMigrationRunner.runMigrations("liquibase.properties");
+
         DependencyFactory.findController(WelcomeController.class).show();
     }
 }

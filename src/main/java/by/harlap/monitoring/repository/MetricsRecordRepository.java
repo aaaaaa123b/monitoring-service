@@ -6,6 +6,7 @@ import by.harlap.monitoring.model.User;
 import java.time.Month;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The MetricsRecordRepository interface defines methods for managing meter reading records.
@@ -13,58 +14,60 @@ import java.util.List;
 public interface MetricsRecordRepository {
 
     /**
-     * Adds a meter reading record to the repository.
+     * Retrieves all meter reading records for a specific user.
      *
-     * @param record The meter reading record to be added.
-     */
-    void add(MeterReadingRecord record);
-
-    /**
-     * Retrieves a list of all meter reading records associated with a specific user.
-     *
-     * @param user The user for whom meter reading records are to be retrieved.
-     * @return A list of MeterReadingRecord objects associated with the specified user.
+     * @param user the user for whom to retrieve meter reading records
+     * @return a list of meter reading records for the specified user
      */
     List<MeterReadingRecord> findAllByUser(User user);
 
     /**
-     * Retrieves a list of all meter reading records in the repository.
+     * Retrieves all meter reading records from the repository.
      *
-     * @return A list of all MeterReadingRecord objects in the repository.
+     * @return a list of all meter reading records
      */
     List<MeterReadingRecord> findAll();
 
     /**
-     * Retrieves a list of meter reading records associated with a specific user for a given month and year.
+     * Retrieves all meter reading records for a specific user and month.
      *
-     * @param user  The user for whom meter reading records are to be retrieved.
-     * @param month The month for which records are to be retrieved.
-     * @param year  The year for which records are to be retrieved.
-     * @return A list of MeterReadingRecord objects associated with the specified user, month, and year.
+     * @param user  the user for whom to retrieve meter reading records
+     * @param month the month for which to retrieve meter reading records
+     * @param year  the year for which to retrieve meter reading records
+     * @return a list of meter reading records for the specified user and month
      */
     List<MeterReadingRecord> findAllByUserAndMonth(User user, Month month, Year year);
 
     /**
-     * Retrieves a list of meter reading records for a given month and year.
+     * Retrieves all meter reading records for a specific month and year.
      *
-     * @param month The month for which records are to be retrieved.
-     * @param year  The year for which records are to be retrieved.
-     * @return A list of MeterReadingRecord objects for the specified month and year.
+     * @param month the month for which to retrieve meter reading records
+     * @param year  the year for which to retrieve meter reading records
+     * @return a list of meter reading records for the specified month and year
      */
     List<MeterReadingRecord> findAllByMonth(Month month, Year year);
 
     /**
-     * Retrieves a list of the latest meter reading records for all users.
+     * Retrieves the latest meter reading records from the repository.
      *
-     * @return A list of the latest MeterReadingRecord objects for all users.
+     * @return a list of the latest meter reading records
      */
     List<MeterReadingRecord> findLatest();
 
     /**
-     * Retrieves a list of the latest meter reading records for a specific user.
+     * Retrieves the latest meter reading records for a specific user.
      *
-     * @param user The user for whom the latest meter reading record is to be retrieved.
-     * @return A list containing the latest MeterReadingRecord object for the specified user.
+     * @param userId the ID of the user
+     * @return a list of the latest meter reading records for the specified user
      */
-    List<MeterReadingRecord> findLatestForUser(User user);
+    List<MeterReadingRecord> findLatestForUser(Long userId);
+
+    /**
+     * Saves the provided meter reading record to the database.
+     *
+     * @param record the meter reading record to be saved
+     * @return an optional containing the saved meter reading record with its generated ID if the operation is successful,
+     *         or an empty optional if saving fails
+     */
+    Optional<MeterReadingRecord> save(MeterReadingRecord record);
 }

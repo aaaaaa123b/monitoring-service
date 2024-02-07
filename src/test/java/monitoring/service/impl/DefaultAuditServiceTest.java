@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for DefaultAuditService")
@@ -27,9 +26,10 @@ class DefaultAuditServiceTest {
 
     @Test
     @DisplayName("Should create an audit event")
-    void testCreateEvent() {
+    void createEventTest() {
         User testUser = new User("testUser", "password", Role.USER);
         String message = "Test message";
+
         auditService.createEvent(testUser, message);
 
         verify(auditRepository, times(1)).save(any());

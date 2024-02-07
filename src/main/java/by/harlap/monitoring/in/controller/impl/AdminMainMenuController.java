@@ -12,7 +12,7 @@ public class AdminMainMenuController extends MainMenuController {
     /**
      * Constructor for AdminMainMenuController.
      *
-     * @param initializationData The initialization data for the controller.
+     * @param initializationData the initialization data for the controller
      */
     public AdminMainMenuController(InitializationData initializationData) {
         super(initializationData);
@@ -53,7 +53,7 @@ public class AdminMainMenuController extends MainMenuController {
     /**
      * Returns the role corresponding to this controller, which is ADMIN for AdminMainMenuController.
      *
-     * @return The corresponding role.
+     * @return the corresponding role
      */
     @Override
     public Role getCorrespondingRole() {

@@ -41,7 +41,7 @@ class LoginControllerTest {
 
     @BeforeEach
     public void prepareController() {
-        activeUser = new User("test", "test", Role.USER);
+        activeUser = new User("liquibase", "liquibase", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
@@ -55,9 +55,9 @@ class LoginControllerTest {
 
     @Test
     @DisplayName("Login Controller should show main menu after successful login ")
-    void testShow() {
-        when(console.readLine()).thenReturn("test", "test");
-        when(authService.login("test", "test")).thenReturn(activeUser);
+    void showTest() {
+        when(console.readLine()).thenReturn("liquibase", "liquibase");
+        when(authService.login("liquibase", "liquibase")).thenReturn(activeUser);
 
         loginController.show();
         verify(mainMenuController, times(1)).show();

@@ -24,7 +24,7 @@ public abstract class AbstractController {
     /**
      * Constructs a new AbstractController with the specified initialization data.
      *
-     * @param initializationData The data needed for initializing the controller.
+     * @param initializationData the data needed for initializing the controller
      */
     public AbstractController(InitializationData initializationData) {
         this.console = initializationData.console;
@@ -57,8 +57,8 @@ public abstract class AbstractController {
     /**
      * Handles a generic exception by printing the exception message and returning the success status.
      *
-     * @param dangerousAction The action that may throw a GenericException.
-     * @return true if the action was successful, false otherwise.
+     * @param dangerousAction the action that may throw a GenericException
+     * @return true if the action was successful, false otherwise
      */
     protected boolean handleGenericException(Runnable dangerousAction) {
         try {

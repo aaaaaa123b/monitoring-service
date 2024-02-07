@@ -13,7 +13,7 @@ public class UserMainMenuController extends MainMenuController {
     /**
      * Constructor for UserMainMenuController.
      *
-     * @param initializationData The initialization data for the controller.
+     * @param initializationData the initialization data for the controller
      */
     public UserMainMenuController(AbstractController.InitializationData initializationData) {
         super(initializationData);
@@ -52,7 +52,7 @@ public class UserMainMenuController extends MainMenuController {
     /**
      * Returns the role corresponding to this controller, which is USER for UserMainMenuController.
      *
-     * @return The corresponding role.
+     * @return the corresponding role
      */
     @Override
     public Role getCorrespondingRole() {
