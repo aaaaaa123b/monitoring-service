@@ -29,9 +29,9 @@ public class MeterReadingsInputController extends AbstractController {
      * Constructs a new MeterReadingsInputController with the specified initialization data,
      * MeterReadingsService, and DeviceService.
      *
-     * @param initializationData The data needed for initializing the controller.
-     * @param meterReadingsService The MeterReadingsService used for storing and retrieving meter reading records.
-     * @param deviceService The DeviceService used for listing available devices.
+     * @param initializationData   the data needed for initializing the controller
+     * @param meterReadingsService the MeterReadingsService used for storing and retrieving meter reading records
+     * @param deviceService        the DeviceService used for listing available devices
      */
     public MeterReadingsInputController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService) {
         super(initializationData);

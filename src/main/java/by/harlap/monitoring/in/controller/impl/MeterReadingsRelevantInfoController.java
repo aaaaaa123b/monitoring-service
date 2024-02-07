@@ -5,6 +5,7 @@ import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
+import by.harlap.monitoring.service.UserService;
 
 import java.util.List;
 
@@ -17,19 +18,22 @@ public class MeterReadingsRelevantInfoController extends AbstractController {
 
     private final MeterReadingsService meterReadingsService;
     private final DeviceService deviceService;
+    private final UserService userService;
 
     /**
      * Constructs a new MeterReadingsRelevantInfoController with the specified initialization data
      * and MeterReadingsService.
      *
-     * @param initializationData   The data needed for initializing the controller.
-     * @param meterReadingsService The MeterReadingsService used for retrieving meter reading records.
+     * @param initializationData   the data needed for initializing the controller
+     * @param meterReadingsService the MeterReadingsService used for retrieving meter reading records
+     * @param userService          the service for handling users
      */
-    public MeterReadingsRelevantInfoController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService) {
+    public MeterReadingsRelevantInfoController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService, UserService userService) {
         super(initializationData);
 
         this.meterReadingsService = meterReadingsService;
         this.deviceService = deviceService;
+        this.userService = userService;
     }
 
     /**
@@ -44,7 +48,8 @@ public class MeterReadingsRelevantInfoController extends AbstractController {
         final List<MeterReadingRecord> records = meterReadingsService.findRelevantRecords(user);
 
         for (MeterReadingRecord record : records) {
-            console.print("Дата внесения показаний для пользователя '%s': %s".formatted(user.getUsername(), record.getDate()));
+            User actualUser = userService.findUserById(record.getUserId());
+            console.print("Дата внесения показаний для пользователя '%s': %s".formatted(actualUser.getUsername(), record.getDate()));
 
             deviceService.findById(record.getDeviceId())
                     .ifPresent(device -> {

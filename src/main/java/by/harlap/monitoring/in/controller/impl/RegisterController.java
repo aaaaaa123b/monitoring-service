@@ -18,8 +18,8 @@ public class RegisterController extends AbstractController {
     /**
      * Constructs a new RegisterController with the specified initialization data and AuthService.
      *
-     * @param initializationData The data needed for initializing the controller.
-     * @param authService        The AuthService used for user registration and logout.
+     * @param initializationData the data needed for initializing the controller
+     * @param authService        the AuthService used for user registration and logout
      */
     public RegisterController(AbstractController.InitializationData initializationData, AuthService authService) {
         super(initializationData);

@@ -25,7 +25,7 @@ public class JdbcUserRepository implements UserRepository {
      * Finds a user by their ID in the database.
      *
      * @param id the user's ID
-     * @return the user object.
+     * @return the user object
      */
     @Override
     public User findById(Long id) {
@@ -53,6 +53,14 @@ public class JdbcUserRepository implements UserRepository {
             throw new RuntimeException("Ошибка при обработке SQL-запроса", e);
         } catch (EntityNotFoundException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -60,7 +68,7 @@ public class JdbcUserRepository implements UserRepository {
      * Saves a new user to the database.
      *
      * @param user the user to be saved
-     * @return Optional containing the saved user or Optional.empty() if not saved.
+     * @return optional containing the saved user or Optional.empty() if not saved
      */
     @Override
     public Optional<User> save(User user) {
@@ -84,17 +92,25 @@ public class JdbcUserRepository implements UserRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      * Finds and returns a user by their username.
      *
-     * @param username The username of the user to be found.
-     * @return The found user or Optional.empty() if not found.
+     * @param username the username of the user to be found
+     * @return the found user or Optional.empty() if not found
      */
     @Override
-    public User findUserByUsername(String username) {
+    public User findByUsername(String username) {
         final Connection connection = connectionManager.getConnection();
         String query = "SELECT * FROM monitoring_service_schema.users WHERE username = ?";
         try {
@@ -116,7 +132,14 @@ public class JdbcUserRepository implements UserRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при обработке SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 }

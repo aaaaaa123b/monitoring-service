@@ -20,6 +20,10 @@
         <mockito.junit.version>5.3.1</mockito.junit.version>
         <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
         <liquibase.version>4.25.1</liquibase.version>
+        <testcontainers.bom.version>1.19.4</testcontainers.bom.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
+        <assertj.version>3.24.2</assertj.version>
+        <postgresql>42.6.0</postgresql>
     </properties>
 
     <dependencies>
@@ -34,6 +38,13 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -54,7 +65,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>
+            <version>${postgresql}</version>
         </dependency>
 
         <dependency>
@@ -66,26 +77,31 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.16.2</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.16.2</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>1.16.2</version>
-            <scope>test</scope>
+            <artifactId>testcontainers-bom</artifactId>
+            <version>${testcontainers.bom.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
         </dependency>
 
-
-
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

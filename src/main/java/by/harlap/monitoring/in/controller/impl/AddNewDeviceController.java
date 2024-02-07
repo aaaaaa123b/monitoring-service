@@ -14,8 +14,8 @@ public class AddNewDeviceController extends AbstractController {
     /**
      * Constructor for AddNewDeviceController.
      *
-     * @param initializationData The initialization data for the controller.
-     * @param deviceService      The service for managing devices.
+     * @param initializationData the initialization data for the controller
+     * @param deviceService      the service for managing devices
      */
     public AddNewDeviceController(InitializationData initializationData, DeviceService deviceService) {
         super(initializationData);

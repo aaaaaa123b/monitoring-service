@@ -12,11 +12,17 @@ public abstract class MainMenuController extends AbstractController {
     /**
      * Constructs a new UserMainMenuController with the specified initialization data.
      *
-     * @param initializationData The data needed for initializing the controller.
+     * @param initializationData the data needed for initializing the controller
      */
     public MainMenuController(InitializationData initializationData) {
         super(initializationData);
     }
 
+    /**
+     * Returns the corresponding role associated with this object.
+     * This method should be implemented by subclasses to provide specific functionality.
+     *
+     * @return the corresponding role object.
+     */
     public abstract Role getCorrespondingRole();
 }

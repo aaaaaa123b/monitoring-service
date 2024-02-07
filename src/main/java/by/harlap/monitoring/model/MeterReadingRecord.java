@@ -3,7 +3,6 @@ package by.harlap.monitoring.model;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 /**
  * Represents a meter reading record, storing information about a specific reading.
@@ -12,6 +11,7 @@ import java.util.Map;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
 public class MeterReadingRecord {
 
     private Long id;

@@ -6,9 +6,12 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.*;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 /**
@@ -18,10 +21,13 @@ import java.util.Properties;
 public class LiquibaseMigrationRunner {
 
     /**
-     * Runs Liquibase migrations based on the provided configuration.
+     * Runs Liquibase migrations using the provided property source.
+     *
+     * @param propertySource the path to the properties file containing database connection information
+     * @throws UncheckedLiquibaseException if an error occurs during migration execution
      */
-    public static void runMigrations() {
-        Properties properties = loadProperties();
+    public static void runMigrations(String propertySource) {
+        Properties properties = loadProperties(propertySource);
 
         String driver = properties.getProperty("driver");
         String url = properties.getProperty("url");
@@ -49,10 +55,10 @@ public class LiquibaseMigrationRunner {
         }
     }
 
-    private static Properties loadProperties() {
+    private static Properties loadProperties(String propertySource) {
         Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/liquibase.properties")) {
-            properties.load(input);
+        try (InputStream source = LiquibaseMigrationRunner.class.getClassLoader().getResourceAsStream(propertySource)) {
+            properties.load(source);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Error while loading properties", e);

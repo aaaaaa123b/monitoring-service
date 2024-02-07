@@ -22,7 +22,7 @@ public class RepositoryFactory {
      * Constructor for RepositoryFactory. Registers various repositories with their corresponding implementations.
      */
     public RepositoryFactory() {
-        final ConnectionManager connectionManager = new ConnectionManager();
+        final ConnectionManager connectionManager = new ConnectionManager("liquibase.properties");
         final AuditRepository auditRepository = new JdbcAuditRepository(connectionManager);
         final UserRepository userRepository = new JdbcUserRepository(connectionManager);
         final DeviceRepository deviceRepository = new JdbcDeviceRepository(connectionManager);
@@ -37,9 +37,9 @@ public class RepositoryFactory {
     /**
      * Retrieves a registered repository based on its interface/class.
      *
-     * @param repositoryClass The interface/class of the repository to retrieve.
-     * @param <T>             The type of the repository.
-     * @return The instance of the repository, or {@code null} if not found.
+     * @param repositoryClass the interface/class of the repository to retrieve
+     * @param <T>             the type of the repository
+     * @return the instance of the repository, or {@code null} if not found
      */
     public <T> T findRepository(Class<? extends T> repositoryClass) {
         return (T) repositories.get(repositoryClass);

@@ -7,6 +7,7 @@ import by.harlap.monitoring.in.controller.impl.MeterReadingsRelevantInfoControll
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
+import by.harlap.monitoring.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,24 +29,27 @@ class MeterReadingsRelevantInfoControllerTest {
     @Mock
     DeviceService deviceService;
 
+    @Mock
+    private UserService userService;
+
     private User activeUser;
 
     private MeterReadingsRelevantInfoController meterReadingsRelevantInfoController;
 
     @BeforeEach
     public void prepareController() {
-        activeUser = new User(1L,"test", "test", Role.USER);
+        activeUser = new User(1L, "liquibase", "liquibase", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
         final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(null, context);
-        meterReadingsRelevantInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService);
+        meterReadingsRelevantInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService, userService);
     }
 
     @Test
     @DisplayName("Should display relevant meter readings information")
-    void show() {
+    void showTest() {
         when(meterReadingsService.findRelevantRecords(activeUser)).thenReturn(List.of());
 
         meterReadingsRelevantInfoController.show();

@@ -18,8 +18,8 @@ public class ControllerFactory {
     /**
      * Constructor for ControllerFactory. Registers various controllers with the provided services.
      *
-     * @param initializationData The initialization data for controllers.
-     * @param serviceFactory      The factory for retrieving service instances.
+     * @param initializationData the initialization data for controllers
+     * @param serviceFactory     the factory for retrieving service instances
      */
     public ControllerFactory(AbstractController.InitializationData initializationData, ServiceFactory serviceFactory) {
         final AuthService authService = serviceFactory.findService(AuthService.class);
@@ -33,10 +33,10 @@ public class ControllerFactory {
         final WelcomeController welcomeController = new WelcomeController(initializationData);
         final UserMainMenuController userMainMenuController = new UserMainMenuController(initializationData);
         final AdminMainMenuController adminMainMenuController = new AdminMainMenuController(initializationData);
-        final MeterReadingsRelevantInfoController meterReadingsInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService);
+        final MeterReadingsRelevantInfoController meterReadingsInfoController = new MeterReadingsRelevantInfoController(initializationData, meterReadingsService, deviceService, userService);
         final MeterReadingsInputController meterReadingsInputController = new MeterReadingsInputController(initializationData, meterReadingsService, deviceService);
-        final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService);
-        final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService);
+        final MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService, userService);
+        final MeterReadingsHistoryController meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService, userService);
         final AuditController auditController = new AuditController(initializationData, auditService, userService);
         final AddNewDeviceController addController = new AddNewDeviceController(initializationData, deviceService);
 
@@ -60,8 +60,8 @@ public class ControllerFactory {
     /**
      * Retrieves a registered controller based on its class.
      *
-     * @param controllerClass The class of the controller to retrieve.
-     * @return The instance of the controller, or {@code null} if not found.
+     * @param controllerClass the class of the controller to retrieve
+     * @return the instance of the controller, or {@code null} if not found
      */
     public <T> T getController(Class<? extends T> controllerClass) {
         return (T) controllers.get(controllerClass);

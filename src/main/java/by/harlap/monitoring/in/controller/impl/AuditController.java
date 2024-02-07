@@ -17,8 +17,8 @@ public class AuditController extends AbstractController {
     /**
      * Constructs a new AuditController with the specified InitializationData and AuditService.
      *
-     * @param initializationData The InitializationData for the controller.
-     * @param auditService       The AuditService used for retrieving user audit events.
+     * @param initializationData the InitializationData for the controller
+     * @param auditService       the AuditService used for retrieving user audit events
      */
     public AuditController(InitializationData initializationData, AuditService auditService, UserService userService) {
         super(initializationData);

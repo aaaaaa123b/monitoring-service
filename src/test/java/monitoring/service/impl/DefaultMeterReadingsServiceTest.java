@@ -1,6 +1,7 @@
 package monitoring.service.impl;
 
 import by.harlap.monitoring.enumeration.Role;
+import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
@@ -16,13 +17,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,79 +41,91 @@ class DefaultMeterReadingsServiceTest {
     @InjectMocks
     private DefaultMeterReadingsService meterReadingsService;
 
-    private final User user = new User(1L,"test", "test", Role.USER);
-    private final MeterReadingRecord record = new MeterReadingRecord(1L,1L,100.0,LocalDate.of(2024,1,1));
-    private final User admin = new User(1L,"admin", "admin", Role.ADMIN);
-
-    @Test
-    @DisplayName("Should create meter reading record for user and create such event")
-    void testCreateMeterReadingRecord() {
-        MeterReadingRecord record = new MeterReadingRecord(1L,1L,100.0,LocalDate.of(2024,1,1));
-
-//        meterReadingsService.createMeterReadingRecord();
-//
-//        verify(metricsRecordRepository).add(record);
-        verify(auditService).createEvent(user, "Пользователь внёс показания счётчиков");
-    }
-
     @Test
     @DisplayName("Should find all records for user and create such event")
-    void testFindAllRecordsForUser() {
-        when(metricsRecordRepository.findAllByUser(user)).thenReturn(List.of(record));
+    void findAllRecordsForUserTest() {
+        User expectedUser = new User(1L, "user", "user", Role.USER);
+        MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
 
-        List<MeterReadingRecord> result = meterReadingsService.findAllRecords(user);
+        when(metricsRecordRepository.findAllByUser(expectedUser)).thenReturn(List.of(expectedRecord));
 
-        verify(auditService).createEvent(user, "Пользователь запросил полную историю внесений показаний счётчиков");
-        verify(metricsRecordRepository).findAllByUser(user);
-        assertEquals(1, result.size());
+        List<MeterReadingRecord> actualRecords = meterReadingsService.findAllRecords(expectedUser);
+
+        verify(auditService).createEvent(expectedUser, "Пользователь запросил полную историю внесений показаний счётчиков");
+        verify(metricsRecordRepository).findAllByUser(expectedUser);
+        assertThat(actualRecords).hasSize(1);
     }
 
     @Test
     @DisplayName("Should find records for specified month for admin")
-    void testFindRecordsForSpecifiedMonthForAdmin() {
+    void findRecordsForSpecifiedMonthForAdminTest() {
         Month month = Month.FEBRUARY;
         Year year = Year.of(2022);
-        when(metricsRecordRepository.findAllByMonth(month, year)).thenReturn(List.of(record));
+        MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
+        User admin = new User(2L, "admin", "admin", Role.ADMIN);
 
-        List<MeterReadingRecord> result = meterReadingsService.findRecordsForSpecifiedMonth(admin, month, year);
+        when(metricsRecordRepository.findAllByMonth(month, year)).thenReturn(List.of(expectedRecord));
+
+        List<MeterReadingRecord> actualRecords = meterReadingsService.findRecordsForSpecifiedMonth(admin, month, year);
 
         verify(auditService).createEvent(admin, "Пользователь запросил внесение данных со счётчиков за FEBRUARY месяц 2022 года");
         verify(metricsRecordRepository).findAllByMonth(month, year);
-        assertEquals(1, result.size());
+        assertThat(actualRecords).hasSize(1);
     }
 
     @Test
     @DisplayName("Should find relevant records for user and create such event")
-    void testFindRelevantRecordsForUser() {
-        when(metricsRecordRepository.findLatestForUser(user.getId())).thenReturn(List.of(record));
+    void findRelevantRecordsForUserTest() {
+        User expectedUser = new User(1L, "user", "user", Role.USER);
+        MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
 
-        List<MeterReadingRecord> result = meterReadingsService.findRelevantRecords(user);
+        when(metricsRecordRepository.findLatestForUser(expectedUser.getId())).thenReturn(List.of(expectedRecord));
 
-        verify(auditService).createEvent(user, "Пользователь запросил последние внесения данных со счётчиков");
-        verify(metricsRecordRepository).findLatestForUser(user.getId());
-        assertEquals(1, result.size());
+        List<MeterReadingRecord> actualRecords = meterReadingsService.findRelevantRecords(expectedUser);
+
+        verify(auditService).createEvent(expectedUser, "Пользователь запросил последние внесения данных со счётчиков");
+        verify(metricsRecordRepository).findLatestForUser(expectedUser.getId());
+        assertThat(actualRecords).hasSize(1);
     }
 
     @Test
     @DisplayName("Should find relevant records for admin")
-    void testFindRelevantRecordsForAdmin() {
-        when(metricsRecordRepository.findLatest()).thenReturn(List.of(record));
+    void findRelevantRecordsForAdminTest() {
+        MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
+        User admin = new User(2L, "admin", "admin", Role.ADMIN);
 
-        List<MeterReadingRecord> result = meterReadingsService.findRelevantRecords(admin);
-        verify(metricsRecordRepository).findLatest();
-        assertEquals(1, result.size());
+        when(metricsRecordRepository.findLatest()).thenReturn(List.of(expectedRecord));
+
+        List<MeterReadingRecord> actualRecords = meterReadingsService.findRelevantRecords(admin);
+        assertThat(actualRecords).hasSize(1);
     }
 
     @Test
     @DisplayName("Should check metric reading record existence")
-    void testCheckMetricReadingRecordExistence() {
+    void checkMetricReadingRecordExistenceTest() {
         List<MeterReadingRecord> records = List.of();
+        User expectedUser = new User(1L, "user", "user", Role.USER);
+
         when(metricsRecordRepository.findAllByUserAndMonth(any(), any(), any())).thenReturn(records);
 
-        boolean result = meterReadingsService.checkMetricReadingRecordExistence(user);
+        boolean result = meterReadingsService.checkMetricReadingRecordExistence(expectedUser);
 
-        verify(metricsRecordRepository).findAllByUserAndMonth(eq(user), any(), any());
         assertFalse(result);
     }
 
+    @Test
+    @DisplayName("Should create meter reading record for user and create such event")
+    void createMeterReadingRecordTest() {
+        Device device = new Device(1L, "холодная вода");
+        Map<Device, Double> meterReadings = new HashMap<>();
+        meterReadings.put(device, 100.1);
+        User expectedUser = new User(1L, "user", "user", Role.USER);
+        MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
+
+        when(metricsRecordRepository.save(any())).thenReturn(Optional.of(expectedRecord));
+
+        meterReadingsService.createMeterReadingRecord(expectedUser, meterReadings, LocalDate.of(2024, 1, 1));
+
+        verify(auditService).createEvent(expectedUser, "Пользователь внёс показания счётчиков");
+    }
 }

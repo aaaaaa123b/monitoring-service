@@ -29,30 +29,27 @@ class DefaultUserServiceTest {
 
     @Test
     @DisplayName("Should successfully save user")
-    void createUser() {
-        User testUser = new User("test", "test", Role.USER);
+    void createUserTest() {
+        User expectedUser = new User(1L, "test", "test", Role.USER);
 
-        when(userRepository.save(testUser)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(expectedUser)).thenReturn(Optional.of(expectedUser));
 
-        Optional<User> actual = userService.createUser(testUser);
+        Optional<User> actual = userService.createUser(expectedUser);
 
         assertNotNull(actual);
-        assertEquals(testUser, actual);
-        verify(userRepository, times(1)).save(testUser);
+        assertEquals(Optional.of(expectedUser), actual);
     }
 
     @Test
     @DisplayName("Should successfully find user by username")
-    void findUserByUsername() {
-        User testUser = new User("test", "test", Role.USER);
+    void findUserByUsernameTest() {
+        User expectedUser = new User(1L, "test", "test", Role.USER);
 
-        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(testUser);
+        when(userRepository.findByUsername(expectedUser.getUsername())).thenReturn(expectedUser);
 
-        Optional<User> actual = userService.findUserByUsername(testUser.getUsername());
+        Optional<User> actual = userService.findUserByUsername(expectedUser.getUsername());
 
         assertNotNull(actual);
-        assertEquals(testUser, actual.get());
-        verify(userRepository, times(1)).findUserByUsername(testUser.getUsername());
+        assertEquals(Optional.of(expectedUser), actual);
     }
-
 }

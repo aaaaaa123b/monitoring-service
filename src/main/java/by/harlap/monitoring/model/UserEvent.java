@@ -2,7 +2,6 @@ package by.harlap.monitoring.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -19,4 +18,10 @@ public class UserEvent {
     private Long userId;
     private String action;
     private LocalDate date;
+
+    public UserEvent(Long userId, String action, LocalDate date) {
+        this.userId = userId;
+        this.action = action;
+        this.date = date;
+    }
 }

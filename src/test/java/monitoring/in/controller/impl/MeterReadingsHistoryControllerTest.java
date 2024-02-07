@@ -31,23 +31,22 @@ class MeterReadingsHistoryControllerTest {
     private UserService userService;
 
     private User activeUser;
-
     private MeterReadingsHistoryController meterReadingsHistoryController;
 
     @BeforeEach
     public void prepareController() {
-        activeUser = new User("test", "test", Role.USER);
+        activeUser = new User("liquibase", "liquibase", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
         final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(null, context);
-        meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService);
+        meterReadingsHistoryController = new MeterReadingsHistoryController(initializationData, meterReadingsService, deviceService, userService);
     }
 
     @Test
     @DisplayName("Test should retrieve and show meter readings history for activeUser")
-    void show() {
+    void showTest() {
         when(meterReadingsService.findAllRecords(activeUser)).thenReturn(List.of());
 
         meterReadingsHistoryController.show();

@@ -22,18 +22,19 @@ public class DefaultAuditService implements AuditService {
      * Creates a user event with the provided user, message, and the current date,
      * then saves the event to the AuditRepository.
      *
-     * @param user The user associated with the event.
-     * @param message The message describing the event.
+     * @param user the user associated with the event
+     * @param message the message describing the event
      */
     @Override
     public void createEvent(User user, String message) {
-        auditRepository.save(user.getId(), message,LocalDate.now());
+        UserEvent userEvent = new UserEvent(user.getId(), message,LocalDate.now());
+        auditRepository.save(userEvent);
     }
 
     /**
      * Retrieves a list of all user events stored in the associated AuditRepository.
      *
-     * @return A list containing all user events in the AuditRepository.
+     * @return a list containing all user events in the AuditRepository
      */
     @Override
     public List<UserEvent> findUserEvents() {

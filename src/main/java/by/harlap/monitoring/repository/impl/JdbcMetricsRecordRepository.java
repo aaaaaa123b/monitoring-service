@@ -11,6 +11,7 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementation of MetricsRecordRepository using JDBC for database interactions.
@@ -44,8 +45,15 @@ public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return meterReadingRecords;
     }
 
@@ -70,8 +78,15 @@ public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return meterReadingRecords;
     }
 
@@ -103,8 +118,15 @@ public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return meterReadingRecords;
     }
 
@@ -134,8 +156,15 @@ public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return meterReadingRecords;
     }
 
@@ -160,8 +189,15 @@ public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return meterReadingRecords;
     }
 
@@ -189,27 +225,58 @@ public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return meterReadingRecords;
     }
 
     /**
-     * Adds a new meter reading record to the repository.
+     * Saves the given meter reading record to the database.
+     *
+     * @param record The meter reading record to save
+     * @return an optional containing the saved meter reading record with its generated ID if successful,
+     * or an empty optional if saving fails
+     * @throws RuntimeException if an SQL exception occurs during query execution
      */
     @Override
-    public void save(MeterReadingRecord record) {
+    public Optional<MeterReadingRecord> save(MeterReadingRecord record) {
         Connection connection = connectionManager.getConnection();
-        final String query = "INSERT INTO monitoring_service_schema.meter_reading_records (user_id, device_id, value, date) VALUES (?, ?, ?, ?)";
+        final String query = "INSERT INTO monitoring_service_schema.meter_reading_records " +
+                "(user_id, device_id, value, date) VALUES (?, ?, ?, ?) RETURNING id";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, record.getUserId());
             preparedStatement.setLong(2, record.getDeviceId());
             preparedStatement.setDouble(3, record.getValue());
             preparedStatement.setDate(4, Date.valueOf(record.getDate()));
-            preparedStatement.executeUpdate();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    long id = resultSet.getLong("id");
+                    record.setId(id);
+                    return Optional.of(record);
+                } else {
+                    System.out.println("Не удалось добавить MeterReadingRecord");
+                    return Optional.empty();
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        }
+        finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -14,4 +14,7 @@ public class Device {
     private Long id;
     private String name;
 
+    public Device(String name) {
+        this.name = name;
+    }
 }

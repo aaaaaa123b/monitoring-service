@@ -3,10 +3,10 @@ package by.harlap.monitoring.repository;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The MetricsRecordRepository interface defines methods for managing meter reading records.
@@ -63,7 +63,11 @@ public interface MetricsRecordRepository {
     List<MeterReadingRecord> findLatestForUser(Long userId);
 
     /**
-     * Adds a new meter reading record to the repository.
+     * Saves the provided meter reading record to the database.
+     *
+     * @param record the meter reading record to be saved
+     * @return an optional containing the saved meter reading record with its generated ID if the operation is successful,
+     *         or an empty optional if saving fails
      */
-    void save(MeterReadingRecord record);
+    Optional<MeterReadingRecord> save(MeterReadingRecord record);
 }

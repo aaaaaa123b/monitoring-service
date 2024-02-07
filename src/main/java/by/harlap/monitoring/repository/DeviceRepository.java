@@ -13,16 +13,19 @@ public interface DeviceRepository {
     /**
      * Retrieves a list of all available devices.
      *
-     * @return A list of Device objects representing all available devices.
+     * @return a list of Device objects representing all available devices
      */
     List<Device> findAll();
 
     /**
-     * Saves a new device to the database.
+     * Saves the provided device to the database.
      *
-     * @param deviceName the name of the device
+     * @param device the device to be saved
+     * @return an optional containing the saved device with its generated ID if the operation is successful,
+     *         or an empty optional if saving fails
      */
-    void save(String deviceName);
+
+    Optional<Device> save(Device device);
 
     /**
      * Retrieves a device by its ID from the database.

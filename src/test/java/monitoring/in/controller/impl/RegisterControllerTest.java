@@ -43,7 +43,7 @@ class RegisterControllerTest {
 
     @BeforeEach
     public void prepareController() {
-        createdUser = new User("test", "test", Role.USER);
+        createdUser = new User("liquibase", "liquibase", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(null);
@@ -57,9 +57,9 @@ class RegisterControllerTest {
 
     @Test
     @DisplayName("Should register a new user and show the main menu")
-    void testShow() {
-        when(console.readLine()).thenReturn("test", "test");
-        when(authService.register("test", "test")).thenReturn(createdUser);
+    void showTest() {
+        when(console.readLine()).thenReturn("liquibase", "liquibase");
+        when(authService.register("liquibase", "liquibase")).thenReturn(createdUser);
 
         registerController.show();
 

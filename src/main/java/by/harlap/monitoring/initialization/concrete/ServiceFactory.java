@@ -21,7 +21,7 @@ public class ServiceFactory {
     /**
      * Constructor for ServiceFactory. Registers various services with their corresponding implementations.
      *
-     * @param repositoryFactory The factory for retrieving repository instances.
+     * @param repositoryFactory the factory for retrieving repository instances
      */
     public ServiceFactory(RepositoryFactory repositoryFactory) {
         final AuditRepository auditRepository = repositoryFactory.findRepository(AuditRepository.class);
@@ -44,9 +44,9 @@ public class ServiceFactory {
     /**
      * Retrieves a registered service based on its interface/class.
      *
-     * @param serviceClass The interface/class of the service to retrieve.
-     * @param <T>          The type of the service.
-     * @return The instance of the service, or {@code null} if not found.
+     * @param serviceClass the interface/class of the service to retrieve
+     * @param <T>          the type of the service
+     * @return the instance of the service, or {@code null} if not found
      */
     public <T> T findService(Class<? extends T> serviceClass) {
         return (T) services.get(serviceClass);

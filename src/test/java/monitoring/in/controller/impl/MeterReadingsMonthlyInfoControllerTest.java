@@ -7,6 +7,7 @@ import by.harlap.monitoring.in.controller.impl.MeterReadingsMonthlyInfoControlle
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
+import by.harlap.monitoring.service.UserService;
 import by.harlap.monitoring.util.ConsoleDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,24 +35,27 @@ class MeterReadingsMonthlyInfoControllerTest {
     @Mock
     DeviceService deviceService;
 
+    @Mock
+    UserService userService;
+
     private User activeUser;
 
     private MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController;
 
     @BeforeEach
     public void prepareController() {
-        activeUser = new User(1L,"test", "test", Role.USER);
+        activeUser = new User(1L, "liquibase", "liquibase", Role.USER);
 
         final ApplicationContext context = new ApplicationContext();
         context.setActiveUser(activeUser);
 
         final AbstractController.InitializationData initializationData = new AbstractController.InitializationData(console, context);
-        meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService);
+        meterReadingsMonthlyInfoController = new MeterReadingsMonthlyInfoController(initializationData, meterReadingsService, deviceService, userService);
     }
 
     @Test
     @DisplayName("Should display monthly information for specified month and year")
-    void show() {
+    void showTest() {
         final Month month = Month.JANUARY;
         final Year year = Year.of(2024);
 

@@ -25,10 +25,10 @@ public class DefaultAuthService implements AuthService {
      * Authenticates a user based on the provided username and password.
      * Logs an authentication event and returns the authenticated user.
      *
-     * @param username The username of the user attempting to log in.
-     * @param password The password provided by the user during login.
-     * @return The authenticated user.
-     * @throws AuthenticationException If authentication fails due to invalid credentials.
+     * @param username the username of the user attempting to log in
+     * @param password the password provided by the user during login
+     * @return the authenticated user
+     * @throws AuthenticationException if authentication fails due to invalid credentials
      */
     @Override
     public User login(String username, String password) {
@@ -50,8 +50,8 @@ public class DefaultAuthService implements AuthService {
     /**
      * Logs out a user and logs an event indicating the user has logged out.
      *
-     * @param username The username of the user logging out.
-     * @throws AuthenticationException A custom exception indicating that the user has logged out.
+     * @param username the username of the user logging out
+     * @throws AuthenticationException a custom exception indicating that the user has logged out
      */
     @Override
     public void logout(String username) {
@@ -66,10 +66,10 @@ public class DefaultAuthService implements AuthService {
      * Registers a new user with the specified username and password.
      * Logs a registration event and returns the registered user.
      *
-     * @param username The username of the user being registered.
-     * @param password The password chosen by the user during registration.
-     * @return The registered user.
-     * @throws AuthenticationException If registration fails due to an existing username.
+     * @param username the username of the user being registered
+     * @param password the password chosen by the user during registration
+     * @return the registered user
+     * @throws AuthenticationException if registration fails due to an existing username
      */
     @Override
     public User register(String username, String password) {

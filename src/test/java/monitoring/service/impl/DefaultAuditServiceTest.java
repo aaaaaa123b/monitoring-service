@@ -26,12 +26,12 @@ class DefaultAuditServiceTest {
 
     @Test
     @DisplayName("Should create an audit event")
-    void testCreateEvent() {
+    void createEventTest() {
         User testUser = new User("testUser", "password", Role.USER);
         String message = "Test message";
+
         auditService.createEvent(testUser, message);
 
-
-        verify(auditRepository, times(1)).save(any(),any(),any());
+        verify(auditRepository, times(1)).save(any());
     }
 }

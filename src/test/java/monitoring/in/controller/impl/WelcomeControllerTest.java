@@ -50,7 +50,7 @@ class WelcomeControllerTest {
 
     @Test
     @DisplayName("Should call the method of LoginController when user selects option 1")
-    void showLoginController() {
+    void showLoginControllerTest() {
         when(console.readInt()).thenReturn(1);
 
         welcomeController.show();
@@ -60,7 +60,7 @@ class WelcomeControllerTest {
 
     @Test
     @DisplayName("Should call the method of RegisterController when user selects option 2")
-    void showRegisterController() {
+    void showRegisterControllerTest() {
         when(console.readInt()).thenReturn(2);
 
         welcomeController.show();

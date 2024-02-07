@@ -8,7 +8,7 @@ public class EntityNotFoundException extends GenericException {
     /**
      * Constructs a new GenericException with the specified detail message.
      *
-     * @param message A String providing details about the exception.
+     * @param message a String providing details about the exception
      */
     public EntityNotFoundException(String message) {
         super(message);

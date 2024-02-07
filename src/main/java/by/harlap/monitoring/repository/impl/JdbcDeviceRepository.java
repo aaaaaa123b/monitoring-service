@@ -25,7 +25,7 @@ public class JdbcDeviceRepository implements DeviceRepository {
     /**
      * Finds all devices in the database.
      *
-     * @return a list of all devices.
+     * @return a list of all devices
      */
     @Override
     public List<Device> findAll() {
@@ -40,28 +40,50 @@ public class JdbcDeviceRepository implements DeviceRepository {
                 Device device = mapResultSetToDevice(rs);
                 devices.add(device);
             }
-            return devices;
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return devices;
     }
 
     /**
      * Saves a new device to the database.
-     *
-     * @param deviceName the name of the device
      */
     @Override
-    public void save(String deviceName) {
+    public Optional<Device> save(Device device) {
         Connection connection = connectionManager.getConnection();
-        final String query = "INSERT INTO monitoring_service_schema.devices (name) VALUES (?)";
+        final String query = "INSERT INTO monitoring_service_schema.devices (name) VALUES (?) RETURNING id";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, deviceName);
-            preparedStatement.executeUpdate();
+            preparedStatement.setString(1, device.getName());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    long id = resultSet.getLong("id");
+                    device.setId(id);
+                    return Optional.of(device);
+                } else {
+                    return Optional.empty();
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -92,6 +114,14 @@ public class JdbcDeviceRepository implements DeviceRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при обработке SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

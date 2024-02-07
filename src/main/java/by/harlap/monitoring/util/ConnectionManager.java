@@ -2,6 +2,7 @@ package by.harlap.monitoring.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,11 +13,17 @@ import java.util.Properties;
  */
 public class ConnectionManager {
 
-    private static final String url;
-    private static final String username;
-    private static final String password;
+    private final String url;
+    private final String username;
+    private final String password;
 
-    static {
+    /**
+     * Constructs a new ConnectionManager with the specified property source.
+     *
+     * @param propertySource the path to the property source containing connection parameters
+     * @throws RuntimeException if the PostgreSQL driver is not found or if there is an error loading properties
+     */
+    public ConnectionManager(String propertySource) {
         try {
             Class.forName("org.postgresql.Driver");
             System.out.println("Драйвер 'org.postgresql.Driver' успешно загружен!");
@@ -24,7 +31,7 @@ public class ConnectionManager {
             throw new RuntimeException("Драйвер для подключения к БД не был найден!", e);
         }
 
-        Properties properties = loadProperties();
+        Properties properties = loadProperties(propertySource);
 
         url = properties.getProperty("url");
         username = properties.getProperty("username");
@@ -34,8 +41,8 @@ public class ConnectionManager {
     /**
      * Establishes a connection to the database.
      *
-     * @return The established database connection.
-     * @throws RuntimeException if connection cannot be established.
+     * @return the established database connection
+     * @throws RuntimeException if connection cannot be established
      */
     public Connection getConnection() {
         Connection connection;
@@ -49,15 +56,14 @@ public class ConnectionManager {
         return connection;
     }
 
-    private static Properties loadProperties() {
+    private Properties loadProperties(String propertySource) {
         Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/liquibase.properties")) {
-            properties.load(input);
+        try (InputStream source = getClass().getClassLoader().getResourceAsStream(propertySource)) {
+            properties.load(source);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Error while loading properties", e);
         }
         return properties;
     }
-
 }

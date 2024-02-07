@@ -33,9 +33,9 @@ public class DependencyFactory {
     /**
      * Finds and returns an instance of the specified repository class.
      *
-     * @param repositoryClass The class of the repository to be found.
-     * @param <T>             The type of the repository.
-     * @return An instance of the specified repository class.
+     * @param repositoryClass the class of the repository to be found
+     * @param <T>             the type of the repository
+     * @return an instance of the specified repository class
      */
     public static <T> T findRepository(Class<? extends T> repositoryClass) {
         return getInstance().repositoryFactory.findRepository(repositoryClass);
@@ -44,9 +44,9 @@ public class DependencyFactory {
     /**
      * Finds and returns an instance of the specified service class.
      *
-     * @param serviceClass The class of the service to be found.
-     * @param <T>          The type of the service.
-     * @return An instance of the specified service class.
+     * @param serviceClass the class of the service to be found
+     * @param <T>          the type of the service
+     * @return an instance of the specified service class
      */
     public static <T> T findService(Class<? extends T> serviceClass) {
         return getInstance().serviceFactory.findService(serviceClass);
@@ -55,9 +55,9 @@ public class DependencyFactory {
     /**
      * Finds and returns an instance of the specified controller class.
      *
-     * @param controllerClass The class of the controller to be found.
-     * @param <T>             The type of the controller.
-     * @return An instance of the specified controller class.
+     * @param controllerClass the class of the controller to be found
+     * @param <T>             the type of the controller
+     * @return an instance of the specified controller class
      */
     public static <T> T findController(Class<? extends T> controllerClass) {
         return getInstance().controllerFactory.getController(controllerClass);
