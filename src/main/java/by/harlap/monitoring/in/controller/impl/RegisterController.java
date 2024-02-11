@@ -1,5 +1,6 @@
 package by.harlap.monitoring.in.controller.impl;
 
+import by.harlap.monitoring.dto.TokenResponse;
 import by.harlap.monitoring.dto.user.RegisterUserDto;
 import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.mapper.UserMapper;
@@ -44,6 +45,8 @@ public class RegisterController extends AbstractController {
         User user = userMapper.toEntity(dto);
 
         String jwtToken = authService.register(user);
-        write(response, jwtToken, HttpServletResponse.SC_OK);
+        TokenResponse tokenResponse = new TokenResponse(jwtToken);
+
+        write(response, tokenResponse, HttpServletResponse.SC_OK);
     }
 }

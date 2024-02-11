@@ -7,13 +7,21 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
-
+import java.util.Properties;
 
 public class JWTDecode {
 
-    private static final String SECRET = "secretkey";
-    private static final long TOKEN_VALIDITY_IN_MILLIS = 3_600_000;
+    private static final String SECRET;
+    private static final long TOKEN_VALIDITY_IN_MILLIS;
+
+    static {
+        Properties properties = loadProperties();
+        SECRET = properties.getProperty("secretKey");
+        TOKEN_VALIDITY_IN_MILLIS = Long.parseLong(properties.getProperty("tokenTime"));
+    }
 
     private static Algorithm algorithm;
     private static JWTVerifier verifier;
@@ -59,5 +67,14 @@ public class JWTDecode {
         return expiresAt.before(new Date());
     }
 
-
+    private static Properties loadProperties() {
+        Properties properties = new Properties();
+        try (InputStream source = JWTDecode.class.getClassLoader().getResourceAsStream("liquibase.properties")) {
+            properties.load(source);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while loading properties", e);
+        }
+        return properties;
+    }
 }

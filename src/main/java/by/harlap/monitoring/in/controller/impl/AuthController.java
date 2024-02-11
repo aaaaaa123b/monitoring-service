@@ -1,5 +1,6 @@
 package by.harlap.monitoring.in.controller.impl;
 
+import by.harlap.monitoring.dto.TokenResponse;
 import by.harlap.monitoring.dto.user.AuthenticateUserDto;
 import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.service.AuthService;
@@ -39,6 +40,8 @@ public class AuthController extends AbstractController {
         AuthenticateUserDto dto = read(request, AuthenticateUserDto.class);
 
         String jwtToken = authService.login(dto.getUsername(), dto.getPassword());
-        write(response, jwtToken, HttpServletResponse.SC_OK);
+        TokenResponse tokenResponse = new TokenResponse(jwtToken);
+
+        write(response, tokenResponse, HttpServletResponse.SC_OK);
     }
 }

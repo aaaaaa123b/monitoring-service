@@ -1,5 +1,6 @@
 # Monitoring Service
 
+### Примеры http запросов находятся в [этом файле](src/main/resources/http/examples.http)
 ### Основная информация
 
 - Проект написан на Java 17.0.4

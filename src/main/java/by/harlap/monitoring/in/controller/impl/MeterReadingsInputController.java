@@ -1,6 +1,7 @@
 package by.harlap.monitoring.in.controller.impl;
 
 import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
+import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.exception.GenericHttpException;
 import by.harlap.monitoring.initialization.DependencyFactory;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,18 +55,25 @@ public class MeterReadingsInputController extends AbstractController {
         validateMetricsExistence(activeUser);
 
         final CreateMeterReadingsDto requestData = read(requestContext, CreateMeterReadingsDto.class);
-        final String responseData = createMeterReadingRecord(activeUser, requestData);
+        final List<MeterReadingResponseDto> responseData = createMeterReadingRecord(activeUser, requestData);
 
         write(response, responseData, HttpServletResponse.SC_CREATED);
     }
 
-    private String createMeterReadingRecord(User user, CreateMeterReadingsDto data) {
+    private List<MeterReadingResponseDto> createMeterReadingRecord(User user, CreateMeterReadingsDto data) {
         final Map<String, Double> valuesByName = data.getDeviceValues();
+        List<MeterReadingResponseDto> meterReadingResponseDtoList = new ArrayList<>();
         Map<Device, Double> valuesByDevice = new HashMap<>();
-
+        LocalDate now = LocalDate.now();
         valuesByName.forEach((name, value) -> {
             deviceService.findByName(name).ifPresentOrElse(
-                    device -> valuesByDevice.put(device, value),
+                    device -> {valuesByDevice.put(device, value);
+                        MeterReadingResponseDto dto = new MeterReadingResponseDto();
+                        dto.setDeviceName(name);
+                        dto.setValue(value);
+                        dto.setDate(now);
+                        dto.setUserName(user.getUsername());
+                        meterReadingResponseDtoList.add(dto);},
                     () -> throwUnknownDeviceException(name)
             );
         });
@@ -72,9 +81,9 @@ public class MeterReadingsInputController extends AbstractController {
         validateDevicesCount(valuesByDevice);
         validateValues(valuesByDevice);
 
-        meterReadingsService.createMeterReadingRecord(user, valuesByDevice, LocalDate.now());
+        meterReadingsService.createMeterReadingRecord(user, valuesByDevice, now);
 
-        return "Показания счётчика успешно внесены";
+        return meterReadingResponseDtoList;
     }
 
     private void throwUnknownDeviceException(String name) {
