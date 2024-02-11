@@ -1,47 +1,67 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.dto.userEvent.UserEventDto;
+import by.harlap.monitoring.enumeration.Role;
+import by.harlap.monitoring.initialization.DependencyFactory;
+import by.harlap.monitoring.mapper.UserEventMapper;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.model.UserEvent;
 import by.harlap.monitoring.service.AuditService;
-import by.harlap.monitoring.service.UserService;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The AuditController class extends AbstractController and is responsible for displaying user audit events.
  */
+@WebServlet("/audit")
 public class AuditController extends AbstractController {
 
-    private final AuditService auditService;
-    private final UserService userService;
+    private AuditService auditService;
+    private UserEventMapper userEventMapper;
 
     /**
-     * Constructs a new AuditController with the specified InitializationData and AuditService.
-     *
-     * @param initializationData the InitializationData for the controller
-     * @param auditService       the AuditService used for retrieving user audit events
+     * Initializes the controller by initializing necessary dependencies.
      */
-    public AuditController(InitializationData initializationData, AuditService auditService, UserService userService) {
-        super(initializationData);
+    @Override
+    public void init() {
+        super.init();
 
-        this.auditService = auditService;
-        this.userService = userService;
+        userEventMapper = DependencyFactory.findMapper(UserEventMapper.class);
+        auditService = DependencyFactory.findService(AuditService.class);
     }
 
     /**
-     * Displays user audit events by iterating through the events retrieved from the AuditService
-     * and printing relevant information for each event.
+     * Handles HTTP GET requests for retrieving user audit events.
+     * Requires the user to have admin role.
+     *
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws IOException if an I/O error occurs while processing the request
      */
     @Override
-    public void show() {
-        for (UserEvent event : auditService.findUserEvents()) {
-            User user = userService.findUserById(event.getUserId());
-            final String message = "%s - Пользователь '%s': %s".formatted(
-                    event.getDate(),
-                    user.getUsername(),
-                    event.getAction()
-            );
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final User activeUser = findActiveUser(request);
 
-            console.print(message);
+        validateRequiredRole(activeUser, Role.ADMIN);
+
+        final List<UserEventDto> responseData = createEventResponse();
+
+        write(response, responseData, HttpServletResponse.SC_OK);
+    }
+
+    private List<UserEventDto> createEventResponse(){
+        List<UserEventDto> eventResponseDtos = new ArrayList<>();
+        for (UserEvent event : auditService.findAllUserEvents()) {
+
+            UserEventDto eventResponseDto = userEventMapper.toDto(event);
+
+            eventResponseDtos.add(eventResponseDto);
         }
+        return eventResponseDtos;
     }
 }

@@ -1,11 +1,8 @@
 package by.harlap.monitoring.initialization;
 
-import by.harlap.monitoring.config.ApplicationContext;
-import by.harlap.monitoring.in.controller.AbstractController;
-import by.harlap.monitoring.initialization.concrete.ControllerFactory;
+import by.harlap.monitoring.initialization.concrete.MapperFactory;
 import by.harlap.monitoring.initialization.concrete.RepositoryFactory;
 import by.harlap.monitoring.initialization.concrete.ServiceFactory;
-import by.harlap.monitoring.util.ConsoleDecorator;
 
 /**
  * Factory class responsible for creating and managing dependencies such as repositories, services, and controllers.
@@ -14,16 +11,12 @@ public class DependencyFactory {
 
     private final RepositoryFactory repositoryFactory;
     private final ServiceFactory serviceFactory;
-    private final ControllerFactory controllerFactory;
+    private final MapperFactory mapperFactory;
 
     private DependencyFactory() {
         repositoryFactory = new RepositoryFactory();
         serviceFactory = new ServiceFactory(repositoryFactory);
-
-        AbstractController.InitializationData initializationData = new AbstractController.InitializationData(
-                new ConsoleDecorator(), new ApplicationContext()
-        );
-        controllerFactory = new ControllerFactory(initializationData, serviceFactory);
+        mapperFactory = new MapperFactory();
     }
 
     private static DependencyFactory getInstance() {
@@ -53,14 +46,14 @@ public class DependencyFactory {
     }
 
     /**
-     * Finds and returns an instance of the specified controller class.
+     * Finds and returns an instance of the specified mapper class.
      *
-     * @param controllerClass the class of the controller to be found
-     * @param <T>             the type of the controller
-     * @return an instance of the specified controller class
+     * @param mapperClass the class of the mapper to be found
+     * @param <T>          the type of the mapper
+     * @return an instance of the specified mapper class
      */
-    public static <T> T findController(Class<? extends T> controllerClass) {
-        return getInstance().controllerFactory.getController(controllerClass);
+    public static <T> T findMapper(Class<? extends T> mapperClass) {
+        return getInstance().mapperFactory.findMapper(mapperClass);
     }
 
     private static final class InstanceHolder {

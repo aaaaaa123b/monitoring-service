@@ -31,5 +31,5 @@ public interface UserService {
      * @param id the unique identifier of the user to find
      * @return the user object if found, or null if no user with the specified id exists
      */
-    User findUserById(Long id);
+    Optional<User> findUserById(Long id);
 }

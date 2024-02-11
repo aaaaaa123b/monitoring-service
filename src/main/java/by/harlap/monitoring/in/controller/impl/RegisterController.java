@@ -1,53 +1,49 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.dto.user.RegisterUserDto;
 import by.harlap.monitoring.initialization.DependencyFactory;
+import by.harlap.monitoring.mapper.UserMapper;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 /**
- * The RegisterController class handles the user registration process.
- * It prompts the user to enter a username and password, registers the user using the AuthService,
- * sets the active user in the application context upon successful registration,
- * displays a welcome message, redirects to the main menu, and handles user logout upon completion.
+ * The RegisterController class extends AbstractController and is responsible for user registration.
  */
+@WebServlet("/register")
 public class RegisterController extends AbstractController {
 
-    private final AuthService authService;
+    private AuthService authService;
+    private UserMapper userMapper;
 
     /**
-     * Constructs a new RegisterController with the specified initialization data and AuthService.
-     *
-     * @param initializationData the data needed for initializing the controller
-     * @param authService        the AuthService used for user registration and logout
+     * Initializes the controller by initializing necessary dependencies.
      */
-    public RegisterController(AbstractController.InitializationData initializationData, AuthService authService) {
-        super(initializationData);
+    @Override
+    public void init() {
+        super.init();
 
-        this.authService = authService;
+        userMapper = DependencyFactory.findMapper(UserMapper.class);
+        authService = DependencyFactory.findService(AuthService.class);
     }
 
     /**
-     * Handles the user registration process. Prompts the user to enter a username and password,
-     * registers the user using the AuthService, sets the active user in the application context
-     * upon successful registration, displays a welcome message, redirects to the main menu,
-     * and handles user logout upon completion.
+     * Handles HTTP POST requests for user registration.
+     *
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws IOException if an I/O error occurs while processing the request
      */
     @Override
-    public void show() {
-        console.print("Введите имя пользователя");
-        final String username = console.readLine();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        RegisterUserDto dto = read(request, RegisterUserDto.class);
+        User user = userMapper.toEntity(dto);
 
-        console.print("Введите пароль");
-        final String password = console.readLine();
-
-        final User user = authService.register(username, password);
-        context.setActiveUser(user);
-
-        console.print("Добрый день, " + username + "!");
-        DependencyFactory.findController(UserMainMenuController.class).show();
-
-        context.clearActiveUser();
-        authService.logout(username);
+        String jwtToken = authService.register(user);
+        write(response, jwtToken, HttpServletResponse.SC_OK);
     }
 }

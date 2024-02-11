@@ -1,71 +1,111 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
+import by.harlap.monitoring.exception.GenericHttpException;
+import by.harlap.monitoring.initialization.DependencyFactory;
+import by.harlap.monitoring.mapper.MeterReadingRecordMapper;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
-import by.harlap.monitoring.service.UserService;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.time.Month;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The MeterReadingsMonthlyInfoController class is responsible for displaying meter readings
- * entered by the active user for a specified month and year. It prompts the user to input the year
- * and month, retrieves the relevant records using the MeterReadingsService, and prints the date
- * of entry and the values for each device in the specified time period.
+ * The MeterReadingsMonthlyInfoController class extends AbstractController and is responsible for retrieving meter readings for a specified month.
  */
+@WebServlet(urlPatterns = "/meterReadingsForMonth")
 public class MeterReadingsMonthlyInfoController extends AbstractController {
 
-    private final MeterReadingsService meterReadingsService;
-    private final DeviceService deviceService;
-    private final UserService userService;
+    private MeterReadingsService meterReadingsService;
+    private DeviceService deviceService;
+    private MeterReadingRecordMapper meterReadingRecordMapper;
 
     /**
-     * Constructs a new MeterReadingsMonthlyInfoController with the specified initialization data
-     * and MeterReadingsService.
-     *
-     * @param initializationData   the data needed for initializing the controller
-     * @param meterReadingsService the MeterReadingsService used for retrieving meter reading records
-     * @param userService          the service for handling users
+     * Initializes the controller by initializing necessary dependencies.
      */
-    public MeterReadingsMonthlyInfoController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService, UserService userService) {
-        super(initializationData);
+    @Override
+    public void init() {
+        super.init();
 
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-        this.userService = userService;
+        meterReadingRecordMapper = DependencyFactory.findMapper(MeterReadingRecordMapper.class);
+        meterReadingsService = DependencyFactory.findService(MeterReadingsService.class);
+        deviceService = DependencyFactory.findService(DeviceService.class);
     }
 
     /**
-     * Displays meter readings entered by the active user for a specified month and year.
-     * Prompts the user to input the year and month, retrieves the relevant records
-     * using the MeterReadingsService, and prints the date of entry and the values
-     * for each device in the specified time period.
+     * Handles HTTP GET requests for retrieving meter readings for a specified month.
+     *
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws IOException if an I/O error occurs while processing the request
      */
-    @Override
-    public void show() {
-        final User user = context.getActiveUser();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final User activeUser = findActiveUser(request);
 
-        console.print("Введите год внесения показаний");
-        final Year year = Year.of(console.readInt());
+        String monthString = request.getParameter("month");
+        String yearString = request.getParameter("year");
 
-        console.print("Введите месяц внесения показаний");
-        final Month month = Month.of(console.readInt());
+        validateMonthAndYearExistence(monthString, yearString);
+        final int month = validateMonth(monthString);
+        final int year = validateYear(yearString);
 
-        final List<MeterReadingRecord> records = meterReadingsService.findRecordsForSpecifiedMonth(user, month, year);
+        final List<MeterReadingResponseDto> responseData = createMeterReadingResponseSpecifiedByMonth(activeUser, month, year);
 
+        write(response, responseData, HttpServletResponse.SC_OK);
+    }
+
+    private List<MeterReadingResponseDto> createMeterReadingResponseSpecifiedByMonth(User activeUser, int month, int year) {
+        final List<MeterReadingRecord> records = meterReadingsService.findRecordsForSpecifiedMonth(activeUser, Month.of(month), Year.of(year));
+
+        List<MeterReadingResponseDto> meterReadingResponseDtoList = new ArrayList<>();
         for (MeterReadingRecord record : records) {
-            User actualUser = userService.findUserById(record.getUserId());
-            console.print("Дата внесения показаний для пользователя '%s': %s".formatted(actualUser.getUsername(), record.getDate()));
 
             deviceService.findById(record.getDeviceId())
                     .ifPresent(device -> {
-                        final String message = "Счётчик: %s. Значение счётчика: %f".formatted(device.getName(), record.getValue());
-                        console.print(message);
+                        MeterReadingResponseDto dto = meterReadingRecordMapper.toDto(record);
+                        meterReadingResponseDtoList.add(dto);
                     });
         }
+        return meterReadingResponseDtoList;
+    }
+
+    private void validateMonthAndYearExistence(String month, String year) {
+        if (month == null || year == null) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Параметры месяц и год не могут быть пустыми");
+        }
+    }
+
+    private int validateMonth(String monthString) {
+        int month;
+        try {
+            month = Integer.parseInt(monthString);
+        } catch (NumberFormatException e) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Неправильный формат месяца");
+        }
+        if (month > 12 || month < 1) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Месяц должен быть задан в диапазоне от 1 до 12");
+        }
+        return month;
+    }
+
+    private int validateYear(String yearString) {
+        final int year;
+        try {
+            year = Integer.parseInt(yearString);
+        } catch (NumberFormatException e) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Неправильный формат года");
+        }
+        if (year < 1) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Год должен быть положительным числом");
+        }
+        return year;
     }
 }

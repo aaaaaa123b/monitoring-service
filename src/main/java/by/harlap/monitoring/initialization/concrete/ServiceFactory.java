@@ -6,6 +6,9 @@ import by.harlap.monitoring.repository.MetricsRecordRepository;
 import by.harlap.monitoring.repository.UserRepository;
 import by.harlap.monitoring.service.*;
 import by.harlap.monitoring.service.impl.*;
+import by.harlap.monitoring.service.impl.AuditServiceImpl;
+import by.harlap.monitoring.service.impl.AuthServiceImpl;
+import by.harlap.monitoring.service.impl.DeviceServiceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +31,11 @@ public class ServiceFactory {
         final UserRepository userRepository = repositoryFactory.findRepository(UserRepository.class);
         final MetricsRecordRepository metricsRecordRepository = repositoryFactory.findRepository(MetricsRecordRepository.class);
 
-        final AuditService auditService = new DefaultAuditService(auditRepository);
-        final UserService userService = new DefaultUserService(userRepository);
-        final AuthService authService = new DefaultAuthService(userService, auditService);
-        final MeterReadingsService meterReadingsService = new DefaultMeterReadingsService(metricsRecordRepository, auditService);
-        final DeviceService deviceService = new DefaultDeviceService(repositoryFactory.findRepository(DeviceRepository.class));
+        final AuditService auditService = new AuditServiceImpl(auditRepository);
+        final UserService userService = new UserServiceImpl(userRepository);
+        final AuthService authService = new AuthServiceImpl(userService);
+        final MeterReadingsService meterReadingsService = new MeterReadingsServiceImpl(metricsRecordRepository);
+        final DeviceService deviceService = new DeviceServiceImpl(repositoryFactory.findRepository(DeviceRepository.class));
 
         services.put(AuditService.class, auditService);
         services.put(UserService.class, userService);

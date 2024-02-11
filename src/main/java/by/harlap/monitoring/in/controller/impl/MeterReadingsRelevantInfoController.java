@@ -1,61 +1,70 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.in.controller.AbstractController;
+import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
+import by.harlap.monitoring.initialization.DependencyFactory;
+import by.harlap.monitoring.mapper.MeterReadingRecordMapper;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
-import by.harlap.monitoring.service.UserService;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The MeterReadingsRelevantInfoController class is responsible for displaying relevant meter readings
- * for the active user. It retrieves the relevant records using the MeterReadingsService and prints
- * the date of entry and the values for each device in the relevant time period.
+ * The MeterReadingsRelevantInfoController class extends AbstractController and is responsible for retrieving relevant meter readings information.
  */
+@WebServlet(urlPatterns = "/relevantMeterReadings")
 public class MeterReadingsRelevantInfoController extends AbstractController {
 
-    private final MeterReadingsService meterReadingsService;
-    private final DeviceService deviceService;
-    private final UserService userService;
+    private MeterReadingsService meterReadingsService;
+    private DeviceService deviceService;
+    private MeterReadingRecordMapper meterReadingRecordMapper;
 
     /**
-     * Constructs a new MeterReadingsRelevantInfoController with the specified initialization data
-     * and MeterReadingsService.
-     *
-     * @param initializationData   the data needed for initializing the controller
-     * @param meterReadingsService the MeterReadingsService used for retrieving meter reading records
-     * @param userService          the service for handling users
-     */
-    public MeterReadingsRelevantInfoController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService, UserService userService) {
-        super(initializationData);
-
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-        this.userService = userService;
-    }
-
-    /**
-     * Displays relevant meter readings for the active user. Retrieves the relevant records
-     * using the MeterReadingsService and prints the date of entry and the values
-     * for each device in the relevant time period.
+     * Initializes the controller by initializing necessary dependencies.
      */
     @Override
-    public void show() {
-        final User user = context.getActiveUser();
+    public void init() {
+        super.init();
 
-        final List<MeterReadingRecord> records = meterReadingsService.findRelevantRecords(user);
+        meterReadingRecordMapper = DependencyFactory.findMapper(MeterReadingRecordMapper.class);
+        meterReadingsService = DependencyFactory.findService(MeterReadingsService.class);
+        deviceService = DependencyFactory.findService(DeviceService.class);
+    }
+
+    /**
+     * Handles HTTP GET requests for retrieving relevant meter readings information.
+     *
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws IOException if an I/O error occurs while processing the request
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final User activeUser = findActiveUser(request);
+
+        final List<MeterReadingResponseDto> responseData = createRelevantMeterReadingResponse(activeUser);
+
+        write(response, responseData, HttpServletResponse.SC_OK);
+    }
+
+    private List<MeterReadingResponseDto> createRelevantMeterReadingResponse(User activeUser) {
+        final List<MeterReadingRecord> records = meterReadingsService.findRelevantRecords(activeUser);
+        List<MeterReadingResponseDto> meterReadingResponseDtoList = new ArrayList<>();
 
         for (MeterReadingRecord record : records) {
-            User actualUser = userService.findUserById(record.getUserId());
-            console.print("Дата внесения показаний для пользователя '%s': %s".formatted(actualUser.getUsername(), record.getDate()));
-
             deviceService.findById(record.getDeviceId())
                     .ifPresent(device -> {
-                        final String message = "Счётчик: %s. Значение счётчика: %f".formatted(device.getName(), record.getValue());
-                        console.print(message);
+                        MeterReadingResponseDto dto = meterReadingRecordMapper.toDto(record);
+                        meterReadingResponseDtoList.add(dto);
                     });
         }
+
+        return meterReadingResponseDtoList;
     }
+
 }

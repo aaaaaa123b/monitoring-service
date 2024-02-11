@@ -1,76 +1,106 @@
 package by.harlap.monitoring.in.controller.impl;
 
+import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.in.controller.AbstractController;
-import by.harlap.monitoring.model.MeterReadingRecord;
-import by.harlap.monitoring.model.User;
+import by.harlap.monitoring.exception.GenericHttpException;
+import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.Device;
+import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * The MeterReadingsInputController class handles the user input of meter readings.
- * It prompts the user to enter readings for available devices, creates a meter reading record,
- * and stores it using the MeterReadingsService. The controller checks for administrator status,
- * existing records for the current month, and provides appropriate messages to the user.
+ * The MeterReadingsInputController class extends AbstractController and is responsible for handling meter readings input requests.
  */
+@WebServlet(urlPatterns = "/inputMeterReadings")
 public class MeterReadingsInputController extends AbstractController {
 
-    private final MeterReadingsService meterReadingsService;
-
-    private final DeviceService deviceService;
-
-    /**
-     * Constructs a new MeterReadingsInputController with the specified initialization data,
-     * MeterReadingsService, and DeviceService.
-     *
-     * @param initializationData   the data needed for initializing the controller
-     * @param meterReadingsService the MeterReadingsService used for storing and retrieving meter reading records
-     * @param deviceService        the DeviceService used for listing available devices
-     */
-    public MeterReadingsInputController(InitializationData initializationData, MeterReadingsService meterReadingsService, DeviceService deviceService) {
-        super(initializationData);
-
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-    }
+    private MeterReadingsService meterReadingsService;
+    private DeviceService deviceService;
 
     /**
-     * Handles the process of user input for meter readings. Prompts the user to enter readings
-     * for available devices, creates a meter reading record, and stores it using the MeterReadingsService.
-     * Checks for administrator status and existing records for the current month,
-     * providing appropriate messages to the user.
+     * Initializes the controller by initializing necessary dependencies.
      */
     @Override
-    public void show() {
-        final User activeUser = context.getActiveUser();
+    public void init() {
+        super.init();
 
-        if (activeUser.getRole().equals(Role.ADMIN)) {
-            console.print("Вы как администратор не можете добавить показания счётчиков.");
-            return;
-        }
+        meterReadingsService = DependencyFactory.findService(MeterReadingsService.class);
+        deviceService = DependencyFactory.findService(DeviceService.class);
+    }
 
-        if (meterReadingsService.checkMetricReadingRecordExistence(activeUser)) {
-            console.print("Вы уже добавили показания счётчиков в этом месяце.");
-            return;
-        }
+    /**
+     * Handles HTTP POST requests for inputting meter readings.
+     *
+     * @param requestContext the HTTP servlet request
+     * @param response       the HTTP servlet response
+     * @throws IOException if an I/O error occurs while processing the request
+     */
+    @Override
+    protected void doPost(HttpServletRequest requestContext, HttpServletResponse response) throws IOException {
+        final User activeUser = findActiveUser(requestContext);
 
-        final List<Device> devices = deviceService.listAvailableDevices();
+        validateRequiredRole(activeUser, Role.USER);
+        validateMetricsExistence(activeUser);
 
-        final Map<Device, Double> values = new HashMap<>();
-        devices.forEach(device -> {
-            console.print("Введите показания для счётчика '%s'".formatted(device.getName()));
-            final double value = console.readDouble();
-            values.put(device, value);
+        final CreateMeterReadingsDto requestData = read(requestContext, CreateMeterReadingsDto.class);
+        final String responseData = createMeterReadingRecord(activeUser, requestData);
+
+        write(response, responseData, HttpServletResponse.SC_CREATED);
+    }
+
+    private String createMeterReadingRecord(User user, CreateMeterReadingsDto data) {
+        final Map<String, Double> valuesByName = data.getDeviceValues();
+        Map<Device, Double> valuesByDevice = new HashMap<>();
+
+        valuesByName.forEach((name, value) -> {
+            deviceService.findByName(name).ifPresentOrElse(
+                    device -> valuesByDevice.put(device, value),
+                    () -> throwUnknownDeviceException(name)
+            );
         });
 
-        meterReadingsService.createMeterReadingRecord(activeUser, values, LocalDate.now());
+        validateDevicesCount(valuesByDevice);
+        validateValues(valuesByDevice);
 
-        console.print("Показания счётчиков успешно добавлены");
+        meterReadingsService.createMeterReadingRecord(user, valuesByDevice, LocalDate.now());
+
+        return "Показания счётчика успешно внесены";
+    }
+
+    private void throwUnknownDeviceException(String name) {
+        throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Device '%s' don't exists".formatted(name));
+    }
+
+    private void validateMetricsExistence(User user) {
+        if (meterReadingsService.checkMetricReadingRecordExistence(user)) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Вы уже добавили показания счётчиков в этом месяце");
+        }
+    }
+
+    private void validateDevicesCount(Map<Device, Double> values) {
+        final List<Device> availableDevices = deviceService.listAvailableDevices();
+        if (values.size() != availableDevices.size()) {
+            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Количество введенных устройств не соответствует доступным устройствам");
+        }
+    }
+
+    private void validateValues(Map<Device, Double> values) {
+        for (Double value : values.values()) {
+            if (value <= 0) {
+                throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Введённые показания должны быть больше 0");
+            }
+        }
     }
 }
+
+

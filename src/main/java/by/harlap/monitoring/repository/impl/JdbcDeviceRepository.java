@@ -59,7 +59,7 @@ public class JdbcDeviceRepository implements DeviceRepository {
      * Saves a new device to the database.
      */
     @Override
-    public Optional<Device> save(Device device) {
+    public synchronized Optional<Device> save(Device device) {
         Connection connection = connectionManager.getConnection();
         final String query = "INSERT INTO monitoring_service_schema.devices (name) VALUES (?) RETURNING id";
 
@@ -75,7 +75,7 @@ public class JdbcDeviceRepository implements DeviceRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при выполнении SQL-запроса", e);
+            throw new RuntimeException("Ошибка добавления устройства", e);
         } finally {
             try {
                 if (connection != null) {
@@ -103,9 +103,37 @@ public class JdbcDeviceRepository implements DeviceRepository {
 
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                final Device device = new Device();
-                device.setId(rs.getLong("id"));
-                device.setName(rs.getString("name"));
+                final Device device = mapResultSetToDevice(rs);
+
+                return Optional.of(device);
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при обработке SQL-запроса", e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public Optional<Device> findByName(String deviceName) {
+        final Connection connection = connectionManager.getConnection();
+        String query = "SELECT * FROM monitoring_service_schema.devices WHERE name = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, deviceName);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                final Device device = mapResultSetToDevice(rs);
 
                 return Optional.of(device);
             } else {
