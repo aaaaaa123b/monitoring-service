@@ -78,7 +78,7 @@ public class MeterReadingsInputController extends AbstractController {
     }
 
     private void throwUnknownDeviceException(String name) {
-        throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Device '%s' don't exists".formatted(name));
+        throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Устройство '%s' не существует".formatted(name));
     }
 
     private void validateMetricsExistence(User user) {

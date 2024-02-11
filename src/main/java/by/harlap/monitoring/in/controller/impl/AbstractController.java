@@ -96,7 +96,7 @@ public abstract class AbstractController extends HttpServlet {
         final String username = (String) request.getAttribute("username");
         final Optional<User> optionalUser = userService.findUserByUsername(username);
         if (optionalUser.isEmpty()) {
-            throw new GenericHttpException(HttpServletResponse.SC_UNAUTHORIZED, "You need to authorize to access this resource");
+            throw new GenericHttpException(HttpServletResponse.SC_UNAUTHORIZED, "Вам необходимо авторизоваться для доступа к этому ресурсу");
         }
 
         return optionalUser.get();
@@ -112,7 +112,7 @@ public abstract class AbstractController extends HttpServlet {
     protected void validateRequiredRole(User user, Role role) {
         final Role actualRole = user.getRole();
         if (actualRole == null || !actualRole.equals(role)) {
-            throw new GenericHttpException(HttpServletResponse.SC_FORBIDDEN, "Access Denied: You do not have permission to create meter reading records");
+            throw new GenericHttpException(HttpServletResponse.SC_FORBIDDEN, "Доступ запрещен");
         }
     }
 }
