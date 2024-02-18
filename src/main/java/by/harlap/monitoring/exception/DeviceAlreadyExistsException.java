@@ -6,6 +6,11 @@ package by.harlap.monitoring.exception;
  */
 public class DeviceAlreadyExistsException extends RuntimeException{
 
+    /**
+     * Constructs a new DeviceAlreadyExistsException with the specified detail message and cause.
+     *
+     * @param message the detail message (which is saved for later retrieval by the getMessage() method)
+     */
     public DeviceAlreadyExistsException(String message) {
         super(message);
     }

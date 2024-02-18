@@ -1,6 +1,7 @@
 package by.harlap.monitoring.service.impl;
 
 import by.harlap.monitoring.annotations.Auditable;
+import by.harlap.monitoring.aspect.AuditableAspect;
 import by.harlap.monitoring.exception.AuthenticationException;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;

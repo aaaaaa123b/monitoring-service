@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/**
+ * Utility class for handling JWT (JSON Web Token) operations.
+ */
 @Component
 public class JwtUtil {
 
@@ -17,6 +20,11 @@ public class JwtUtil {
     private final Algorithm algorithm;
     private final JWTVerifier verifier;
 
+    /**
+     * Constructs a new JwtUtil instance with the specified SecurityProperties.
+     *
+     * @param securityProperties the SecurityProperties containing JWT-related configuration
+     */
     public JwtUtil(SecurityProperties securityProperties) {
         this.securityProperties = securityProperties;
 

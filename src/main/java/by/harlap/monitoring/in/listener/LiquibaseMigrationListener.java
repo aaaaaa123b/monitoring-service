@@ -16,6 +16,11 @@ public class LiquibaseMigrationListener implements ApplicationListener<ContextRe
 
     private final LiquibaseMigrationRunner migrationRunner;
 
+    /**
+     * Runs Liquibase migrations when the application context is refreshed.
+     *
+     * @param event The ContextRefreshedEvent fired when the application context is refreshed
+     */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         migrationRunner.runMigrations();

@@ -29,8 +29,15 @@ public class MeterReadingsInputController {
     private final MeterReadingInputFacade meterReadingInputFacade;
     private final SecurityUtil securityUtil;
 
+    /**
+     * Handles requests to input meter readings.
+     *
+     * @param username         the username obtained from the request attribute
+     * @param meterReadingsDto the CreateMeterReadingsDto containing data for the meter readings to be input
+     * @return ResponseEntity containing the response data for the created meter readings
+     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MeterReadingResponseDto>> doPost(@RequestAttribute("username") String username, @RequestBody CreateMeterReadingsDto meterReadingsDto) {
+    public ResponseEntity<List<MeterReadingResponseDto>> inputMeterReadingRecords(@RequestAttribute("username") String username, @RequestBody CreateMeterReadingsDto meterReadingsDto) {
         final User activeUser = securityUtil.findActiveUser(username);
         securityUtil.validateRequiredRole(activeUser, Role.USER);
 

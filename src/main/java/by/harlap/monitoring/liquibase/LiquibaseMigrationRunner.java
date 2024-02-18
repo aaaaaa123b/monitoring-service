@@ -3,7 +3,6 @@ package by.harlap.monitoring.liquibase;
 import by.harlap.monitoring.config.property.DatabaseProperties;
 import by.harlap.monitoring.config.property.LiquibaseProperties;
 import by.harlap.monitoring.exception.UncheckedLiquibaseException;
-import by.harlap.monitoring.util.PropertyHolder;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;

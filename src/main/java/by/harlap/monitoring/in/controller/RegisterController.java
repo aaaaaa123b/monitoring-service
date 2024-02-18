@@ -22,8 +22,14 @@ public class RegisterController {
 
     private final RegisterFacade registerFacade;
 
+    /**
+     * Handles requests for user registration.
+     *
+     * @param authenticationUserDto the AuthenticationUserDto containing user registration data
+     * @return ResponseEntity containing the token response data for the registered user
+     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    protected ResponseEntity<TokenResponseDto> doPost(@RequestBody AuthenticationUserDto authenticationUserDto) {
+    protected ResponseEntity<TokenResponseDto> register(@RequestBody AuthenticationUserDto authenticationUserDto) {
         final TokenResponseDto tokenResponseDto = registerFacade.register(authenticationUserDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenResponseDto);

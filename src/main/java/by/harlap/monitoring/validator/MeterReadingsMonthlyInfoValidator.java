@@ -1,7 +1,6 @@
 package by.harlap.monitoring.validator;
 
 import by.harlap.monitoring.exception.GenericHttpException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

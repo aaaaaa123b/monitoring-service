@@ -25,8 +25,14 @@ public class MeterReadingsRelevantInfoController {
     private final MeterReadingsRelevantInfoFacade meterReadingsRelevantInfoFacade;
     private final SecurityUtil securityUtil;
 
+    /**
+     * Retrieves relevant meter readings information for the authenticated user.
+     *
+     * @param username the username obtained from the request attribute
+     * @return ResponseEntity containing a list of MeterReadingResponseDto representing the relevant meter readings information
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MeterReadingResponseDto>> doGet(@RequestAttribute("username") String username) {
+    public ResponseEntity<List<MeterReadingResponseDto>> getRelevantMeterReadingRecords(@RequestAttribute("username") String username) {
         final User activeUser = securityUtil.findActiveUser(username);
 
         final List<MeterReadingResponseDto> responseData = meterReadingsRelevantInfoFacade.createRelevantMeterReadingResponse(activeUser);

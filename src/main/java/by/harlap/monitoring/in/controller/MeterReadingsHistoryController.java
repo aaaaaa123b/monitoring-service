@@ -25,8 +25,14 @@ public class MeterReadingsHistoryController {
     private final MeterReadingsHistoryFacade meterReadingsHistoryFacade;
     private final SecurityUtil securityUtil;
 
+    /**
+     * Retrieves meter readings history for the authenticated user.
+     *
+     * @param username the username obtained from the request attribute
+     * @return ResponseEntity containing a list of MeterReadingResponseDto representing the meter readings history
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MeterReadingResponseDto>> doGet(@RequestAttribute("username") String username) {
+    public ResponseEntity<List<MeterReadingResponseDto>> getMeterReadingHistory(@RequestAttribute("username") String username) {
         final User activeUser = securityUtil.findActiveUser(username);
 
         final List<MeterReadingResponseDto> responseData = meterReadingsHistoryFacade.findMeterReadingRecords(activeUser);

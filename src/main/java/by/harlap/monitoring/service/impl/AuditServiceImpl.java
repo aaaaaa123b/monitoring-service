@@ -23,7 +23,7 @@ public class AuditServiceImpl implements AuditService {
      * then saves the event to the AuditRepository.
      */
     @Override
-    public void createEvent(UserEvent userEvent) {;
+    public void createEvent(UserEvent userEvent) {
         auditRepository.save(userEvent);
     }
 

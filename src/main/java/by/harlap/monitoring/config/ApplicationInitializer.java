@@ -15,6 +15,12 @@ import org.springframework.web.servlet.DispatcherServlet;
 @Component
 public class ApplicationInitializer implements WebApplicationInitializer {
 
+    /**
+     * This method is called during application startup.
+     * It configures the Spring Web application context and registers necessary configurations.
+     *
+     * @param servletContext the ServletContext for the web application
+     */
     @Override
     public void onStartup(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();

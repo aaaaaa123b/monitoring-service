@@ -26,6 +26,13 @@ public class AuditController {
     private final AuditFacade auditFacade;
     private final SecurityUtil securityUtil;
 
+    /**
+     * Retrieves user audit events and returns them as a list of UserEventResponseDto.
+     * This endpoint requires an authenticated user with the role of ADMIN.
+     *
+     * @param username the username obtained from the request attribute
+     * @return ResponseEntity containing a list of UserEventResponseDto
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserEventResponseDto>> getAudit(@RequestAttribute("username") String username) {
         final User activeUser = securityUtil.findActiveUser(username);

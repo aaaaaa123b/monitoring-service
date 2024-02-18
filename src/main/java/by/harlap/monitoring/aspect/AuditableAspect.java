@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 
+/**
+ * This aspect class handles auditing functionality for methods annotated with {@link by.harlap.monitoring.annotations.Auditable}.
+ * It intercepts method execution and performs auditing based on the annotation's value.
+ */
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -21,7 +25,14 @@ public class AuditableAspect {
 
     private final AuditService auditService;
 
-    @Around("execution(public * *(..)) && @annotation(by.harlap.monitoring.annotations.Auditable)")
+    /**
+     * Intercepts method execution and performs auditing for methods annotated with {@link by.harlap.monitoring.annotations.Auditable}.
+     *
+     * @param proceedingJoinPoint the ProceedingJoinPoint representing the intercepted method execution
+     * @return the result of the intercepted method execution
+     * @throws Throwable if an error occurs during method execution
+     */
+    @Around("execution(* * (..)) && within(@by.harlap.monitoring.annotations.Auditable *)")
     public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object result = proceedingJoinPoint.proceed();
 

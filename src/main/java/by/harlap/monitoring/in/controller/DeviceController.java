@@ -20,13 +20,20 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 @Controller
 @RequiredArgsConstructor
-public class DeviceController{
+public class DeviceController {
 
     private final DeviceFacade deviceFacade;
     private final SecurityUtil securityUtil;
 
+    /**
+     * Handles requests to add a new device.
+     *
+     * @param username  the username obtained from the request attribute
+     * @param deviceDto the CreateDeviceDto containing data for the new device
+     * @return ResponseEntity containing the response data for the created device
+     */
     @PostMapping(value = "/devices", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DeviceResponseDto> doPost(@RequestAttribute("username") String username, @RequestBody CreateDeviceDto deviceDto){
+    public ResponseEntity<DeviceResponseDto> createDevice(@RequestAttribute("username") String username, @RequestBody CreateDeviceDto deviceDto) {
         final User activeUser = securityUtil.findActiveUser(username);
 
         securityUtil.validateRequiredRole(activeUser, Role.ADMIN);

@@ -26,8 +26,16 @@ public class MeterReadingsMonthlyInfoController {
     private final MeterReadingsMonthlyInfoFacade monthlyInfoFacade;
     private final SecurityUtil securityUtil;
 
+    /**
+     * Retrieves meter readings for the specified month and year for the authenticated user.
+     *
+     * @param username    the username obtained from the request attribute
+     * @param monthString the month for which meter readings are requested
+     * @param yearString  the year for which meter readings are requested
+     * @return ResponseEntity containing a list of MeterReadingResponseDto representing the meter readings for the specified month and year
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MeterReadingResponseDto>> doGet(@RequestAttribute("username") String username, @RequestParam("month") String monthString, @RequestParam("year") String yearString) {
+    public ResponseEntity<List<MeterReadingResponseDto>> getMeterReadingsByMonth(@RequestAttribute("username") String username, @RequestParam("month") String monthString, @RequestParam("year") String yearString) {
         final User activeUser = securityUtil.findActiveUser(username);
 
         final List<MeterReadingResponseDto> responseData = monthlyInfoFacade.createMeterReadingResponseSpecifiedByMonth(activeUser, monthString, yearString);

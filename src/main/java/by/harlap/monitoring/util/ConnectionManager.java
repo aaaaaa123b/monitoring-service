@@ -15,6 +15,11 @@ public class ConnectionManager {
 
     private final DatabaseProperties databaseProperties;
 
+    /**
+     * Constructs a new ConnectionManager instance with the specified DatabaseProperties.
+     *
+     * @param databaseProperties the DatabaseProperties containing database connection configuration
+     */
     public ConnectionManager(DatabaseProperties databaseProperties) {
         this.databaseProperties = databaseProperties;
         try {

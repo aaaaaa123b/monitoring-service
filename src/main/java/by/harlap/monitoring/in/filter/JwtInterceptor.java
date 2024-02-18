@@ -21,27 +21,35 @@ public class JwtInterceptor implements HandlerInterceptor {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
+    /**
+     * Pre-handle method to intercept incoming HTTP requests for authentication and authorization.
+     *
+     * @param request  the HttpServletRequest object representing the incoming request
+     * @param response the HttpServletResponse object representing the response to be sent
+     * @param handler  the handler for the request
+     * @return true if the request should proceed, false if it should be stopped
+     */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-            String jwtToken = request.getHeader("Authorization");
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        String jwtToken = request.getHeader("Authorization");
 
-            if (jwtToken == null || !jwtToken.startsWith("Bearer ")) {
-                throw new AuthenticationException("Missing or invalid JWT");
-            }
+        if (jwtToken == null || !jwtToken.startsWith("Bearer ")) {
+            throw new AuthenticationException("Missing or invalid JWT");
+        }
 
-            jwtToken = jwtToken.substring(7);
+        jwtToken = jwtToken.substring(7);
 
-            DecodedJWT decodedJWT = jwtUtil.verifyJWT(jwtToken);
-            if (decodedJWT == null) {
-                throw new AuthenticationException("Invalid JWT");
-            }
+        DecodedJWT decodedJWT = jwtUtil.verifyJWT(jwtToken);
+        if (decodedJWT == null) {
+            throw new AuthenticationException("Invalid JWT");
+        }
 
-            final String username = decodedJWT.getClaim("username").asString();
-            if (userService.findUserByUsername(username).isEmpty()) {
-                throw new AuthenticationException("User not found");
-            }
-            request.setAttribute("username", username);
+        final String username = decodedJWT.getClaim("username").asString();
+        if (userService.findUserByUsername(username).isEmpty()) {
+            throw new AuthenticationException("User not found");
+        }
+        request.setAttribute("username", username);
 
-            return true;
+        return true;
     }
 }

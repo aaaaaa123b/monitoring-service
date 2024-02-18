@@ -9,6 +9,11 @@ import lombok.Getter;
 @Getter
 public class GenericHttpException extends RuntimeException {
 
+    /**
+     * Constructs a new GenericHttpException with the specified detail message and cause.
+     *
+     * @param message the detail message (which is saved for later retrieval by the getMessage() method)
+     */
     public GenericHttpException(String message) {
         super(message);
     }

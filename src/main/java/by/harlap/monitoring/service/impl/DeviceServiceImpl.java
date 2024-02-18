@@ -3,6 +3,7 @@ package by.harlap.monitoring.service.impl;
 import by.harlap.monitoring.exception.DeviceAlreadyExistsException;
 import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.repository.DeviceRepository;
+import by.harlap.monitoring.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-public class DeviceServiceImpl implements by.harlap.monitoring.service.DeviceService {
+public class DeviceServiceImpl implements DeviceService {
 
     private final DeviceRepository deviceRepository;
 

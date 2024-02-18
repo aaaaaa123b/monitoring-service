@@ -15,6 +15,11 @@ import java.util.Objects;
 @Configuration
 public class PropertySourceConfiguration {
 
+    /**
+     * Configures a {@link PropertySourcesPlaceholderConfigurer} bean to load properties from an application YAML file.
+     *
+     * @return a {@link PropertySourcesPlaceholderConfigurer} instance configured to load properties from YAML
+     */
     @Bean
     public static PropertySourcesPlaceholderConfigurer property() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();

@@ -12,7 +12,7 @@ POST http://localhost:8080/register
 Content-Type: application/json
 
 {
-  "username" : "newUser1",
+  "username" : "newUser21",
   "password" : "newPassword"
 }
 
@@ -31,20 +31,20 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZ
 
 ###просмотр истории подачи показаний (admin/user)
 GET http://localhost:8080/meterReadingsHistory
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyMjEwMTYsImlhdCI6MTcwODIxNzQxNiwidXNlcm5hbWUiOiJ1c2VyIn0.HLcU3XAOEeZVxx6Ac7iEuzrI_TgIjNZzmjlcSmSJc5A
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgzMDEwNDQsImlhdCI6MTcwODI5NzQ0NCwidXNlcm5hbWUiOiJ1c2VyIn0.D-M5mUnVTkTSn3fa1dAU_GEbHv0sMDbwb0b-H5ndoSM
 
 ###просмотр актуальных показаний счетчиков (admin/user)
 GET http://localhost:8080/relevantMeterReadings
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDc2OTA5NDgsImlhdCI6MTcwNzY4NzM0OCwidXNlcm5hbWUiOiJ1c2VyIn0.f0m_4IDLz6LT8xZj6VjNinez2TAjmAZatFk4TDyyxd4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgzMDEwNDQsImlhdCI6MTcwODI5NzQ0NCwidXNlcm5hbWUiOiJ1c2VyIn0.D-M5mUnVTkTSn3fa1dAU_GEbHv0sMDbwb0b-H5ndoSM
 
 ###просмотр показаний счетчиков за конкретный месяц (admin/user)
 GET http://localhost:8080/meterReadingsForMonth?month=1&year=2024
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyMjEwMTYsImlhdCI6MTcwODIxNzQxNiwidXNlcm5hbWUiOiJ1c2VyIn0.HLcU3XAOEeZVxx6Ac7iEuzrI_TgIjNZzmjlcSmSJc5A
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgzMDEwNDQsImlhdCI6MTcwODI5NzQ0NCwidXNlcm5hbWUiOiJ1c2VyIn0.D-M5mUnVTkTSn3fa1dAU_GEbHv0sMDbwb0b-H5ndoSM
 
 ###подача показаний (user)
 POST http://localhost:8080/inputMeterReadings
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyOTEwMjMsImlhdCI6MTcwODI4NzQyMywidXNlcm5hbWUiOiJ1c2VyIn0.sxf2ZjA0n7OtE9F7zBX9My-iN5R3zW5isL_zGL-eCGo
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6Im5ld1Bhc3N3b3JkIiwiZXhwIjoxNzA4MzAxMTIyLCJpYXQiOjE3MDgyOTc1MjIsInVzZXJuYW1lIjoibmV3VXNlcjIxIn0.-7llVp_baborev5_NfbQKfgotY46J_cx79CbzlXyqxI
 
 {"deviceValues": {
     "отопление": 1533.13,

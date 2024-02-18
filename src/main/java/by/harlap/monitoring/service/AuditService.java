@@ -1,6 +1,5 @@
 package by.harlap.monitoring.service;
 
-import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.model.UserEvent;
 
 import java.util.List;
