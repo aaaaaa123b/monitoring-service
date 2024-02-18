@@ -1,8 +1,8 @@
-package by.harlap.monitoring.in.controller.impl;
+package by.harlap.monitoring.in.controller;
 
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.facade.MeterReadingsMonthlyInfoFacade;
+import by.harlap.monitoring.facade.MeterReadingsRelevantInfoFacade;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,19 +27,19 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@DisplayName("Tests for MeterReadingsMonthlyInfoControllerTest")
+@DisplayName("Tests for MeterReadingsRelevantInfoControllerTest")
 @ExtendWith(MockitoExtension.class)
-class MeterReadingsMonthlyInfoControllerTest {
+class MeterReadingsRelevantInfoControllerTest {
 
     @Mock
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
     @Mock
-    private MeterReadingsMonthlyInfoFacade meterReadingsMonthlyInfoFacade;
+    private MeterReadingsRelevantInfoFacade meterReadingsRelevantInfoFacade;
 
     @InjectMocks
-    private MeterReadingsMonthlyInfoController meterReadingsMonthlyInfoController;
+    private MeterReadingsRelevantInfoController meterReadingsRelevantInfoController;
 
     private static MockedStatic<SecurityUtil> securityUtilMockedStatic;
 
@@ -49,7 +49,7 @@ class MeterReadingsMonthlyInfoControllerTest {
     }
 
     @Test
-    @DisplayName("Test get records specified by month by get method")
+    @DisplayName("Test get relevant records by get method")
     void doGetTest() throws IOException {
         User user = new User(1L, "user", "user", Role.ADMIN);
         List<MeterReadingResponseDto> records = new ArrayList<>();
@@ -62,16 +62,14 @@ class MeterReadingsMonthlyInfoControllerTest {
 
         records.add(dto);
 
-        when(request.getParameter("month")).thenReturn(String.valueOf(5));
-        when(request.getParameter("year")).thenReturn(String.valueOf(2024));
+        when(SecurityUtil.findActiveUser(request)).thenReturn(user);
+        when(meterReadingsRelevantInfoFacade.createRelevantMeterReadingResponse(user)).thenReturn(records);
 
         StringWriter responseWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(responseWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        when(SecurityUtil.findActiveUser(request)).thenReturn(user);
-        when(meterReadingsMonthlyInfoFacade.createMeterReadingResponseSpecifiedByMonth(user, "5", "2024")).thenReturn(records);
-        meterReadingsMonthlyInfoController.doGet(request, response);
+        meterReadingsRelevantInfoController.doGet(request, response);
 
         verify(response).getWriter();
         String expectedResponseBody = "[{\"date\":\"2024-01-01\",\"userName\":\"user\",\"deviceName\":\"device\",\"value\":100.2}]";

@@ -1,4 +1,4 @@
-package by.harlap.monitoring.in.controller.impl;
+package by.harlap.monitoring.in.controller;
 
 import by.harlap.monitoring.dto.device.CreateDeviceDto;
 import by.harlap.monitoring.dto.device.DeviceResponseDto;

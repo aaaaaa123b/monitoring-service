@@ -1,4 +1,4 @@
-package by.harlap.monitoring.in.controller.impl;
+package by.harlap.monitoring.in.controller;
 
 import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;

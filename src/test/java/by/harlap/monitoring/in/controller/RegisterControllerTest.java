@@ -1,12 +1,15 @@
-package by.harlap.monitoring.in.controller.impl;
+package by.harlap.monitoring.in.controller;
 
 import by.harlap.monitoring.dto.TokenResponseDto;
-import by.harlap.monitoring.facade.AuthFacade;
+import by.harlap.monitoring.dto.user.AuthenticationUserDto;
+import by.harlap.monitoring.enumeration.Role;
+import by.harlap.monitoring.facade.RegisterFacade;
+import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,43 +21,50 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@DisplayName("Tests for AuthControllerTest")
+@DisplayName("Tests for RegisterControllerTest")
 @ExtendWith(MockitoExtension.class)
-class AuthControllerTest {
+class RegisterControllerTest {
 
     @Mock
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
     @Mock
-    private AuthFacade authFacade;
+    private RegisterFacade registerFacade;
+
     @InjectMocks
-    private AuthController authController;
+    private RegisterController registerController;
 
     private static MockedStatic<SecurityUtil> securityUtilMockedStatic;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void init() {
         securityUtilMockedStatic = mockStatic(SecurityUtil.class);
     }
+
     @Test
-    @DisplayName("Test authenticate by post method")
-    void doPost() throws IOException {
+    @DisplayName("Test register by post method")
+    void doPostTest() throws IOException {
+
         String createRequestJson = "{\"username\":\"user\",\"password\":\"user\"}";
+        User user = new User(1L, "user", "user", Role.USER);
+        AuthenticationUserDto authenticationUserDto = new AuthenticationUserDto();
+        authenticationUserDto.setUsername("user");
+        authenticationUserDto.setPassword("user");
+
+        TokenResponseDto tokenResponseDto = new TokenResponseDto("fakeToken");
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(createRequestJson)));
-        TokenResponseDto fakeToken = new TokenResponseDto("fakeToken");
+        when(registerFacade.register(authenticationUserDto)).thenReturn(tokenResponseDto);
+        when(SecurityUtil.findActiveUser(request)).thenReturn(user);
 
         StringWriter responseWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(responseWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        when(authFacade.createToken(any())).thenReturn(fakeToken);
-
-        authController.doPost(request, response);
+        registerController.doPost(request, response);
 
         verify(response).getWriter();
         String expectedResponseBody = "{\"token\":\"fakeToken\"}";
@@ -62,8 +72,8 @@ class AuthControllerTest {
         assertEquals(expectedResponseBody, responseWriter.toString().replaceAll("\\s", ""));
     }
 
-    @AfterEach
-    public void close() {
+    @AfterAll
+    public static void close() {
         securityUtilMockedStatic.close();
     }
 }

@@ -1,4 +1,4 @@
-package by.harlap.monitoring.in.controller.impl;
+package by.harlap.monitoring.in.controller;
 
 import by.harlap.monitoring.dto.ErrorResponse;
 import by.harlap.monitoring.exception.GenericHttpException;

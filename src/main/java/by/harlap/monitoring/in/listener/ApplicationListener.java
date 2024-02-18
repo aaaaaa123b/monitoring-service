@@ -1,7 +1,7 @@
 package by.harlap.monitoring.in.listener;
 
 import by.harlap.monitoring.facade.*;
-import by.harlap.monitoring.in.controller.impl.*;
+import by.harlap.monitoring.in.controller.*;
 import by.harlap.monitoring.initialization.DependencyFactory;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;

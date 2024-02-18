@@ -1,7 +1,6 @@
 package by.harlap.monitoring.validator;
 
 import by.harlap.monitoring.exception.GenericHttpException;
-import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;

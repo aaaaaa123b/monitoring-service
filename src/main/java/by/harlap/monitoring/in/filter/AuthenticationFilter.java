@@ -8,7 +8,6 @@ import by.harlap.monitoring.service.UserService;
 import by.harlap.monitoring.util.IOUtil;
 import by.harlap.monitoring.util.JwtUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
