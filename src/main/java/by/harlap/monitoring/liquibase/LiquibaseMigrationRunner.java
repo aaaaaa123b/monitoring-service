@@ -1,18 +1,16 @@
 package by.harlap.monitoring.liquibase;
 
 import by.harlap.monitoring.exception.UncheckedLiquibaseException;
+import by.harlap.monitoring.util.PropertyHolder;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 /**
  * The LiquibaseMigrationRunner class is responsible for running Liquibase migrations based on the provided configuration.
@@ -26,15 +24,15 @@ public class LiquibaseMigrationRunner {
      * @param propertySource the path to the properties file containing database connection information
      * @throws UncheckedLiquibaseException if an error occurs during migration execution
      */
-    public static void runMigrations(String propertySource) {
-        Properties properties = loadProperties(propertySource);
+    public static void runMigrations(final String propertySource) {
+        final PropertyHolder properties = new PropertyHolder(propertySource);
 
-        String driver = properties.getProperty("driver");
-        String url = properties.getProperty("url");
-        String username = properties.getProperty("username");
-        String password = properties.getProperty("password");
-        String changeLogFile = properties.getProperty("changeLogFile");
-        String liquibaseSchemaName = properties.getProperty("liquibaseSchemaName");
+        final String driver = properties.get("driver");
+        final String url = properties.get("url");
+        final String username = properties.get("username");
+        final String password = properties.get("password");
+        final String changeLogFile = properties.get("changeLogFile");
+        final String liquibaseSchemaName = properties.get("liquibaseSchemaName");
 
         try {
             Class.forName(driver);
@@ -53,17 +51,6 @@ public class LiquibaseMigrationRunner {
             e.printStackTrace();
             throw new UncheckedLiquibaseException("Migrations are failed!", e);
         }
-    }
-
-    private static Properties loadProperties(String propertySource) {
-        Properties properties = new Properties();
-        try (InputStream source = LiquibaseMigrationRunner.class.getClassLoader().getResourceAsStream(propertySource)) {
-            properties.load(source);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error while loading properties", e);
-        }
-        return properties;
     }
 
     private static void createLiquibaseSchemaIfRequired(Connection connection, String liquibaseSchemaName) {

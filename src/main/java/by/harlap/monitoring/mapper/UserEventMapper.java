@@ -1,6 +1,6 @@
 package by.harlap.monitoring.mapper;
 
-import by.harlap.monitoring.dto.userEvent.UserEventDto;
+import by.harlap.monitoring.dto.userEvent.UserEventResponseDto;
 import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.model.UserEvent;
@@ -11,19 +11,19 @@ import org.mapstruct.Mapping;
 import java.util.Optional;
 
 /**
- * The UserEventMapper interface provides methods for mapping between UserEvent entities and UserEventDto objects.
+ * The UserEventMapper interface provides methods for mapping between UserEvent entities and UserEventResponseDto objects.
  */
 @Mapper
 public interface UserEventMapper {
 
     /**
-     * Maps a UserEvent entity to a UserEventDto object.
+     * Maps a UserEvent entity to a UserEventResponseDto object.
      *
      * @param userEvent the UserEvent entity to map
-     * @return the corresponding UserEventDto object
+     * @return the corresponding UserEventResponseDto object
      */
     @Mapping(target = "userName", expression = "java(findUsername(userEvent.getUserId()))")
-    UserEventDto toDto(UserEvent userEvent);
+    UserEventResponseDto toDto(UserEvent userEvent);
 
     default String findUsername(Long userId) {
         UserService userService = DependencyFactory.findService(UserService.class);
@@ -32,13 +32,13 @@ public interface UserEventMapper {
     }
 
     /**
-     * Maps a UserEventDto object to a UserEvent entity.
+     * Maps a UserEventResponseDto object to a UserEvent entity.
      *
-     * @param userEventDto the UserEventDto object to map
+     * @param userEventResponseDto the UserEventResponseDto object to map
      * @return the corresponding UserEvent entity
      */
-    @Mapping(target = "id", expression = "java(findId(userEventDto.getUserName()))")
-    UserEvent toEntity(UserEventDto userEventDto);
+    @Mapping(target = "id", expression = "java(findId(userEventResponseDto.getUserName()))")
+    UserEvent toEntity(UserEventResponseDto userEventResponseDto);
 
     default Long findId(String username) {
         UserService userService = DependencyFactory.findService(UserService.class);

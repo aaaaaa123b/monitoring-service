@@ -5,7 +5,8 @@ import by.harlap.monitoring.exception.AuthenticationException;
 import by.harlap.monitoring.exception.GenericHttpException;
 import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.service.UserService;
-import by.harlap.monitoring.util.JWTDecode;
+import by.harlap.monitoring.util.IOUtil;
+import by.harlap.monitoring.util.JwtUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
@@ -21,19 +22,14 @@ import java.io.IOException;
 @WebFilter(urlPatterns = {"/meterReadingsHistory", "/devices", "/relevantMeterReadings", "/meterReadingsForMonth", "/audit", "/inputMeterReadings"})
 public class AuthenticationFilter implements Filter {
 
-    private UserService userService;
-    private ObjectMapper objectMapper;
+    private final UserService userService;
 
     /**
-     * Initializes the filter by initializing necessary dependencies.
-     *
-     * @param filterConfig the filter configuration
+     * Constructs an AuthenticationFilter object.
+     * Initializes the UserService using DependencyFactory.
      */
-    @Override
-    public void init(FilterConfig filterConfig) {
+    public AuthenticationFilter() {
         userService = DependencyFactory.findService(UserService.class);
-        objectMapper = new ObjectMapper();
-        JWTDecode.initialize();
     }
 
     /**
@@ -50,13 +46,12 @@ public class AuthenticationFilter implements Filter {
             doFilterInternal(request, response, chain);
         } catch (GenericHttpException exception) {
             final ErrorResponse responseData = new ErrorResponse(exception.getMessage());
-            sendResponse((HttpServletResponse) response, responseData, exception.getCode());
+            IOUtil.write((HttpServletResponse) response, responseData, exception.getCode());
         }
     }
 
     private void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        final HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         String jwtToken = httpRequest.getHeader("Authorization");
 
@@ -66,12 +61,12 @@ public class AuthenticationFilter implements Filter {
 
         jwtToken = jwtToken.substring(7);
 
-        DecodedJWT decodedJWT = JWTDecode.verifyJWT(jwtToken);
+        DecodedJWT decodedJWT = JwtUtil.verifyJWT(jwtToken);
         if (decodedJWT == null) {
             throw new AuthenticationException("Invalid JWT");
         }
 
-        String username = decodedJWT.getClaim("username").asString();
+        final String username = decodedJWT.getClaim("username").asString();
         if (userService.findUserByUsername(username).isEmpty()) {
             throw new AuthenticationException("User not found");
         }
@@ -82,13 +77,5 @@ public class AuthenticationFilter implements Filter {
         } catch (ServletException e) {
             throw new AuthenticationException("Authorization failed");
         }
-
-    }
-
-    private void sendResponse(HttpServletResponse response, Object o, int code) throws IOException {
-        String user = objectMapper.writeValueAsString(o);
-        response.getWriter().write(user);
-        response.setStatus(code);
-        response.setContentType("application/json");
     }
 }

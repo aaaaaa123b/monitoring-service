@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 /**
  * The MeterReadingResponseDto class represents a DTO (Data Transfer Object) for meter reading responses.
- * It contains information about the date, user name, device name, and meter value.
+ * It contains information about the date, username, device name, and meter value.
  */
 @Getter
 @Setter

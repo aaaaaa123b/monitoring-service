@@ -1,31 +1,29 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.dto.TokenResponse;
-import by.harlap.monitoring.dto.user.AuthenticateUserDto;
-import by.harlap.monitoring.initialization.DependencyFactory;
-import by.harlap.monitoring.service.AuthService;
-import jakarta.servlet.annotation.WebServlet;
+import by.harlap.monitoring.dto.TokenResponseDto;
+import by.harlap.monitoring.dto.user.AuthenticationUserDto;
+import by.harlap.monitoring.facade.AuthFacade;
+import by.harlap.monitoring.util.IOUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 /**
- * The AuthController class extends AbstractController and is responsible for handling user authentication requests.
+ * The AuthController class extends BaseController and is responsible for handling user authentication requests.
  */
-@WebServlet("/auth")
-public class AuthController extends AbstractController {
 
-    private AuthService authService;
+public class AuthController extends BaseController {
+
+    private final AuthFacade authFacade;
 
     /**
-     * Initializes the controller by initializing necessary dependencies.
+     * Constructs an AuthController object with the specified AuthFacade.
+     *
+     * @param authFacade the AuthFacade object to use for authentication operations
      */
-    @Override
-    public void init() {
-        super.init();
-
-        authService = DependencyFactory.findService(AuthService.class);
+    public AuthController(AuthFacade authFacade) {
+        this.authFacade = authFacade;
     }
 
     /**
@@ -37,11 +35,10 @@ public class AuthController extends AbstractController {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        AuthenticateUserDto dto = read(request, AuthenticateUserDto.class);
+        final AuthenticationUserDto dto = IOUtil.read(request, AuthenticationUserDto.class);
 
-        String jwtToken = authService.login(dto.getUsername(), dto.getPassword());
-        TokenResponse tokenResponse = new TokenResponse(jwtToken);
+        final TokenResponseDto responseData = authFacade.createToken(dto);
 
-        write(response, tokenResponse, HttpServletResponse.SC_OK);
+        IOUtil.write(response, responseData, HttpServletResponse.SC_OK);
     }
 }

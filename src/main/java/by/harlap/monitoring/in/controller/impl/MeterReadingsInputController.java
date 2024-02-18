@@ -3,41 +3,30 @@ package by.harlap.monitoring.in.controller.impl;
 import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.exception.GenericHttpException;
-import by.harlap.monitoring.initialization.DependencyFactory;
-import by.harlap.monitoring.model.Device;
+import by.harlap.monitoring.facade.MeterReadingInputFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.service.DeviceService;
-import by.harlap.monitoring.service.MeterReadingsService;
-import jakarta.servlet.annotation.WebServlet;
+import by.harlap.monitoring.util.IOUtil;
+import by.harlap.monitoring.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * The MeterReadingsInputController class extends AbstractController and is responsible for handling meter readings input requests.
+ * The MeterReadingsInputController class extends BaseController and is responsible for handling meter readings input requests.
  */
-@WebServlet(urlPatterns = "/inputMeterReadings")
-public class MeterReadingsInputController extends AbstractController {
+public class MeterReadingsInputController extends BaseController {
 
-    private MeterReadingsService meterReadingsService;
-    private DeviceService deviceService;
+    private final MeterReadingInputFacade meterReadingInputFacade;
 
     /**
-     * Initializes the controller by initializing necessary dependencies.
+     * Constructs a MeterReadingsInputController object with the specified MeterReadingInputFacade.
+     *
+     * @param meterReadingInputFacade the MeterReadingInputFacade object to use for handling meter readings input
      */
-    @Override
-    public void init() {
-        super.init();
-
-        meterReadingsService = DependencyFactory.findService(MeterReadingsService.class);
-        deviceService = DependencyFactory.findService(DeviceService.class);
+    public MeterReadingsInputController(MeterReadingInputFacade meterReadingInputFacade) {
+      this.meterReadingInputFacade = meterReadingInputFacade;
     }
 
     /**
@@ -49,66 +38,14 @@ public class MeterReadingsInputController extends AbstractController {
      */
     @Override
     protected void doPost(HttpServletRequest requestContext, HttpServletResponse response) throws IOException {
-        final User activeUser = findActiveUser(requestContext);
+        final User activeUser = SecurityUtil.findActiveUser(requestContext);
+        SecurityUtil.validateRequiredRole(activeUser, Role.USER);
 
-        validateRequiredRole(activeUser, Role.USER);
-        validateMetricsExistence(activeUser);
+        final CreateMeterReadingsDto requestData = IOUtil.read(requestContext, CreateMeterReadingsDto.class);
 
-        final CreateMeterReadingsDto requestData = read(requestContext, CreateMeterReadingsDto.class);
-        final List<MeterReadingResponseDto> responseData = createMeterReadingRecord(activeUser, requestData);
+        final List<MeterReadingResponseDto> responseData = meterReadingInputFacade.createMeterReadingRecord(activeUser, requestData);
 
-        write(response, responseData, HttpServletResponse.SC_CREATED);
-    }
-
-    private List<MeterReadingResponseDto> createMeterReadingRecord(User user, CreateMeterReadingsDto data) {
-        final Map<String, Double> valuesByName = data.getDeviceValues();
-        List<MeterReadingResponseDto> meterReadingResponseDtoList = new ArrayList<>();
-        Map<Device, Double> valuesByDevice = new HashMap<>();
-        LocalDate now = LocalDate.now();
-        valuesByName.forEach((name, value) -> {
-            deviceService.findByName(name).ifPresentOrElse(
-                    device -> {valuesByDevice.put(device, value);
-                        MeterReadingResponseDto dto = new MeterReadingResponseDto();
-                        dto.setDeviceName(name);
-                        dto.setValue(value);
-                        dto.setDate(now);
-                        dto.setUserName(user.getUsername());
-                        meterReadingResponseDtoList.add(dto);},
-                    () -> throwUnknownDeviceException(name)
-            );
-        });
-
-        validateDevicesCount(valuesByDevice);
-        validateValues(valuesByDevice);
-
-        meterReadingsService.createMeterReadingRecord(user, valuesByDevice, now);
-
-        return meterReadingResponseDtoList;
-    }
-
-    private void throwUnknownDeviceException(String name) {
-        throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Устройство '%s' не существует".formatted(name));
-    }
-
-    private void validateMetricsExistence(User user) {
-        if (meterReadingsService.checkMetricReadingRecordExistence(user)) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Вы уже добавили показания счётчиков в этом месяце");
-        }
-    }
-
-    private void validateDevicesCount(Map<Device, Double> values) {
-        final List<Device> availableDevices = deviceService.listAvailableDevices();
-        if (values.size() != availableDevices.size()) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Количество введенных устройств не соответствует доступным устройствам");
-        }
-    }
-
-    private void validateValues(Map<Device, Double> values) {
-        for (Double value : values.values()) {
-            if (value <= 0) {
-                throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Введённые показания должны быть больше 0");
-            }
-        }
+        IOUtil.write(response, responseData, HttpServletResponse.SC_CREATED);
     }
 }
 

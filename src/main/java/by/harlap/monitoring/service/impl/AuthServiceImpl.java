@@ -3,8 +3,9 @@ package by.harlap.monitoring.service.impl;
 import by.harlap.monitoring.annotations.Auditable;
 import by.harlap.monitoring.exception.AuthenticationException;
 import by.harlap.monitoring.model.User;
+import by.harlap.monitoring.service.AuthService;
 import by.harlap.monitoring.service.UserService;
-import by.harlap.monitoring.util.JWTDecode;
+import by.harlap.monitoring.util.JwtUtil;
 import lombok.AllArgsConstructor;
 
 import java.util.Optional;
@@ -14,7 +15,7 @@ import java.util.Optional;
  * and provides authentication and registration services for users.
  */
 @AllArgsConstructor
-public class AuthServiceImpl implements by.harlap.monitoring.service.AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
 
@@ -40,9 +41,17 @@ public class AuthServiceImpl implements by.harlap.monitoring.service.AuthService
             throw new AuthenticationException("Проверьте пароль и повторите попытку");
         }
 
-        return JWTDecode.createJWT(username, password);
+        return JwtUtil.createJWT(username, password);
     }
 
+    /**
+     * Registers a user in the system and generates a JWT token upon successful registration.
+     * If the user already exists, throws an AuthenticationException.
+     *
+     * @param user the User object to register
+     * @return the JWT token generated upon successful registration
+     * @throws AuthenticationException if a user with the same username already exists or if registration fails
+     */
     @Auditable("Пользователь зарегистрировался в системе")
     @Override
     public String register(User user) {
@@ -54,6 +63,6 @@ public class AuthServiceImpl implements by.harlap.monitoring.service.AuthService
 
         userService.createUser(user).orElseThrow(() -> new AuthenticationException("Не удалось зарегестрировать пользователя"));
 
-        return JWTDecode.createJWT(user.getUsername(), user.getPassword());
+        return JwtUtil.createJWT(user.getUsername(), user.getPassword());
     }
 }

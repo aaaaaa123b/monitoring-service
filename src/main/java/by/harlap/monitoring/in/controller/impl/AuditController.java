@@ -1,38 +1,31 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.dto.userEvent.UserEventDto;
+import by.harlap.monitoring.dto.userEvent.UserEventResponseDto;
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.initialization.DependencyFactory;
-import by.harlap.monitoring.mapper.UserEventMapper;
+import by.harlap.monitoring.facade.AuditFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.model.UserEvent;
-import by.harlap.monitoring.service.AuditService;
-import jakarta.servlet.annotation.WebServlet;
+import by.harlap.monitoring.util.IOUtil;
+import by.harlap.monitoring.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The AuditController class extends AbstractController and is responsible for displaying user audit events.
+ * The AuditController class extends BaseController and is responsible for displaying user audit events.
  */
-@WebServlet("/audit")
-public class AuditController extends AbstractController {
+public class AuditController extends BaseController {
 
-    private AuditService auditService;
-    private UserEventMapper userEventMapper;
+    private final AuditFacade auditFacade;
 
     /**
-     * Initializes the controller by initializing necessary dependencies.
+     * Constructs an AuditController object with the specified AuditFacade.
+     *
+     * @param auditFacade the AuditFacade object to use for retrieving user audit events
      */
-    @Override
-    public void init() {
-        super.init();
-
-        userEventMapper = DependencyFactory.findMapper(UserEventMapper.class);
-        auditService = DependencyFactory.findService(AuditService.class);
+    public AuditController(AuditFacade auditFacade) {
+        this.auditFacade = auditFacade;
     }
 
     /**
@@ -45,23 +38,11 @@ public class AuditController extends AbstractController {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final User activeUser = findActiveUser(request);
+        final User activeUser = SecurityUtil.findActiveUser(request);
+        SecurityUtil.validateRequiredRole(activeUser, Role.ADMIN);
 
-        validateRequiredRole(activeUser, Role.ADMIN);
+        final List<UserEventResponseDto> responseData = auditFacade.findUserEvents();
 
-        final List<UserEventDto> responseData = createEventResponse();
-
-        write(response, responseData, HttpServletResponse.SC_OK);
-    }
-
-    private List<UserEventDto> createEventResponse(){
-        List<UserEventDto> eventResponseDtos = new ArrayList<>();
-        for (UserEvent event : auditService.findAllUserEvents()) {
-
-            UserEventDto eventResponseDto = userEventMapper.toDto(event);
-
-            eventResponseDtos.add(eventResponseDto);
-        }
-        return eventResponseDtos;
+        IOUtil.write(response, responseData, HttpServletResponse.SC_OK);
     }
 }

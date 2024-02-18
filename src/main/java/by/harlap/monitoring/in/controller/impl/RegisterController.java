@@ -1,35 +1,28 @@
 package by.harlap.monitoring.in.controller.impl;
 
-import by.harlap.monitoring.dto.TokenResponse;
-import by.harlap.monitoring.dto.user.RegisterUserDto;
-import by.harlap.monitoring.initialization.DependencyFactory;
-import by.harlap.monitoring.mapper.UserMapper;
-import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.service.AuthService;
-import jakarta.servlet.annotation.WebServlet;
+import by.harlap.monitoring.dto.TokenResponseDto;
+import by.harlap.monitoring.dto.user.AuthenticationUserDto;
+import by.harlap.monitoring.facade.RegisterFacade;
+import by.harlap.monitoring.util.IOUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 /**
- * The RegisterController class extends AbstractController and is responsible for user registration.
+ * The RegisterController class extends BaseController and is responsible for user registration.
  */
-@WebServlet("/register")
-public class RegisterController extends AbstractController {
+public class RegisterController extends BaseController {
 
-    private AuthService authService;
-    private UserMapper userMapper;
+    private final RegisterFacade registerFacade;
 
     /**
-     * Initializes the controller by initializing necessary dependencies.
+     * Constructs a RegisterController object with the specified RegisterFacade.
+     *
+     * @param registerFacade the RegisterFacade object to use for registration operations
      */
-    @Override
-    public void init() {
-        super.init();
-
-        userMapper = DependencyFactory.findMapper(UserMapper.class);
-        authService = DependencyFactory.findService(AuthService.class);
+    public RegisterController(RegisterFacade registerFacade) {
+        this.registerFacade = registerFacade;
     }
 
     /**
@@ -41,12 +34,10 @@ public class RegisterController extends AbstractController {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        RegisterUserDto dto = read(request, RegisterUserDto.class);
-        User user = userMapper.toEntity(dto);
+        final AuthenticationUserDto dto = IOUtil.read(request, AuthenticationUserDto.class);
 
-        String jwtToken = authService.register(user);
-        TokenResponse tokenResponse = new TokenResponse(jwtToken);
+        final TokenResponseDto tokenResponseDto = registerFacade.register(dto);
 
-        write(response, tokenResponse, HttpServletResponse.SC_OK);
+        IOUtil.write(response, tokenResponseDto, HttpServletResponse.SC_OK);
     }
 }

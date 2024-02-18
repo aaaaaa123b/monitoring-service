@@ -5,7 +5,6 @@ import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
-import by.harlap.monitoring.service.AuditService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +23,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for MeterReadingsServiceImpl")
@@ -33,9 +32,6 @@ class MeterReadingsServiceImplTest {
 
     @Mock
     private MetricsRecordRepository metricsRecordRepository;
-
-    @Mock
-    private AuditService auditService;
 
     @InjectMocks
     private MeterReadingsServiceImpl meterReadingsService;
@@ -114,12 +110,14 @@ class MeterReadingsServiceImplTest {
     void createMeterReadingRecordTest() {
         Device device = new Device(1L, "холодная вода");
         Map<Device, Double> meterReadings = new HashMap<>();
-        meterReadings.put(device, 100.1);
+        meterReadings.put(device, 100.0);
         User expectedUser = new User(1L, "user", "user", Role.USER);
         MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
 
-        when(metricsRecordRepository.save(any())).thenReturn(Optional.of(expectedRecord));
+        when(metricsRecordRepository.save(expectedRecord)).thenReturn(Optional.of(expectedRecord));
 
         meterReadingsService.createMeterReadingRecord(expectedUser, meterReadings, LocalDate.of(2024, 1, 1));
+
+        verify(metricsRecordRepository, times(1)).save(expectedRecord);
     }
 }

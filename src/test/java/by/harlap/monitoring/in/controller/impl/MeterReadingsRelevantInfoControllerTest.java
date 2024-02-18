@@ -2,25 +2,19 @@ package by.harlap.monitoring.in.controller.impl;
 
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.mapper.MeterReadingRecordMapper;
-import by.harlap.monitoring.model.Device;
-import by.harlap.monitoring.model.MeterReadingRecord;
+import by.harlap.monitoring.facade.MeterReadingsRelevantInfoFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.service.DeviceService;
-import by.harlap.monitoring.service.MeterReadingsService;
-import by.harlap.monitoring.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import by.harlap.monitoring.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
@@ -29,60 +23,47 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @DisplayName("Tests for MeterReadingsRelevantInfoControllerTest")
 @ExtendWith(MockitoExtension.class)
 class MeterReadingsRelevantInfoControllerTest {
 
     @Mock
-    private MeterReadingsService meterReadingsService;
-    @Mock
-    private MeterReadingRecordMapper meterReadingRecordMapper;
-    @Mock
-    private UserService userService;
-    @Mock
-    private DeviceService deviceService;
-    @Mock
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
-    @Spy
-    private static ObjectMapper objectMapper;
+    @Mock
+    private MeterReadingsRelevantInfoFacade meterReadingsRelevantInfoFacade;
 
     @InjectMocks
     private MeterReadingsRelevantInfoController meterReadingsRelevantInfoController;
 
+    private static MockedStatic<SecurityUtil> securityUtilMockedStatic;
+
     @BeforeAll
     public static void init() {
-        objectMapper = JsonMapper.builder()
-                .addModule(new JavaTimeModule())
-                .build();
+        securityUtilMockedStatic = mockStatic(SecurityUtil.class);
     }
 
     @Test
     @DisplayName("Test get relevant records by get method")
     void doGetTest() throws IOException {
         User user = new User(1L, "user", "user", Role.ADMIN);
-        Device device = new Device(1L, "device");
-        List<MeterReadingRecord> records = new ArrayList<>();
-        MeterReadingRecord record = new MeterReadingRecord(1L, 1L, 100.2, LocalDate.of(2024, 1, 1));
-        records.add(record);
+        List<MeterReadingResponseDto> records = new ArrayList<>();
+
         MeterReadingResponseDto dto = new MeterReadingResponseDto();
         dto.setUserName(user.getUsername());
-        dto.setDeviceName(device.getName());
-        dto.setDate(record.getDate());
-        dto.setValue(record.getValue());
+        dto.setDeviceName("device");
+        dto.setDate(LocalDate.of(2024, 1, 1));
+        dto.setValue(100.2);
 
-        when(meterReadingRecordMapper.toDto(record)).thenReturn(dto);
-        when(meterReadingsService.findRelevantRecords(user)).thenReturn(records);
-        when(deviceService.findById(any())).thenReturn(Optional.of(device));
-        when(userService.findUserByUsername(any())).thenReturn(Optional.of(user));
+        records.add(dto);
+
+        when(SecurityUtil.findActiveUser(request)).thenReturn(user);
+        when(meterReadingsRelevantInfoFacade.createRelevantMeterReadingResponse(user)).thenReturn(records);
 
         StringWriter responseWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(responseWriter);
@@ -94,5 +75,10 @@ class MeterReadingsRelevantInfoControllerTest {
         String expectedResponseBody = "[{\"date\":\"2024-01-01\",\"userName\":\"user\",\"deviceName\":\"device\",\"value\":100.2}]";
 
         assertEquals(expectedResponseBody, responseWriter.toString());
+    }
+
+    @AfterAll
+    public static void close() {
+        securityUtilMockedStatic.close();
     }
 }

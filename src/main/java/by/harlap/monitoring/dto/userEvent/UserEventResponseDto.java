@@ -8,13 +8,13 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 /**
- * The UserEventDto class represents a DTO (Data Transfer Object) for user events.
- * It contains information about the date, user name, and action.
+ * The UserEventResponseDto class represents a DTO (Data Transfer Object) for user events.
+ * It contains information about the date, username, and action.
  */
 @Getter
 @Setter
 @EqualsAndHashCode
-public class UserEventDto {
+public class UserEventResponseDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;

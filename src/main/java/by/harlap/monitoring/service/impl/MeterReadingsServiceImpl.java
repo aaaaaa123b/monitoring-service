@@ -23,7 +23,6 @@ public class MeterReadingsServiceImpl implements MeterReadingsService {
 
     private final MetricsRecordRepository metricsRecordRepository;
 
-
     /**
      * Checks if a metric reading record exists for the specified user in the current month and year.
      *
@@ -68,7 +67,6 @@ public class MeterReadingsServiceImpl implements MeterReadingsService {
     @Auditable("Пользователь запросил внесение данных со счётчиков за конкретный месяц")
     @Override
     public List<MeterReadingRecord> findRecordsForSpecifiedMonth(User user, Month month, Year year) {
-//        auditService.createEvent(user, "Пользователь запросил внесение данных со счётчиков за %s месяц %s года".formatted(month.toString(), year.toString()));
         return switch (user.getRole()) {
             case USER -> metricsRecordRepository.findAllByUserAndMonth(user, month, year);
             case ADMIN -> metricsRecordRepository.findAllByMonth(month, year);
@@ -101,7 +99,7 @@ public class MeterReadingsServiceImpl implements MeterReadingsService {
     @Override
     public void createMeterReadingRecord(User user, Map<Device, Double> values, LocalDate now) {
         values.forEach((device, value) -> {
-            MeterReadingRecord record = new MeterReadingRecord(user.getId(), device.getId(), value, LocalDate.now());
+            final MeterReadingRecord record = new MeterReadingRecord(user.getId(), device.getId(), value, now);
             metricsRecordRepository.save(record);
         });
     }
