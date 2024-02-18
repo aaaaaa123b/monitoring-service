@@ -3,22 +3,17 @@ package by.harlap.monitoring.facade;
 import by.harlap.monitoring.dto.TokenResponseDto;
 import by.harlap.monitoring.dto.user.AuthenticationUserDto;
 import by.harlap.monitoring.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * Facade for authentication operations.
  */
+@RequiredArgsConstructor
+@Component
 public class AuthFacade {
 
     private final AuthService authService;
-
-    /**
-     * Constructs an AuthFacade with the specified AuthService.
-     *
-     * @param authService the service responsible for authentication
-     */
-    public AuthFacade(AuthService authService) {
-        this.authService = authService;
-    }
 
     /**
      * Creates a JWT token for the given authentication user

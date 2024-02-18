@@ -19,7 +19,7 @@ public class UserEventResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
-    private String userName;
+    private Long userId;
 
     private String action;
 }

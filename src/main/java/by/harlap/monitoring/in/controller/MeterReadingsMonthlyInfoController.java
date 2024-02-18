@@ -3,45 +3,35 @@ package by.harlap.monitoring.in.controller;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.facade.MeterReadingsMonthlyInfoFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.util.IOUtil;
 import by.harlap.monitoring.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * The MeterReadingsMonthlyInfoController class extends BaseController and is responsible for retrieving meter readings for a specified month.
  */
-public class MeterReadingsMonthlyInfoController extends BaseController {
+@Controller
+@RequestMapping("/meterReadingsForMonth")
+@RequiredArgsConstructor
+public class MeterReadingsMonthlyInfoController {
 
     private final MeterReadingsMonthlyInfoFacade monthlyInfoFacade;
+    private final SecurityUtil securityUtil;
 
-    /**
-     * Constructs a MeterReadingsMonthlyInfoController object with the specified MeterReadingsMonthlyInfoFacade.
-     *
-     * @param monthlyInfoFacade the MeterReadingsMonthlyInfoFacade object to use for accessing monthly meter readings information
-     */
-    public MeterReadingsMonthlyInfoController(MeterReadingsMonthlyInfoFacade monthlyInfoFacade) {
-        this.monthlyInfoFacade = monthlyInfoFacade;
-    }
-
-    /**
-     * Handles HTTP GET requests for retrieving meter readings for a specified month.
-     *
-     * @param request  the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @throws IOException if an I/O error occurs while processing the request
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final User activeUser = SecurityUtil.findActiveUser(request);
-
-        final String monthString = request.getParameter("month");
-        final String yearString = request.getParameter("year");
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MeterReadingResponseDto>> doGet(@RequestAttribute("username") String username, @RequestParam("month") String monthString, @RequestParam("year") String yearString) {
+        final User activeUser = securityUtil.findActiveUser(username);
 
         final List<MeterReadingResponseDto> responseData = monthlyInfoFacade.createMeterReadingResponseSpecifiedByMonth(activeUser, monthString, yearString);
 
-        IOUtil.write(response, responseData, HttpServletResponse.SC_OK);
+        return ResponseEntity.ok(responseData);
     }
 }

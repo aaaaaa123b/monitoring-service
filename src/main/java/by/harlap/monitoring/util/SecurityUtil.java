@@ -1,52 +1,29 @@
 package by.harlap.monitoring.util;
 
 import by.harlap.monitoring.enumeration.Role;
+import by.harlap.monitoring.exception.AuthenticationException;
 import by.harlap.monitoring.exception.GenericHttpException;
-import by.harlap.monitoring.initialization.DependencyFactory;
+import by.harlap.monitoring.exception.PermissionDeniedException;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 /**
  * Utility class for security-related operations.
  */
+@Component
+@RequiredArgsConstructor
 public final class SecurityUtil {
 
     private final UserService userService;
 
-    private static final class InstanceHolder {
-        private static final SecurityUtil instance = new SecurityUtil();
-    }
-
-    /**
-     * Returns the instance of the SecurityUtil class. This method provides access to the singleton instance
-     * of the SecurityUtil.
-     *
-     * @return the singleton instance of the SecurityUtil class
-     */
-    public static SecurityUtil getInstance() {
-        return SecurityUtil.InstanceHolder.instance;
-    }
-
-    private SecurityUtil() {
-        userService = DependencyFactory.findService(UserService.class);
-    }
-
-    /**
-     * Finds the active user based on the username provided in the HttpServletRequest.
-     *
-     * @param request the HttpServletRequest containing the username attribute
-     * @return the active user
-     * @throws GenericHttpException if the user is not found
-     */
-    public static User findActiveUser(HttpServletRequest request) {
-        final String username = (String) request.getAttribute("username");
-        final Optional<User> optionalUser = getInstance().userService.findUserByUsername(username);
+    public User findActiveUser(final String username) {
+        final Optional<User> optionalUser = userService.findUserByUsername(username);
         if (optionalUser.isEmpty()) {
-            throw new GenericHttpException(HttpServletResponse.SC_UNAUTHORIZED, "Вам необходимо авторизоваться для доступа к этому ресурсу");
+            throw new AuthenticationException( "Вам необходимо авторизоваться для доступа к этому ресурсу");
         }
         return optionalUser.get();
     }
@@ -58,10 +35,10 @@ public final class SecurityUtil {
      * @param role the required role
      * @throws GenericHttpException if the user does not have the required role
      */
-    public static void validateRequiredRole(User user, Role role) {
+    public void validateRequiredRole(User user, Role role) {
         final Role actualRole = user.getRole();
         if (actualRole == null || !actualRole.equals(role)) {
-            throw new GenericHttpException(HttpServletResponse.SC_FORBIDDEN, "Доступ запрещен");
+            throw new PermissionDeniedException("Доступ запрещен");
         }
     }
 

@@ -7,6 +7,8 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 import by.harlap.monitoring.validator.MeterReadingsMonthlyInfoValidator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.Month;
 import java.time.Year;
@@ -16,6 +18,8 @@ import java.util.List;
 /**
  * Facade for monthly meter readings information operations.
  */
+@RequiredArgsConstructor
+@Component
 public class MeterReadingsMonthlyInfoFacade {
 
     private final MeterReadingsService meterReadingsService;
@@ -23,20 +27,6 @@ public class MeterReadingsMonthlyInfoFacade {
     private final MeterReadingRecordMapper meterReadingRecordMapper;
     private final MeterReadingsMonthlyInfoValidator meterReadingsMonthlyInfoValidator;
 
-    /**
-     * Constructs a MeterReadingsMonthlyInfoFacade with the specified dependencies.
-     *
-     * @param meterReadingsService              the service responsible for meter readings operations
-     * @param deviceService                     the service responsible for device operations
-     * @param meterReadingRecordMapper          the mapper used to map MeterReadingRecord objects to DTOs
-     * @param meterReadingsMonthlyInfoValidator the validator for monthly meter readings information
-     */
-    public MeterReadingsMonthlyInfoFacade(MeterReadingsService meterReadingsService, DeviceService deviceService, MeterReadingRecordMapper meterReadingRecordMapper, MeterReadingsMonthlyInfoValidator meterReadingsMonthlyInfoValidator) {
-        this.meterReadingRecordMapper = meterReadingRecordMapper;
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-        this.meterReadingsMonthlyInfoValidator = meterReadingsMonthlyInfoValidator;
-    }
 
     /**
      * Creates meter reading responses for the specified month and year for the provided active user.

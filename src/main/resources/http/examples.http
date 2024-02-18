@@ -19,7 +19,7 @@ Content-Type: application/json
 ###добавление нового счётчика (admin)
 POST http://localhost:8080/devices
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyMjEwMTYsImlhdCI6MTcwODIxNzQxNiwidXNlcm5hbWUiOiJ1c2VyIn0.HLcU3XAOEeZVxx6Ac7iEuzrI_TgIjNZzmjlcSmSJc5A
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyNzI3MjUsImlhdCI6MTcwODI2OTEyNSwidXNlcm5hbWUiOiJ1c2VyIn0.we0cc-gCC6k5lrJ9yzmsXd4BKMoWnbNlbXCZSzfn5_k
 
 {
   "deviceName" : "newDevice"
@@ -44,7 +44,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZ
 ###подача показаний (user)
 POST http://localhost:8080/inputMeterReadings
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDc2OTA5NDgsImlhdCI6MTcwNzY4NzM0OCwidXNlcm5hbWUiOiJ1c2VyIn0.f0m_4IDLz6LT8xZj6VjNinez2TAjmAZatFk4TDyyxd4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyOTEwMjMsImlhdCI6MTcwODI4NzQyMywidXNlcm5hbWUiOiJ1c2VyIn0.sxf2ZjA0n7OtE9F7zBX9My-iN5R3zW5isL_zGL-eCGo
 
 {"deviceValues": {
     "отопление": 1533.13,

@@ -2,7 +2,9 @@ package by.harlap.monitoring.service.impl;
 
 import by.harlap.monitoring.model.UserEvent;
 import by.harlap.monitoring.repository.AuditRepository;
-import lombok.AllArgsConstructor;
+import by.harlap.monitoring.service.AuditService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -10,8 +12,9 @@ import java.util.List;
  * The AuditServiceImpl class implements the AuditServiceImpl interface
  * and provides functionality to create user events and save them to the AuditRepository.
  */
-@AllArgsConstructor
-public class AuditServiceImpl implements by.harlap.monitoring.service.AuditService {
+@Service
+@RequiredArgsConstructor
+public class AuditServiceImpl implements AuditService {
 
     private final AuditRepository auditRepository;
 

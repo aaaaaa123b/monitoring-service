@@ -6,7 +6,8 @@ import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
 import by.harlap.monitoring.service.MeterReadingsService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -18,7 +19,8 @@ import java.util.Map;
  * The MeterReadingsServiceImpl class implements the MeterReadingsService interface
  * and provides services related to meter readings and records.
  */
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class MeterReadingsServiceImpl implements MeterReadingsService {
 
     private final MetricsRecordRepository metricsRecordRepository;

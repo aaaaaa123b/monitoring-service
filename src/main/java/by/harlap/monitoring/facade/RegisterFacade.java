@@ -5,25 +5,18 @@ import by.harlap.monitoring.dto.user.AuthenticationUserDto;
 import by.harlap.monitoring.mapper.UserMapper;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * Facade for user registration operations.
  */
+@RequiredArgsConstructor
+@Component
 public class RegisterFacade {
 
     private final AuthService authService;
     private final UserMapper userMapper;
-
-    /**
-     * Constructs a RegisterFacade with the specified dependencies.
-     *
-     * @param authService the service responsible for authentication
-     * @param userMapper  the mapper used to map AuthenticationUserDto objects to User objects
-     */
-    public RegisterFacade(AuthService authService, UserMapper userMapper) {
-        this.authService = authService;
-        this.userMapper = userMapper;
-    }
 
     /**
      * Registers a new user using the provided authentication user DTO.

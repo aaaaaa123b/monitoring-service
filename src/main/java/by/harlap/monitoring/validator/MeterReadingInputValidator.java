@@ -6,6 +6,8 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -13,18 +15,12 @@ import java.util.Map;
 /**
  * Validator for meter reading input.
  */
+@Component
+@RequiredArgsConstructor
 public class MeterReadingInputValidator {
 
     private final MeterReadingsService meterReadingsService;
     private final DeviceService deviceService;
-
-    /**
-     * Constructs a MeterReadingInputValidator with the required services.
-     */
-    public MeterReadingInputValidator(MeterReadingsService meterReadingsService, DeviceService deviceService) {
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-    }
 
     /**
      * Validates the existence of metric reading records for the user in the current month.
@@ -34,7 +30,7 @@ public class MeterReadingInputValidator {
      */
     public void validateMetricsExistence(User user) {
         if (meterReadingsService.checkMetricReadingRecordExistence(user)) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Вы уже добавили показания счётчиков в этом месяце");
+            throw new GenericHttpException( "Вы уже добавили показания счётчиков в этом месяце");
         }
     }
 
@@ -47,7 +43,7 @@ public class MeterReadingInputValidator {
     public void validateDevicesCount(Map<Device, Double> values) {
         final List<Device> availableDevices = deviceService.listAvailableDevices();
         if (values.size() != availableDevices.size()) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Количество введенных устройств не соответствует доступным устройствам");
+            throw new GenericHttpException("Количество введенных устройств не соответствует доступным устройствам");
         }
     }
 
@@ -60,7 +56,7 @@ public class MeterReadingInputValidator {
     public void validateValues(Map<Device, Double> values) {
         for (final Double value : values.values()) {
             if (value <= 0) {
-                throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Введённые показания должны быть больше 0");
+                throw new GenericHttpException("Введённые показания должны быть больше 0");
             }
         }
     }

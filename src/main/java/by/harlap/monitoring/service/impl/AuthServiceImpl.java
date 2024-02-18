@@ -6,7 +6,8 @@ import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
 import by.harlap.monitoring.service.UserService;
 import by.harlap.monitoring.util.JwtUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -14,10 +15,12 @@ import java.util.Optional;
  * The AuthServiceImpl class implements the AuthServiceImpl interface
  * and provides authentication and registration services for users.
  */
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     /**
      * Authenticates a user based on the provided username and password.
@@ -41,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthenticationException("Проверьте пароль и повторите попытку");
         }
 
-        return JwtUtil.createJWT(username, password);
+        return jwtUtil.createJWT(username, password);
     }
 
     /**
@@ -63,6 +66,6 @@ public class AuthServiceImpl implements AuthService {
 
         userService.createUser(user).orElseThrow(() -> new AuthenticationException("Не удалось зарегестрировать пользователя"));
 
-        return JwtUtil.createJWT(user.getUsername(), user.getPassword());
+        return jwtUtil.createJWT(user.getUsername(), user.getPassword());
     }
 }

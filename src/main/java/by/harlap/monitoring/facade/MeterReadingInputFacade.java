@@ -9,6 +9,8 @@ import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
 import by.harlap.monitoring.validator.MeterReadingInputValidator;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,24 +21,14 @@ import java.util.Map;
 /**
  * Facade for meter reading input operations.
  */
+@RequiredArgsConstructor
+@Component
 public class MeterReadingInputFacade {
 
     private final MeterReadingsService meterReadingsService;
     private final DeviceService deviceService;
     private final MeterReadingInputValidator meterReadingInputValidator;
 
-    /**
-     * Constructs a MeterReadingInputFacade with the specified dependencies.
-     *
-     * @param meterReadingsService       the service responsible for meter readings operations
-     * @param deviceService              the service responsible for device operations
-     * @param meterReadingInputValidator the validator for meter reading inputs
-     */
-    public MeterReadingInputFacade(MeterReadingsService meterReadingsService, DeviceService deviceService, MeterReadingInputValidator meterReadingInputValidator) {
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-        this.meterReadingInputValidator = meterReadingInputValidator;
-    }
 
     /**
      * Creates meter reading records for the provided user and data.
@@ -59,10 +51,10 @@ public class MeterReadingInputFacade {
                     valuesByDevice.put(device, value);
 
                     final MeterReadingResponseDto dto = new MeterReadingResponseDto();
-                    dto.setDeviceName(name);
+                    dto.setDeviceId(device.getId());
                     dto.setValue(value);
                     dto.setDate(now);
-                    dto.setUserName(user.getUsername());
+                    dto.setUserId(user.getId());
 
                     meterReadingResponseDtoList.add(dto);
                 },
@@ -78,6 +70,6 @@ public class MeterReadingInputFacade {
     }
 
     private void throwUnknownDeviceException(String name) {
-        throw new UnknownDeviceException(HttpServletResponse.SC_CONFLICT, "Устройство '%s' не существует".formatted(name));
+        throw new UnknownDeviceException( "Устройство '%s' не существует".formatted(name));
     }
 }

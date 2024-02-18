@@ -4,7 +4,8 @@ import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
 import by.harlap.monitoring.util.ConnectionManager;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.time.Month;
@@ -16,7 +17,8 @@ import java.util.Optional;
 /**
  * Implementation of MetricsRecordRepository using JDBC for database interactions.
  */
-@AllArgsConstructor
+@Repository
+@RequiredArgsConstructor
 public class JdbcMetricsRecordRepository implements MetricsRecordRepository {
 
     private final ConnectionManager connectionManager;

@@ -3,7 +3,8 @@ package by.harlap.monitoring.service.impl;
 import by.harlap.monitoring.exception.DeviceAlreadyExistsException;
 import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.repository.DeviceRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,8 @@ import java.util.Optional;
  * The DeviceServiceImpl class implements the DeviceServiceImpl interface
  * and provides operations related to devices.
  */
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class DeviceServiceImpl implements by.harlap.monitoring.service.DeviceService {
 
     private final DeviceRepository deviceRepository;

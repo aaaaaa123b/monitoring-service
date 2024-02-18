@@ -2,10 +2,14 @@ package by.harlap.monitoring.validator;
 
 import by.harlap.monitoring.exception.GenericHttpException;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * Validator for meter readings monthly information.
  */
+@Component
+@RequiredArgsConstructor
 public class MeterReadingsMonthlyInfoValidator {
 
     /**
@@ -17,7 +21,7 @@ public class MeterReadingsMonthlyInfoValidator {
      */
     public void validateMonthAndYearExistence(final String month, final String year) {
         if (month == null || year == null) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Параметры месяц и год не могут быть пустыми");
+            throw new GenericHttpException("Параметры месяц и год не могут быть пустыми");
         }
     }
 
@@ -33,10 +37,10 @@ public class MeterReadingsMonthlyInfoValidator {
         try {
             month = Integer.parseInt(monthString);
         } catch (NumberFormatException e) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Неправильный формат месяца");
+            throw new GenericHttpException("Неправильный формат месяца");
         }
         if (month > 12 || month < 1) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Месяц должен быть задан в диапазоне от 1 до 12");
+            throw new GenericHttpException("Месяц должен быть задан в диапазоне от 1 до 12");
         }
         return month;
     }
@@ -53,10 +57,10 @@ public class MeterReadingsMonthlyInfoValidator {
         try {
             year = Integer.parseInt(yearString);
         } catch (NumberFormatException e) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Неправильный формат года");
+            throw new GenericHttpException("Неправильный формат года");
         }
         if (year < 1) {
-            throw new GenericHttpException(HttpServletResponse.SC_CONFLICT, "Год должен быть положительным числом");
+            throw new GenericHttpException("Год должен быть положительным числом");
         }
         return year;
     }

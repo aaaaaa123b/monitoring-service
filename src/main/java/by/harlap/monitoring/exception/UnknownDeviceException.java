@@ -1,14 +1,12 @@
 package by.harlap.monitoring.exception;
 
-public class UnknownDeviceException extends GenericHttpException{
+/**
+ * This class represents an exception indicating that a device is unknown or not recognized.
+ * It extends RuntimeException to indicate that it is an unchecked exception.
+ */
+public class UnknownDeviceException extends RuntimeException{
 
-    /**
-     * Constructs a new {@code GenericHttpException} with the specified HTTP status code and message.
-     *
-     * @param code    the HTTP status code
-     * @param message the description or reason for the exception
-     */
-    public UnknownDeviceException(int code, String message) {
-        super(code, message);
+    public UnknownDeviceException(String message) {
+        super(message);
     }
 }

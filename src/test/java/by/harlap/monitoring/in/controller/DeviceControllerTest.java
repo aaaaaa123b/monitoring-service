@@ -6,75 +6,61 @@ import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.facade.DeviceFacade;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for DeviceControllerTest")
 class DeviceControllerTest {
 
-    @Mock
-    private HttpServletRequest request;
-    @Mock
-    private HttpServletResponse response;
+    private MockMvc mockMvc;
     @Mock
     private DeviceFacade deviceFacade;
-
+    @Mock
+    private SecurityUtil securityUtil;
     @InjectMocks
     private DeviceController deviceController;
 
-    private static MockedStatic<SecurityUtil> securityUtilMockedStatic;
-
-    @BeforeAll
-    public static void init() {
-        securityUtilMockedStatic = mockStatic(SecurityUtil.class);
+    @BeforeEach
+    public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(deviceController).build();
     }
 
     @Test
     @DisplayName("Test creating device by post method")
-    void doPostTest() throws IOException {
-        String createRequestJson = "{\"name\": \"testDevice\"}";
-        User user = new User(1L, "user", "user", Role.ADMIN);
-        DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
+    void doPostTest() throws Exception {
+        final String createRequestJson = "{\"name\": \"testDevice\"}";
+        final User user = new User(1L, "user", "user", Role.ADMIN);
+        final DeviceResponseDto deviceResponseDto = new DeviceResponseDto();
         deviceResponseDto.setName("testDevice");
         deviceResponseDto.setId(1L);
 
-        CreateDeviceDto deviceDto = new CreateDeviceDto();
+        final CreateDeviceDto deviceDto = new CreateDeviceDto();
         deviceDto.setName("testDevice");
 
-        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(createRequestJson)));
-        when(SecurityUtil.findActiveUser(request)).thenReturn(user);
+        when(securityUtil.findActiveUser(user.getUsername())).thenReturn(user);
         when(deviceFacade.createDevice(deviceDto)).thenReturn(deviceResponseDto);
 
-        StringWriter responseWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(responseWriter);
-        when(response.getWriter()).thenReturn(printWriter);
+        final String expectedResponseBody = "{\"id\":1,\"name\":\"testDevice\"}";
 
-        deviceController.doPost(request, response);
-
-        verify(response).getWriter();
-        String expectedResponseBody = "{\"id\":1,\"name\":\"testDevice\"}";
-
-        assertEquals(expectedResponseBody, responseWriter.toString().replaceAll("\\s", ""));
-    }
-
-    @AfterAll
-    public static void close() {
-        securityUtilMockedStatic.close();
+        mockMvc.perform(post("/devices")
+                        .requestAttr("username", user.getUsername())
+                        .content(createRequestJson)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(expectedResponseBody));
     }
 }

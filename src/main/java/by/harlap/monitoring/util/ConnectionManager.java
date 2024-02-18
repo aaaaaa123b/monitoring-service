@@ -1,5 +1,8 @@
 package by.harlap.monitoring.util;
 
+import by.harlap.monitoring.config.property.DatabaseProperties;
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,30 +10,18 @@ import java.sql.SQLException;
 /**
  * Utility class for managing database connections.
  */
+@Component
 public class ConnectionManager {
 
-    private final String url;
-    private final String username;
-    private final String password;
+    private final DatabaseProperties databaseProperties;
 
-    /**
-     * Constructs a new ConnectionManager with the specified property source.
-     *
-     * @param propertySource the path to the property source containing connection parameters
-     * @throws RuntimeException if the PostgresSQL driver is not found or if there is an error loading properties
-     */
-    public ConnectionManager(String propertySource) {
+    public ConnectionManager(DatabaseProperties databaseProperties) {
+        this.databaseProperties = databaseProperties;
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(databaseProperties.getDriver());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Драйвер для подключения к БД не был найден!", e);
         }
-
-        final PropertyHolder propertyHolder = new PropertyHolder(propertySource);
-
-        url = propertyHolder.get("url");
-        username = propertyHolder.get("username");
-        password = propertyHolder.get("password");
     }
 
     /**
@@ -43,7 +34,11 @@ public class ConnectionManager {
         final Connection connection;
 
         try {
-            connection = DriverManager.getConnection(url, username, password);
+            connection = DriverManager.getConnection(
+                    databaseProperties.getUrl(),
+                    databaseProperties.getUsername(),
+                    databaseProperties.getPassword()
+            );
         } catch (SQLException e) {
             throw new RuntimeException("Не удалось установить соединение с БД: ", e);
         }

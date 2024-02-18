@@ -3,43 +3,35 @@ package by.harlap.monitoring.in.controller;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.facade.MeterReadingsRelevantInfoFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.util.IOUtil;
 import by.harlap.monitoring.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * The MeterReadingsRelevantInfoController class extends BaseController and is responsible for retrieving relevant meter readings information.
  */
-public class MeterReadingsRelevantInfoController extends BaseController {
+@Controller
+@RequestMapping("/relevantMeterReadings")
+@RequiredArgsConstructor
+public class MeterReadingsRelevantInfoController {
 
     private final MeterReadingsRelevantInfoFacade meterReadingsRelevantInfoFacade;
+    private final SecurityUtil securityUtil;
 
-    /**
-     * Constructs a MeterReadingsRelevantInfoController object with the specified MeterReadingsRelevantInfoFacade.
-     *
-     * @param meterReadingsRelevantInfoFacade the MeterReadingsRelevantInfoFacade object to use for accessing relevant meter readings information
-     */
-    public MeterReadingsRelevantInfoController(MeterReadingsRelevantInfoFacade meterReadingsRelevantInfoFacade) {
-        this.meterReadingsRelevantInfoFacade = meterReadingsRelevantInfoFacade;
-    }
-
-    /**
-     * Handles HTTP GET requests for retrieving relevant meter readings information.
-     *
-     * @param request  the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @throws IOException if an I/O error occurs while processing the request
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final User activeUser = SecurityUtil.findActiveUser(request);
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MeterReadingResponseDto>> doGet(@RequestAttribute("username") String username) {
+        final User activeUser = securityUtil.findActiveUser(username);
 
         final List<MeterReadingResponseDto> responseData = meterReadingsRelevantInfoFacade.createRelevantMeterReadingResponse(activeUser);
 
-        IOUtil.write(response, responseData, HttpServletResponse.SC_OK);
+        return ResponseEntity.ok(responseData);
     }
 
 }

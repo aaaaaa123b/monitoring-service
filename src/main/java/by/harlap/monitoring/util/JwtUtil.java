@@ -1,29 +1,27 @@
 package by.harlap.monitoring.util;
 
+import by.harlap.monitoring.config.property.SecurityProperties;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
-    private static final String SECRET;
-    private static final long TOKEN_VALIDITY_IN_MILLIS;
+    private final SecurityProperties securityProperties;
+    private final Algorithm algorithm;
+    private final JWTVerifier verifier;
 
-    private static final Algorithm algorithm;
-    private static final JWTVerifier verifier;
+    public JwtUtil(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
 
-    static {
-        final PropertyHolder properties = new PropertyHolder("liquibase.properties");
-
-        SECRET = properties.get("secretKey");
-        algorithm = Algorithm.HMAC256(SECRET);
+        algorithm = Algorithm.HMAC256(securityProperties.getSecret());
         verifier = JWT.require(algorithm).build();
-
-        TOKEN_VALIDITY_IN_MILLIS = Long.parseLong(properties.get("tokenTime"));
     }
 
     /**
@@ -33,12 +31,12 @@ public class JwtUtil {
      * @param password the password to be included in the token
      * @return a JWT token
      */
-    public static String createJWT(String username, String password) {
+    public String createJWT(String username, String password) {
         return JWT.create()
                 .withClaim("username", username)
                 .withClaim("password", password)
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_VALIDITY_IN_MILLIS))
+                .withExpiresAt(new Date(System.currentTimeMillis() + securityProperties.getTtl()))
                 .sign(algorithm);
     }
 
@@ -48,7 +46,7 @@ public class JwtUtil {
      * @param jwtToken the JWT token to be verified
      * @return the decoded JWT if verification is successful, null otherwise
      */
-    public static DecodedJWT verifyJWT(String jwtToken) {
+    public DecodedJWT verifyJWT(String jwtToken) {
         try {
             return verifier.verify(jwtToken);
         } catch (JWTVerificationException e) {

@@ -6,6 +6,8 @@ import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,24 +15,13 @@ import java.util.List;
 /**
  * Facade for relevant meter readings information operations.
  */
+@RequiredArgsConstructor
+@Component
 public class MeterReadingsRelevantInfoFacade {
 
     private final MeterReadingsService meterReadingsService;
     private final DeviceService deviceService;
     private final MeterReadingRecordMapper meterReadingRecordMapper;
-
-    /**
-     * Constructs a MeterReadingsRelevantInfoFacade with the specified dependencies.
-     *
-     * @param meterReadingsService     the service responsible for meter readings operations
-     * @param deviceService            the service responsible for device operations
-     * @param meterReadingRecordMapper the mapper used to map MeterReadingRecord objects to DTOs
-     */
-    public MeterReadingsRelevantInfoFacade(MeterReadingsService meterReadingsService, DeviceService deviceService, MeterReadingRecordMapper meterReadingRecordMapper) {
-        this.meterReadingRecordMapper = meterReadingRecordMapper;
-        this.meterReadingsService = meterReadingsService;
-        this.deviceService = deviceService;
-    }
 
     /**
      * Creates relevant meter reading responses for the provided active user.
