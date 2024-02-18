@@ -6,22 +6,19 @@ import by.harlap.monitoring.model.UserEvent;
 import java.util.List;
 
 /**
- * The AuditService interface defines methods for logging audit events.
+ * The AuditServiceImpl interface defines methods for logging audit events.
  */
 public interface AuditService {
 
     /**
      * Creates an audit event for the specified user with the given message.
-     *
-     * @param user    the user associated with the audit event
-     * @param message the message describing the audit event
      */
-    void createEvent(User user, String message);
+    void createEvent(UserEvent userEvent);
 
     /**
-     * Retrieves a list of all user events logged by the AuditService.
+     * Retrieves a list of all user events logged by the AuditServiceImpl.
      *
-     * @return a list containing all user events logged by the AuditService
+     * @return a list containing all user events logged by the AuditServiceImpl
      */
-    List<UserEvent> findUserEvents();
+    List<UserEvent> findAllUserEvents();
 }

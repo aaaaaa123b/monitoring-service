@@ -6,6 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>by.harlap</groupId>
+    <packaging>war</packaging>
     <artifactId>monitoring-service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -23,7 +24,17 @@
         <testcontainers.bom.version>1.19.4</testcontainers.bom.version>
         <testcontainers.version>1.16.2</testcontainers.version>
         <assertj.version>3.24.2</assertj.version>
-        <postgresql>42.6.0</postgresql>
+        <postgresql.version>42.6.0</postgresql.version>
+        <jackson.core.version>2.15.2</jackson.core.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jwt.version>4.2.1</jwt.version>
+        <mapstruct.maven.plugin.version>3.11.0</mapstruct.maven.plugin.version>
+        <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
+        <plugin.compile.version>3.11.0</plugin.compile.version>
+        <lombok.binding.version>0.2.0</lombok.binding.version>
+        <plugin.aspectj.version>1.14.0</plugin.aspectj.version>
+        <aspectj.version>1.9.7</aspectj.version>
     </properties>
 
     <dependencies>
@@ -65,7 +76,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql}</version>
+            <version>${postgresql.version}</version>
         </dependency>
 
         <dependency>
@@ -90,34 +101,56 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-bom</artifactId>
-            <version>${testcontainers.bom.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>by.harlap.monitoring.MonitoringServiceApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven.war.plugin.version}</version>
             </plugin>
 
             <plugin>
@@ -135,6 +168,60 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${plugin.compile.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok.binding.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>${plugin.aspectj.version}</version>
+                <configuration>
+                    <showWeaveInfo>true</showWeaveInfo>
+                    <Xlint>ignore</Xlint>
+                    <complianceLevel>${plugin.compile.version}</complianceLevel>
+                    <encoding>UTF-8</encoding>
+                    <verbose>true</verbose>
+                    <forceAjcCompile>true</forceAjcCompile>
+                    <sources/>
+                    <weaveDirectories>
+                        <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+                    </weaveDirectories>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

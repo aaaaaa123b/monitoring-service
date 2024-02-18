@@ -34,4 +34,6 @@ public interface DeviceRepository {
      * @return an Optional containing the device, or Optional.empty() if not found
      */
     Optional<Device> findById(Long deviceId);
+
+    Optional<Device> findByName(String deviceName);
 }
