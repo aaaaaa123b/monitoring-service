@@ -3,8 +3,8 @@ POST http://localhost:8080/auth
 Content-Type: application/json
 
 {
-  "username" : "user",
-  "password" : "user"
+  "username" : "admin",
+  "password" : "admin"
 }
 
 ###регистрация пользователя (user)
@@ -19,7 +19,7 @@ Content-Type: application/json
 ###добавление нового счётчика (admin)
 POST http://localhost:8080/devices
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyNzI3MjUsImlhdCI6MTcwODI2OTEyNSwidXNlcm5hbWUiOiJ1c2VyIn0.we0cc-gCC6k5lrJ9yzmsXd4BKMoWnbNlbXCZSzfn5_k
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6ImFkbWluIiwiZXhwIjoxNzA4NjU1NzMwLCJpYXQiOjE3MDg2NTIxMzAsInVzZXJuYW1lIjoiYWRtaW4ifQ.lKWeINUODIGBj2ntWfX621Rk2efaliCsF_UsE-RhkNA
 
 {
   "deviceName" : "newDevice"
@@ -27,24 +27,24 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZ
 
 ###аудит действий пользователя (admin)
 GET http://localhost:8080/audit
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgyMjEwMTYsImlhdCI6MTcwODIxNzQxNiwidXNlcm5hbWUiOiJ1c2VyIn0.HLcU3XAOEeZVxx6Ac7iEuzrI_TgIjNZzmjlcSmSJc5A
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDg2Mzk1MzIsImlhdCI6MTcwODYzNTkzMiwidXNlcm5hbWUiOiJ1c2VyIn0.H8DeowV-F3JMP3ZxxpaOVRZKNbDGuysiRtIBPUAK9tU
 
 ###просмотр истории подачи показаний (admin/user)
-GET http://localhost:8080/meterReadingsHistory
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgzMDEwNDQsImlhdCI6MTcwODI5NzQ0NCwidXNlcm5hbWUiOiJ1c2VyIn0.D-M5mUnVTkTSn3fa1dAU_GEbHv0sMDbwb0b-H5ndoSM
+GET http://localhost:8080/meterReadings
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDg2NTQ2OTEsImlhdCI6MTcwODY1MTA5MSwidXNlcm5hbWUiOiJ1c2VyIn0.WApFwHPF5yaCU1t2aHycG9PYNk3asWNpEUvPzAlmZ2c
 
 ###просмотр актуальных показаний счетчиков (admin/user)
-GET http://localhost:8080/relevantMeterReadings
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgzMDEwNDQsImlhdCI6MTcwODI5NzQ0NCwidXNlcm5hbWUiOiJ1c2VyIn0.D-M5mUnVTkTSn3fa1dAU_GEbHv0sMDbwb0b-H5ndoSM
+GET http://localhost:8080/meterReadings/relevant
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDg2NTQ2OTEsImlhdCI6MTcwODY1MTA5MSwidXNlcm5hbWUiOiJ1c2VyIn0.WApFwHPF5yaCU1t2aHycG9PYNk3asWNpEUvPzAlmZ2c
 
 ###просмотр показаний счетчиков за конкретный месяц (admin/user)
-GET http://localhost:8080/meterReadingsForMonth?month=1&year=2024
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDgzMDEwNDQsImlhdCI6MTcwODI5NzQ0NCwidXNlcm5hbWUiOiJ1c2VyIn0.D-M5mUnVTkTSn3fa1dAU_GEbHv0sMDbwb0b-H5ndoSM
+GET http://localhost:8080/meterReadings/forMonth?month=1&year=2024
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDg2NTQ2OTEsImlhdCI6MTcwODY1MTA5MSwidXNlcm5hbWUiOiJ1c2VyIn0.WApFwHPF5yaCU1t2aHycG9PYNk3asWNpEUvPzAlmZ2c
 
 ###подача показаний (user)
-POST http://localhost:8080/inputMeterReadings
+POST http://localhost:8080/meterReadings
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6Im5ld1Bhc3N3b3JkIiwiZXhwIjoxNzA4MzAxMTIyLCJpYXQiOjE3MDgyOTc1MjIsInVzZXJuYW1lIjoibmV3VXNlcjIxIn0.-7llVp_baborev5_NfbQKfgotY46J_cx79CbzlXyqxI
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDg2NTQ2OTEsImlhdCI6MTcwODY1MTA5MSwidXNlcm5hbWUiOiJ1c2VyIn0.WApFwHPF5yaCU1t2aHycG9PYNk3asWNpEUvPzAlmZ2c
 
 {"deviceValues": {
     "отопление": 1533.13,

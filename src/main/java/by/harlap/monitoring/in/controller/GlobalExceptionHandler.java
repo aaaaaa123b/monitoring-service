@@ -14,33 +14,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler({
+            EntityNotFoundException.class,
+            UncheckedLiquibaseException.class,
+            UnknownDeviceException.class,
+            GenericHttpException.class,
+            DeviceAlreadyExistsException.class
+    })
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleConflictException(RuntimeException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleAuthenticationException(AuthenticationException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler(DeviceAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAuthenticationException(DeviceAlreadyExistsException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAuthenticationException(EntityNotFoundException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler(UncheckedLiquibaseException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAuthenticationException(UncheckedLiquibaseException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler(UnknownDeviceException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAuthenticationException(UnknownDeviceException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
@@ -49,11 +37,4 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleAuthenticationException(PermissionDeniedException exception) {
         return new ErrorResponse(exception.getMessage());
     }
-
-    @ExceptionHandler(GenericHttpException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleAuthenticationException(GenericHttpException exception) {
-        return new ErrorResponse(exception.getMessage());
-    }
-
 }

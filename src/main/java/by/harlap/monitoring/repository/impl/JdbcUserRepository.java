@@ -88,7 +88,6 @@ public class JdbcUserRepository implements UserRepository {
                     user.setId(id);
                     return Optional.of(user);
                 } else {
-                    System.out.println("Не удалось добавить пользователя.");
                     return Optional.empty();
                 }
             }

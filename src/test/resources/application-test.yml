@@ -8,3 +8,7 @@ database:
 liquibase:
   changeLogFile: liquibase/test/changelog-test.xml
   schemaName: migration_schema
+
+security:
+  tokenTime: 3600000
+  secretKey: secretKey

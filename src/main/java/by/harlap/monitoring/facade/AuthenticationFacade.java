@@ -9,14 +9,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * Facade for user registration operations.
+ * Facade for user registration and authorization operations.
  */
-@RequiredArgsConstructor
 @Component
-public class RegisterFacade {
+@RequiredArgsConstructor
+public class AuthenticationFacade {
 
     private final AuthService authService;
     private final UserMapper userMapper;
+
+    /**
+     * Creates a JWT token for the given authentication user
+     *
+     * @param dto the authentication user DTO containing username and password
+     * @return TokenResponseDto representing the JWT token
+     */
+    public TokenResponseDto createToken(AuthenticationUserDto dto) {
+        final String jwtToken = authService.login(dto.getUsername(), dto.getPassword());
+
+        return new TokenResponseDto(jwtToken);
+    }
 
     /**
      * Registers a new user using the provided authentication user DTO.

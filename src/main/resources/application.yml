@@ -12,3 +12,5 @@ liquibase:
 security:
   tokenTime: 3600000
   secretKey: secretKey
+
+debug: true

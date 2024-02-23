@@ -1,7 +1,8 @@
 package by.harlap.monitoring.in.controller;
 
 import by.harlap.monitoring.dto.TokenResponseDto;
-import by.harlap.monitoring.facade.AuthFacade;
+import by.harlap.monitoring.dto.user.AuthenticationUserDto;
+import by.harlap.monitoring.facade.AuthenticationFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,30 +20,52 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("Tests for AuthControllerTest")
+@DisplayName("Tests for AuthenticationControllerTest")
 @ExtendWith(MockitoExtension.class)
-class AuthControllerTest {
+class AuthenticationControllerTest {
 
     private MockMvc mockMvc;
-
     @Mock
-    private AuthFacade authFacade;
+    private AuthenticationFacade authenticationFacade;
+
     @InjectMocks
-    private AuthController authController;
+    private AuthenticationController authenticationController;
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(authenticationController).build();
+    }
+
+    @Test
+    @DisplayName("Test register by post method")
+    void registerTest() throws Exception {
+        final String createRequestJson = "{\"username\":\"user\",\"password\":\"user\"}";
+        final AuthenticationUserDto authenticationUserDto = new AuthenticationUserDto();
+        authenticationUserDto.setUsername("user");
+        authenticationUserDto.setPassword("user");
+
+        final TokenResponseDto tokenResponseDto = new TokenResponseDto("fakeToken");
+
+        when(authenticationFacade.register(authenticationUserDto)).thenReturn(tokenResponseDto);
+
+        final String expectedResponseBody = "{\"token\":\"fakeToken\"}";
+
+        mockMvc.perform(post("/register")
+                        .requestAttr("username", authenticationUserDto.getUsername())
+                        .content(createRequestJson)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(expectedResponseBody));
     }
 
     @Test
     @DisplayName("Test authenticate by post method")
-    void doPost() throws Exception {
+    void authorizationTest() throws Exception {
         final String createRequestJson = "{\"username\":\"user\",\"password\":\"user\"}";
 
         final TokenResponseDto fakeToken = new TokenResponseDto("fakeToken");
 
-        when(authFacade.createToken(any())).thenReturn(fakeToken);
+        when(authenticationFacade.createToken(any())).thenReturn(fakeToken);
 
         final String expectedResponseBody = "{\"token\":\"fakeToken\"}";
 
