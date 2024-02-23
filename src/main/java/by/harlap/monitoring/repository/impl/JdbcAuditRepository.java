@@ -3,7 +3,8 @@ package by.harlap.monitoring.repository.impl;
 import by.harlap.monitoring.model.UserEvent;
 import by.harlap.monitoring.repository.AuditRepository;
 import by.harlap.monitoring.util.ConnectionManager;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +15,8 @@ import java.util.Optional;
  * The JdbcAuditRepository class implements the AuditRepository interface
  * and provides JDBC-based operations for managing user audit events in a database.
  */
-@AllArgsConstructor
+@Repository
+@RequiredArgsConstructor
 public class JdbcAuditRepository implements AuditRepository {
 
     private final ConnectionManager connectionManager;

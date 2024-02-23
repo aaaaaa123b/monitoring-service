@@ -5,24 +5,29 @@ import by.harlap.monitoring.dto.user.AuthenticationUserDto;
 import by.harlap.monitoring.mapper.UserMapper;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
- * Facade for user registration operations.
+ * Facade for user registration and authorization operations.
  */
-public class RegisterFacade {
+@Component
+@RequiredArgsConstructor
+public class AuthenticationFacade {
 
     private final AuthService authService;
     private final UserMapper userMapper;
 
     /**
-     * Constructs a RegisterFacade with the specified dependencies.
+     * Creates a JWT token for the given authentication user
      *
-     * @param authService the service responsible for authentication
-     * @param userMapper  the mapper used to map AuthenticationUserDto objects to User objects
+     * @param dto the authentication user DTO containing username and password
+     * @return TokenResponseDto representing the JWT token
      */
-    public RegisterFacade(AuthService authService, UserMapper userMapper) {
-        this.authService = authService;
-        this.userMapper = userMapper;
+    public TokenResponseDto createToken(AuthenticationUserDto dto) {
+        final String jwtToken = authService.login(dto.getUsername(), dto.getPassword());
+
+        return new TokenResponseDto(jwtToken);
     }
 
     /**

@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 /**
  * The UserMapper interface provides methods for mapping between User entities and AuthenticationUserDto objects.
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
     /**

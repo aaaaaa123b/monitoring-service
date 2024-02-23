@@ -3,26 +3,18 @@ package by.harlap.monitoring.exception;
 import lombok.Getter;
 
 /**
- * Represents a generic HTTP exception with a specific code and message.
- * This exception extends {@code RuntimeException}.
- * <p>
- * The {@code code} attribute represents the HTTP status code of the exception.
- * The {@code message} attribute represents the description or reason for the exception.
+ * This class represents a generic HTTP exception.
+ * It extends RuntimeException to indicate that it is an unchecked exception.
  */
 @Getter
 public class GenericHttpException extends RuntimeException {
 
-    private final int code;
-    private final String message;
-
     /**
-     * Constructs a new {@code GenericHttpException} with the specified HTTP status code and message.
+     * Constructs a new GenericHttpException with the specified detail message and cause.
      *
-     * @param code    the HTTP status code
-     * @param message the description or reason for the exception
+     * @param message the detail message (which is saved for later retrieval by the getMessage() method)
      */
-    public GenericHttpException(int code, String message) {
-        this.code = code;
-        this.message = message;
+    public GenericHttpException(String message) {
+        super(message);
     }
 }

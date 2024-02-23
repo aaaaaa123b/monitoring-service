@@ -5,14 +5,14 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Custom exception class representing the situation where an entity is not found.
  */
-public class EntityNotFoundException extends GenericHttpException {
+public class EntityNotFoundException extends RuntimeException {
 
     /**
-     * Constructs a new GenericException with the specified detail message.
+     * Constructs a new EntityNotFoundException with the specified detail message and cause.
      *
-     * @param message a String providing details about the exception
+     * @param message the detail message (which is saved for later retrieval by the getMessage() method)
      */
     public EntityNotFoundException(String message) {
-        super(HttpServletResponse.SC_CONFLICT, message);
+        super(message);
     }
 }

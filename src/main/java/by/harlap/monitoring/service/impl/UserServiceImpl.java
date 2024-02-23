@@ -3,7 +3,8 @@ package by.harlap.monitoring.service.impl;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.UserRepository;
 import by.harlap.monitoring.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -11,7 +12,8 @@ import java.util.Optional;
  * The UserServiceImpl class implements the UserService interface
  * and provides operations related to user management.
  */
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

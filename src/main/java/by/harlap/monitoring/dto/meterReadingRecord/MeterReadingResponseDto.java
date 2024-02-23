@@ -18,7 +18,7 @@ public class MeterReadingResponseDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
-    private String userName;
-    private String deviceName;
+    private Long userId;
+    private Long deviceId;
     private Double value;
 }

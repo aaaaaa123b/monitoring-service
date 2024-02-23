@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 /**
  * The DeviceMapper interface provides methods for mapping between Device entities and CreateDeviceDto objects.
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DeviceMapper {
 
     /**

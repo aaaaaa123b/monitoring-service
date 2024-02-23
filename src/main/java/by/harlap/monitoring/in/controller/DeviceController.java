@@ -5,47 +5,41 @@ import by.harlap.monitoring.dto.device.DeviceResponseDto;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.facade.DeviceFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.util.IOUtil;
 import by.harlap.monitoring.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * Controller class for adding a new device.
  */
-public class DeviceController extends BaseController {
+@Controller
+@RequiredArgsConstructor
+public class DeviceController {
 
     private final DeviceFacade deviceFacade;
+    private final SecurityUtil securityUtil;
 
     /**
-     * Constructs a DeviceController object with the specified DeviceFacade.
+     * Handles requests to add a new device.
      *
-     * @param deviceFacade the DeviceFacade object to use for device-related operations
+     * @param username  the username obtained from the request attribute
+     * @param deviceDto the CreateDeviceDto containing data for the new device
+     * @return ResponseEntity containing the response data for the created device
      */
-    public DeviceController(DeviceFacade deviceFacade) {
-        this.deviceFacade = deviceFacade;
-    }
+    @PostMapping(value = "/devices", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DeviceResponseDto> createDevice(@RequestAttribute("username") String username, @RequestBody CreateDeviceDto deviceDto) {
+        final User activeUser = securityUtil.findActiveUser(username);
 
-    /**
-     * Handles HTTP POST requests for adding a new device.
-     * Requires the user to have admin role.
-     *
-     * @param request  the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @throws IOException if an I/O error occurs while processing the request
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final User activeUser = SecurityUtil.findActiveUser(request);
+        securityUtil.validateRequiredRole(activeUser, Role.ADMIN);
 
-        SecurityUtil.validateRequiredRole(activeUser, Role.ADMIN);
+        final DeviceResponseDto responseDto = deviceFacade.createDevice(deviceDto);
 
-        final CreateDeviceDto dto = IOUtil.read(request, CreateDeviceDto.class);
-
-        final DeviceResponseDto responseDto = deviceFacade.createDevice(dto);
-
-        IOUtil.write(response, responseDto, HttpServletResponse.SC_CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 }

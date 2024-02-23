@@ -4,45 +4,42 @@ import by.harlap.monitoring.dto.userEvent.UserEventResponseDto;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.facade.AuditFacade;
 import by.harlap.monitoring.model.User;
-import by.harlap.monitoring.util.IOUtil;
 import by.harlap.monitoring.util.SecurityUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * The AuditController class extends BaseController and is responsible for displaying user audit events.
  */
-public class AuditController extends BaseController {
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/audit")
+public class AuditController {
 
     private final AuditFacade auditFacade;
+    private final SecurityUtil securityUtil;
 
     /**
-     * Constructs an AuditController object with the specified AuditFacade.
+     * Retrieves user audit events and returns them as a list of UserEventResponseDto.
+     * This endpoint requires an authenticated user with the role of ADMIN.
      *
-     * @param auditFacade the AuditFacade object to use for retrieving user audit events
+     * @param username the username obtained from the request attribute
+     * @return ResponseEntity containing a list of UserEventResponseDto
      */
-    public AuditController(AuditFacade auditFacade) {
-        this.auditFacade = auditFacade;
-    }
-
-    /**
-     * Handles HTTP GET requests for retrieving user audit events.
-     * Requires the user to have admin role.
-     *
-     * @param request  the HTTP servlet request
-     * @param response the HTTP servlet response
-     * @throws IOException if an I/O error occurs while processing the request
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final User activeUser = SecurityUtil.findActiveUser(request);
-        SecurityUtil.validateRequiredRole(activeUser, Role.ADMIN);
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserEventResponseDto>> getAudit(@RequestAttribute("username") String username) {
+        final User activeUser = securityUtil.findActiveUser(username);
+        securityUtil.validateRequiredRole(activeUser, Role.ADMIN);
 
         final List<UserEventResponseDto> responseData = auditFacade.findUserEvents();
 
-        IOUtil.write(response, responseData, HttpServletResponse.SC_OK);
+        return ResponseEntity.ok(responseData);
     }
 }

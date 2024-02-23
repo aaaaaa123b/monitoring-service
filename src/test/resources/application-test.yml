@@ -1,0 +1,14 @@
+database:
+  connection:
+    url: jdbc:postgresql://localhost:5434/monitoring_test_database
+    username: postgres
+    password: 4021
+    driver: org.postgresql.Driver
+
+liquibase:
+  changeLogFile: liquibase/test/changelog-test.xml
+  schemaName: migration_schema
+
+security:
+  tokenTime: 3600000
+  secretKey: secretKey

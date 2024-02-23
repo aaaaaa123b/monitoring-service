@@ -3,7 +3,8 @@ package by.harlap.monitoring.repository.impl;
 import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.repository.DeviceRepository;
 import by.harlap.monitoring.util.ConnectionManager;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +18,8 @@ import java.util.Optional;
  * The JdbcDeviceRepository class implements the DeviceRepository interface
  * and provides JDBC-based operations for managing devices in a database.
  */
-@AllArgsConstructor
+@Repository
+@RequiredArgsConstructor
 public class JdbcDeviceRepository implements DeviceRepository {
 
     private final ConnectionManager connectionManager;

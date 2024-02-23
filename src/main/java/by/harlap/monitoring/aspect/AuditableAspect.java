@@ -1,24 +1,38 @@
 package by.harlap.monitoring.aspect;
 
 import by.harlap.monitoring.annotations.Auditable;
-import by.harlap.monitoring.initialization.DependencyFactory;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.model.UserEvent;
 import by.harlap.monitoring.service.AuditService;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 
+/**
+ * This aspect class handles auditing functionality for methods annotated with {@link by.harlap.monitoring.annotations.Auditable}.
+ * It intercepts method execution and performs auditing based on the annotation's value.
+ */
 @Aspect
+@Component
+@RequiredArgsConstructor
 public class AuditableAspect {
 
-    private final AuditService auditService = DependencyFactory.findService(AuditService.class);
+    private final AuditService auditService;
 
-    @Around("execution(public * *(..)) && @annotation(by.harlap.monitoring.annotations.Auditable)")
+    /**
+     * Intercepts method execution and performs auditing for methods annotated with {@link by.harlap.monitoring.annotations.Auditable}.
+     *
+     * @param proceedingJoinPoint the ProceedingJoinPoint representing the intercepted method execution
+     * @return the result of the intercepted method execution
+     * @throws Throwable if an error occurs during method execution
+     */
+    @Around("execution(* * (..)) && within(@by.harlap.monitoring.annotations.Auditable *)")
     public Object logging(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object result = proceedingJoinPoint.proceed();
 
@@ -38,9 +52,5 @@ public class AuditableAspect {
             }
         }
         return result;
-    }
-
-    public static AuditableAspect aspectOf() {
-        return new AuditableAspect();
     }
 }

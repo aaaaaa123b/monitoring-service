@@ -1,19 +1,17 @@
 package by.harlap.monitoring.exception;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 /**
  * Custom exception class indicating that a device already exists.
  * Extends {@link GenericHttpException}, providing HTTP status code for conflict (409).
  */
-public class DeviceAlreadyExistsException extends GenericHttpException{
+public class DeviceAlreadyExistsException extends RuntimeException{
 
     /**
-     * Constructs a new GenericException with the specified detail message.
+     * Constructs a new DeviceAlreadyExistsException with the specified detail message and cause.
      *
-     * @param message a String providing details about the exception
+     * @param message the detail message (which is saved for later retrieval by the getMessage() method)
      */
     public DeviceAlreadyExistsException(String message) {
-        super(HttpServletResponse.SC_CONFLICT, message);
+        super(message);
     }
 }

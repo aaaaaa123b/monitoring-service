@@ -5,7 +5,8 @@ import by.harlap.monitoring.exception.EntityNotFoundException;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.UserRepository;
 import by.harlap.monitoring.util.ConnectionManager;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +17,8 @@ import java.util.Optional;
 /**
  * Implementation of UserRepository using JDBC for database interactions.
  */
-@AllArgsConstructor
+@Repository
+@RequiredArgsConstructor
 public class JdbcUserRepository implements UserRepository {
 
     private final ConnectionManager connectionManager;
@@ -86,7 +88,6 @@ public class JdbcUserRepository implements UserRepository {
                     user.setId(id);
                     return Optional.of(user);
                 } else {
-                    System.out.println("Не удалось добавить пользователя.");
                     return Optional.empty();
                 }
             }
