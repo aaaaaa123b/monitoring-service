@@ -9,8 +9,7 @@ import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.service.DeviceService;
 import by.harlap.monitoring.service.MeterReadingsService;
-import by.harlap.monitoring.validator.MeterReadingInputValidator;
-import by.harlap.monitoring.validator.MeterReadingsMonthlyInfoValidator;
+import by.harlap.monitoring.validator.MeterReadingsValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +31,7 @@ public class MeterReadingsFacade {
     private final MeterReadingsService meterReadingsService;
     private final DeviceService deviceService;
     private final MeterReadingRecordMapper meterReadingRecordMapper;
-    private final MeterReadingsMonthlyInfoValidator meterReadingsMonthlyInfoValidator;
-    private final MeterReadingInputValidator meterReadingInputValidator;
+    private final MeterReadingsValidator meterReadingsValidator;
 
     /**
      * Finds meter reading records for the provided active user.
@@ -56,9 +54,9 @@ public class MeterReadingsFacade {
      * @return a list of MeterReadingResponseDto objects representing the meter readings for the specified month and year
      */
     public List<MeterReadingResponseDto> createMeterReadingResponseSpecifiedByMonth(User activeUser, String monthString, String yearString) {
-        meterReadingsMonthlyInfoValidator.validateMonthAndYearExistence(monthString, yearString);
-        final int month = meterReadingsMonthlyInfoValidator.validateMonth(monthString);
-        final int year = meterReadingsMonthlyInfoValidator.validateYear(yearString);
+        meterReadingsValidator.validateMonthAndYearExistence(monthString, yearString);
+        final int month = meterReadingsValidator.validateMonth(monthString);
+        final int year = meterReadingsValidator.validateYear(yearString);
 
         final List<MeterReadingRecord> records = meterReadingsService.findRecordsForSpecifiedMonth(activeUser, Month.of(month), Year.of(year));
 
@@ -85,7 +83,7 @@ public class MeterReadingsFacade {
      * @return a list of meter reading response DTOs representing the created meter readings
      */
     public List<MeterReadingResponseDto> createMeterReadingRecord(User user, CreateMeterReadingsDto data) {
-        meterReadingInputValidator.validateMetricsExistence(user);
+        meterReadingsValidator.validateMetricsExistence(user);
 
         final Map<String, Double> valuesByName = data.getDeviceValues();
         final List<MeterReadingResponseDto> meterReadingResponseDtoList = new ArrayList<>();
@@ -108,8 +106,8 @@ public class MeterReadingsFacade {
                         () -> throwUnknownDeviceException(name)
                 ));
 
-        meterReadingInputValidator.validateDevicesCount(valuesByDevice);
-        meterReadingInputValidator.validateValues(valuesByDevice);
+        meterReadingsValidator.validateDevicesCount(valuesByDevice);
+        meterReadingsValidator.validateValues(valuesByDevice);
 
         meterReadingsService.createMeterReadingRecord(user, valuesByDevice, now);
 
