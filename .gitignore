@@ -1,3 +1,11 @@
-target/
-.idea/
+.idea
 *.iml
+
+auditable-starter/.idea
+logging-starter/.idea
+monitoring-service/.idea
+
+auditable-starter/target
+logging-starter/target
+monitoring-service/target
+
