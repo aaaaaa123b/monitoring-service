@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="liquibase/changelog-master.xml">
+
+    <include file="migration/001-create-monitoring-service-schema.xml" relativeToChangelogFile="true"/>
+    <include file="migration/002-create-device-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/003-create-user-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/004-create-user-event-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/005-create-meter-reading-record-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/006-populate-devices-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/007-populate-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/008-populate-meter-reading-records-table.xml" relativeToChangelogFile="true"/>
+    <include file="migration/009-populate-user-events-table.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="009-populate-user-events-table" author="Diana Harlap">
+        <insert schemaName="monitoring_service_schema" tableName="user_events">
+            <column name="user_id" value="2"/>
+            <column name="action" value="Тестовое действие"/>
+            <column name="date" value="2024-01-01"/>
+        </insert>
+        <insert schemaName="monitoring_service_schema" tableName="user_events">
+            <column name="user_id" value="2"/>
+            <column name="action" value="Тестовое действие"/>
+            <column name="date" value="2024-02-01"/>
+        </insert>
+        <insert schemaName="monitoring_service_schema" tableName="user_events">
+            <column name="user_id" value="2"/>
+            <column name="action" value="Тестовое действие"/>
+            <column name="date" value="2024-03-01"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
