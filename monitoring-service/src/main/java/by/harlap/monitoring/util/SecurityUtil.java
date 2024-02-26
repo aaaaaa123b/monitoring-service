@@ -20,10 +20,17 @@ public class SecurityUtil {
 
     private final UserService userService;
 
+    /**
+     * Finds the active user based on the provided username.
+     *
+     * @param username the username of the user to find
+     * @return the active user with the given username
+     * @throws AuthenticationException if the user is not found
+     */
     public User findActiveUser(final String username) {
         final Optional<User> optionalUser = userService.findUserByUsername(username);
         if (optionalUser.isEmpty()) {
-            throw new AuthenticationException( "Вам необходимо авторизоваться для доступа к этому ресурсу");
+            throw new AuthenticationException("Вам необходимо авторизоваться для доступа к этому ресурсу");
         }
         return optionalUser.get();
     }
@@ -41,5 +48,4 @@ public class SecurityUtil {
             throw new PermissionDeniedException("Доступ запрещен");
         }
     }
-
 }

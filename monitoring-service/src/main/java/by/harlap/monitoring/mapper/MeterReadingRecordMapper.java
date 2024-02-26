@@ -17,7 +17,13 @@ public interface MeterReadingRecordMapper {
      * @param meterReadingRecord the MeterReadingRecord entity to map
      * @return the corresponding MeterReadingResponseDto object
      */
-    MeterReadingResponseDto toDto(MeterReadingRecord meterReadingRecord);
+    MeterReadingResponseDto toMeterReadingResponseDto(MeterReadingRecord meterReadingRecord);
 
-    MeterReadingRecord toEntity(CreateMeterReadingDto meterReadingRecord);
+    /**
+     * Maps a CreateMeterReadingDto object to a MeterReadingRecord entity.
+     *
+     * @param meterReadingRecord the CreateMeterReadingDto object to map
+     * @return the corresponding MeterReadingRecord entity
+     */
+    MeterReadingRecord toMeterReadingEntity(CreateMeterReadingDto meterReadingRecord);
 }

@@ -17,7 +17,7 @@ public interface DeviceMapper {
      * @param device the Device entity to map
      * @return the corresponding DeviceResponseDto object
      */
-    DeviceResponseDto toDto(Device device);
+    DeviceResponseDto toDeviceResponseDto(Device device);
 
     /**
      * Maps a CreateDeviceDto object to a Device entity.
@@ -25,5 +25,5 @@ public interface DeviceMapper {
      * @param createDeviceDto the CreateDeviceDto object to map
      * @return the corresponding Device entity
      */
-    Device toEntity(CreateDeviceDto createDeviceDto);
+    Device toDeviceEntity(CreateDeviceDto createDeviceDto);
 }

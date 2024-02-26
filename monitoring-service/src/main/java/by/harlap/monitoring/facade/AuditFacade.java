@@ -29,7 +29,7 @@ public class AuditFacade {
         final List<UserEventResponseDto> eventResponseDtoList = new ArrayList<>();
 
         for (final UserEvent event : auditService.findAllUserEvents()) {
-            UserEventResponseDto eventResponseDto = userEventMapper.toDto(event);
+            UserEventResponseDto eventResponseDto = userEventMapper.toUserEventResponseDto(event);
             eventResponseDtoList.add(eventResponseDto);
         }
 

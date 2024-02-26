@@ -13,6 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+/**
+ * Interface representing the OpenAPI specification for AuthenticationController.
+ */
 @Tag(name = "Authentication", description = "The authentication API")
 public interface AuthenticationOpenAPI {
 

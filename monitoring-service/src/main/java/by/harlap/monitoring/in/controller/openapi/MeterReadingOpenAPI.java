@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ * Interface representing the OpenAPI specification for MeterReadingController.
+ */
 @Tag(name = "MeterReading", description = "The meter reading API")
 public interface MeterReadingOpenAPI {
 
@@ -140,6 +143,15 @@ public interface MeterReadingOpenAPI {
                             {
                               "messages": [
                                 "Неверный JWT"
+                              ]
+                            }
+                            """))),
+            @ApiResponse(responseCode = "403", description = "Admin try to save meter reading records",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class), examples = @ExampleObject("""
+                            {
+                              "messages": [
+                                "Доступ запрещен"
                               ]
                             }
                             """))),

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller class for adding a new device.
+ * Controller class for handling devices.
  */
 @RestController
 @RequiredArgsConstructor
@@ -24,10 +24,6 @@ public class DeviceController implements DeviceOpenAPI {
 
     /**
      * Handles requests to add a new device.
-     *
-     * @param username  the username obtained from the request attribute
-     * @param deviceDto the CreateDeviceDto containing data for the new device
-     * @return ResponseEntity containing the response data for the created device
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/devices")

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 
 import java.util.List;
 
+/**
+ * Interface representing the OpenAPI specification for AuditController.
+ */
 @Tag(name = "Audit", description = "The audit API")
 public interface AuditOpenAPI {
 

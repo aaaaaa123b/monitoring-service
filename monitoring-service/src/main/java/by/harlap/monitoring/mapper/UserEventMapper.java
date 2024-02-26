@@ -16,5 +16,5 @@ public interface UserEventMapper {
      * @param userEvent the UserEvent entity to map
      * @return the corresponding UserEventResponseDto object
      */
-    UserEventResponseDto toDto(UserEvent userEvent);
+    UserEventResponseDto toUserEventResponseDto(UserEvent userEvent);
 }

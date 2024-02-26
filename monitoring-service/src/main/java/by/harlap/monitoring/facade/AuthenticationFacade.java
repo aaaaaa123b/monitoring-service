@@ -37,7 +37,7 @@ public class AuthenticationFacade {
      * @return TokenResponseDto representing the JWT token generated upon successful registration.
      */
     public TokenResponseDto register(AuthenticationUserDto dto) {
-        final User user = userMapper.toEntity(dto);
+        final User user = userMapper.toUserEntity(dto);
 
         final String jwtToken = authService.register(user);
 

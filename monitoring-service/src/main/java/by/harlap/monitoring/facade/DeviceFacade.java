@@ -25,10 +25,10 @@ public class DeviceFacade {
      * @return DeviceResponseDto representing the created device
      */
     public DeviceResponseDto createDevice(CreateDeviceDto dto) {
-        final Device device = deviceMapper.toEntity(dto);
+        final Device device = deviceMapper.toDeviceEntity(dto);
 
         deviceService.save(device);
 
-        return deviceMapper.toDto(device);
+        return deviceMapper.toDeviceResponseDto(device);
     }
 }

@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestAttribute;
 
+/**
+ * Interface representing the OpenAPI specification for DeviceController.
+ */
 @Tag(name = "Device", description = "The device API")
 public interface DeviceOpenAPI {
 

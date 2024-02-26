@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class for handling meter reading records.
+ */
 @RestController
 @RequestMapping("/meterReadings")
 @RequiredArgsConstructor
@@ -24,9 +27,6 @@ public class MeterReadingController implements MeterReadingOpenAPI {
 
     /**
      * Retrieves meter readings history for the authenticated user.
-     *
-     * @param username the username obtained from the request attribute
-     * @return ResponseEntity containing a list of MeterReadingResponseDto representing the meter readings history
      */
     @GetMapping
     public List<MeterReadingResponseDto> findMeterReadingRecordsHistory(@RequestAttribute("username") String username) {
@@ -37,10 +37,6 @@ public class MeterReadingController implements MeterReadingOpenAPI {
 
     /**
      * Handles requests to input meter readings.
-     *
-     * @param username         the username obtained from the request attribute
-     * @param meterReadingsDto the CreateMeterReadingDto containing data for the meter readings to be input
-     * @return ResponseEntity containing the response data for the created meter readings
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -53,11 +49,6 @@ public class MeterReadingController implements MeterReadingOpenAPI {
 
     /**
      * Retrieves meter readings for the specified month and year for the authenticated user.
-     *
-     * @param username    the username obtained from the request attribute
-     * @param monthString the month for which meter readings are requested
-     * @param yearString  the year for which meter readings are requested
-     * @return ResponseEntity containing a list of MeterReadingResponseDto representing the meter readings for the specified month and year
      */
     @GetMapping(value = "/forMonth")
     public List<MeterReadingResponseDto> findMeterReadingRecordsByMonth(@RequestAttribute("username") String username, @RequestParam("month") String monthString, @RequestParam("year") String yearString) {
@@ -68,9 +59,6 @@ public class MeterReadingController implements MeterReadingOpenAPI {
 
     /**
      * Retrieves relevant meter readings information for the authenticated user.
-     *
-     * @param username the username obtained from the request attribute
-     * @return ResponseEntity containing a list of MeterReadingResponseDto representing the relevant meter readings information
      */
     @GetMapping(value = "/relevant")
     public List<MeterReadingResponseDto> findRelevantMeterReadingRecords(@RequestAttribute("username") String username) {

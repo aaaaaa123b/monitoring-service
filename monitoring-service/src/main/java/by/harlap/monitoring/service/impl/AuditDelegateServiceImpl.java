@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+/**
+ * Implementation of responsible for auditing user actions.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -18,6 +21,12 @@ public class AuditDelegateServiceImpl implements AuditableDelegate {
 
     private final AuditService auditService;
 
+    /**
+     * Executes the auditing process for a specific user action.
+     *
+     * @param proceedingJoinPoint the proceeding join point
+     * @param message             the message describing the action
+     */
     @Override
     public void execute(ProceedingJoinPoint proceedingJoinPoint, String message) {
         Object[] args = proceedingJoinPoint.getArgs();

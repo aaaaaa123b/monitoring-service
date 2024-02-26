@@ -23,9 +23,6 @@ public class AuthenticationController implements AuthenticationOpenAPI {
 
     /**
      * Handles user authentication requests by creating an authentication token.
-     *
-     * @param dto the AuthenticationUserDto containing user authentication data
-     * @return ResponseEntity containing the generated authentication token
      */
     @PostMapping(value = "/auth")
     public TokenResponseDto authorize(@RequestBody @Valid AuthenticationUserDto dto) {
@@ -34,9 +31,6 @@ public class AuthenticationController implements AuthenticationOpenAPI {
 
     /**
      * Handles requests for user registration.
-     *
-     * @param authenticationUserDto the AuthenticationUserDto containing user registration data
-     * @return ResponseEntity containing the token response data for the registered user
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/register")

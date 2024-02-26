@@ -89,12 +89,12 @@ public class MeterReadingFacade {
         for (final CreateMeterReadingDto dto : data) {
             deviceService.findByName(dto.getDeviceName())
                     .ifPresent(device -> {
-                        final MeterReadingRecord record = meterReadingRecordMapper.toEntity(dto);
+                        final MeterReadingRecord record = meterReadingRecordMapper.toMeterReadingEntity(dto);
                         record.setUserId(user.getId());
                         record.setDeviceId(device.getId());
                         record.setDate(now);
                         meterReadingRecords.add(record);
-                        meterReadingResponseDtoList.add(meterReadingRecordMapper.toDto(record));
+                        meterReadingResponseDtoList.add(meterReadingRecordMapper.toMeterReadingResponseDto(record));
                     });
         }
 
@@ -110,7 +110,7 @@ public class MeterReadingFacade {
         for (final MeterReadingRecord record : records) {
             deviceService.findById(record.getDeviceId())
                     .ifPresent(device -> {
-                        final MeterReadingResponseDto dto = meterReadingRecordMapper.toDto(record);
+                        final MeterReadingResponseDto dto = meterReadingRecordMapper.toMeterReadingResponseDto(record);
                         meterReadingResponseDtoList.add(dto);
                     });
         }

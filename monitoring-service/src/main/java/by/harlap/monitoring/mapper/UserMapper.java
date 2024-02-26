@@ -12,19 +12,11 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     /**
-     * Maps a User entity to a AuthenticationUserDto object.
-     *
-     * @param user the User entity to map
-     * @return the corresponding AuthenticationUserDto object
-     */
-    AuthenticationUserDto toDto(User user);
-
-    /**
      * Maps a AuthenticationUserDto object to a User entity.
      *
      * @param authenticationUserDto the AuthenticationUserDto object to map
      * @return the corresponding User entity
      */
     @Mapping(target = "role", expression = "java(by.harlap.monitoring.enumeration.Role.USER)")
-    User toEntity(AuthenticationUserDto authenticationUserDto);
+    User toUserEntity(AuthenticationUserDto authenticationUserDto);
 }

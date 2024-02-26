@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * The AuditController class extends BaseController and is responsible for displaying user audit events.
+ * The AuditController class for handling user audit events.
  */
 @RestController
 @RequiredArgsConstructor
@@ -28,11 +28,7 @@ public class AuditController implements AuditOpenAPI {
     private final SecurityUtil securityUtil;
 
     /**
-     * Retrieves user audit events and returns them as a list of UserEventResponseDto.
-     * This endpoint requires an authenticated user with the role of ADMIN.
-     *
-     * @param username the username obtained from the request attribute
-     * @return ResponseEntity containing a list of UserEventResponseDto
+     * Find all audit logs.
      */
     @GetMapping
     public List<UserEventResponseDto> findAllAudit(@RequestAttribute("username") String username) {
