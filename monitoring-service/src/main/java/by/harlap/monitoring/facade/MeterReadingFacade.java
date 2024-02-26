@@ -1,6 +1,6 @@
 package by.harlap.monitoring.facade;
 
-import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
+import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingDto;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.mapper.MeterReadingRecordMapper;
 import by.harlap.monitoring.model.MeterReadingRecord;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Component
-public class MeterReadingsFacade {
+public class MeterReadingFacade {
 
     private final MeterReadingsService meterReadingsService;
     private final DeviceService deviceService;
@@ -78,7 +78,7 @@ public class MeterReadingsFacade {
      * @param data the data containing meter readings for devices
      * @return a list of meter reading response DTOs representing the created meter readings
      */
-    public List<MeterReadingResponseDto> createMeterReadingRecord(User user, List<CreateMeterReadingsDto> data) {
+    public List<MeterReadingResponseDto> createMeterReadingRecord(User user, List<CreateMeterReadingDto> data) {
         meterReadingsValidator.validateMetricsExistence(user);
 
 
@@ -86,7 +86,7 @@ public class MeterReadingsFacade {
         final List<MeterReadingRecord> meterReadingRecords = new ArrayList<>();
         final List<MeterReadingResponseDto> meterReadingResponseDtoList = new ArrayList<>();
 
-        for (final CreateMeterReadingsDto dto : data) {
+        for (final CreateMeterReadingDto dto : data) {
             deviceService.findByName(dto.getDeviceName())
                     .ifPresent(device -> {
                         final MeterReadingRecord record = meterReadingRecordMapper.toEntity(dto);

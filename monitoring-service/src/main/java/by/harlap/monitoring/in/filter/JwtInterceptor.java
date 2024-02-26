@@ -34,19 +34,19 @@ public class JwtInterceptor implements HandlerInterceptor {
         String jwtToken = request.getHeader("Authorization");
 
         if (jwtToken == null || !jwtToken.startsWith("Bearer ")) {
-            throw new AuthenticationException("Missing or invalid JWT");
+            throw new AuthenticationException("Отсутствует или неверный JWT");
         }
 
         jwtToken = jwtToken.substring(7);
 
         DecodedJWT decodedJWT = jwtUtil.verifyJWT(jwtToken);
         if (decodedJWT == null) {
-            throw new AuthenticationException("Invalid JWT");
+            throw new AuthenticationException("Неверный JWT");
         }
 
         final String username = decodedJWT.getClaim("username").asString();
         if (userService.findUserByUsername(username).isEmpty()) {
-            throw new AuthenticationException("User not found");
+            throw new AuthenticationException("User не найден");
         }
         request.setAttribute("username", username);
 

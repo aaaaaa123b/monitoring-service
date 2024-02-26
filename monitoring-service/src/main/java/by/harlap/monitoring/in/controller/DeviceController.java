@@ -4,9 +4,9 @@ import by.harlap.monitoring.dto.device.CreateDeviceDto;
 import by.harlap.monitoring.dto.device.DeviceResponseDto;
 import by.harlap.monitoring.enumeration.Role;
 import by.harlap.monitoring.facade.DeviceFacade;
+import by.harlap.monitoring.in.controller.openapi.DeviceOpenAPI;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.util.SecurityUtil;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Device", description = "Add new device")
-public class DeviceController {
+public class DeviceController implements DeviceOpenAPI {
 
     private final DeviceFacade deviceFacade;
     private final SecurityUtil securityUtil;
@@ -32,7 +31,7 @@ public class DeviceController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/devices")
-    public DeviceResponseDto createDevice(@RequestAttribute("username") String username, @RequestBody @Valid CreateDeviceDto deviceDto) {
+    public DeviceResponseDto saveDevice(@RequestAttribute("username") String username, @RequestBody @Valid CreateDeviceDto deviceDto) {
         final User activeUser = securityUtil.findActiveUser(username);
         securityUtil.validateRequiredRole(activeUser, Role.ADMIN);
 

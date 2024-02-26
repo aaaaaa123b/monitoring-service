@@ -3,7 +3,7 @@ package by.harlap.monitoring.in.controller;
 import by.harlap.monitoring.dto.TokenResponseDto;
 import by.harlap.monitoring.dto.user.AuthenticationUserDto;
 import by.harlap.monitoring.facade.AuthenticationFacade;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import by.harlap.monitoring.in.controller.openapi.AuthenticationOpenAPI;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "Register and authorize")
-public class AuthenticationController {
+public class AuthenticationController implements AuthenticationOpenAPI {
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -29,7 +28,7 @@ public class AuthenticationController {
      * @return ResponseEntity containing the generated authentication token
      */
     @PostMapping(value = "/auth")
-    public TokenResponseDto authenticate(@RequestBody @Valid AuthenticationUserDto dto) {
+    public TokenResponseDto authorize(@RequestBody @Valid AuthenticationUserDto dto) {
         return authenticationFacade.createToken(dto);
     }
 
@@ -41,7 +40,7 @@ public class AuthenticationController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/register")
-    protected TokenResponseDto register(@RequestBody @Valid AuthenticationUserDto authenticationUserDto) {
+    public TokenResponseDto register(@RequestBody @Valid AuthenticationUserDto authenticationUserDto) {
         return authenticationFacade.register(authenticationUserDto);
     }
 }

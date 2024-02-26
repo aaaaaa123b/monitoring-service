@@ -7,13 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The CreateMeterReadingsDto class represents a DTO (Data Transfer Object) for creating meter readings.
+ * The CreateMeterReadingDto class represents a DTO (Data Transfer Object) for creating meter readings.
  * It contains information about the device values.
  */
 @Getter
 @Setter
 @AllArgsConstructor
-public class CreateMeterReadingsDto {
+public class CreateMeterReadingDto {
 
     @NotBlank
     private String deviceName;

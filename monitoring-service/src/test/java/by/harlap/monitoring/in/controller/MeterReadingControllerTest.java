@@ -23,8 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-@DisplayName("Tests for MeterReadingsControllerTest")
-class MeterReadingsControllerTest extends BaseIntegrationTest {
+@DisplayName("Tests for MeterReadingControllerTest")
+class MeterReadingControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
     private final JwtUtil jwtUtil;

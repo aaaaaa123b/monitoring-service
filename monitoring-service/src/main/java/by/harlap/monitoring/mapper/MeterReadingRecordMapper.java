@@ -1,6 +1,6 @@
 package by.harlap.monitoring.mapper;
 
-import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
+import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingDto;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import org.mapstruct.Mapper;
@@ -19,5 +19,5 @@ public interface MeterReadingRecordMapper {
      */
     MeterReadingResponseDto toDto(MeterReadingRecord meterReadingRecord);
 
-    MeterReadingRecord toEntity(CreateMeterReadingsDto meterReadingRecord);
+    MeterReadingRecord toEntity(CreateMeterReadingDto meterReadingRecord);
 }

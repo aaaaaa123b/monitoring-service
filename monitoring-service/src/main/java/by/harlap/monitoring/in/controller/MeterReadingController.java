@@ -1,14 +1,15 @@
 package by.harlap.monitoring.in.controller;
 
-import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingsDto;
+import by.harlap.monitoring.dto.meterReadingRecord.CreateMeterReadingDto;
 import by.harlap.monitoring.dto.meterReadingRecord.MeterReadingResponseDto;
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.facade.MeterReadingsFacade;
+import by.harlap.monitoring.facade.MeterReadingFacade;
+import by.harlap.monitoring.in.controller.openapi.MeterReadingOpenAPI;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.util.SecurityUtil;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +17,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/meterReadings")
 @RequiredArgsConstructor
-@Tag(name = "Meter readings", description = "Find history/relevant/month meter readings, save meter readings")
-public class MeterReadingsController {
+public class MeterReadingController implements MeterReadingOpenAPI {
 
-    private final MeterReadingsFacade meterReadingsFacade;
+    private final MeterReadingFacade meterReadingFacade;
     private final SecurityUtil securityUtil;
 
     /**
@@ -29,25 +29,26 @@ public class MeterReadingsController {
      * @return ResponseEntity containing a list of MeterReadingResponseDto representing the meter readings history
      */
     @GetMapping
-    public List<MeterReadingResponseDto> findMeterReadingHistory(@RequestAttribute("username") String username) {
+    public List<MeterReadingResponseDto> findMeterReadingRecordsHistory(@RequestAttribute("username") String username) {
         final User activeUser = securityUtil.findActiveUser(username);
 
-        return meterReadingsFacade.findMeterReadingRecords(activeUser);
+        return meterReadingFacade.findMeterReadingRecords(activeUser);
     }
 
     /**
      * Handles requests to input meter readings.
      *
      * @param username         the username obtained from the request attribute
-     * @param meterReadingsDto the CreateMeterReadingsDto containing data for the meter readings to be input
+     * @param meterReadingsDto the CreateMeterReadingDto containing data for the meter readings to be input
      * @return ResponseEntity containing the response data for the created meter readings
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public List<MeterReadingResponseDto> saveMeterReadingRecords(@RequestAttribute("username") String username, @RequestBody @Valid List<CreateMeterReadingsDto> meterReadingsDto) {
+    public List<MeterReadingResponseDto> saveMeterReadingRecords(@RequestAttribute("username") String username, @RequestBody @Valid List<CreateMeterReadingDto> meterReadingsDto) {
         final User activeUser = securityUtil.findActiveUser(username);
         securityUtil.validateRequiredRole(activeUser, Role.USER);
 
-        return meterReadingsFacade.createMeterReadingRecord(activeUser, meterReadingsDto);
+        return meterReadingFacade.createMeterReadingRecord(activeUser, meterReadingsDto);
     }
 
     /**
@@ -59,10 +60,10 @@ public class MeterReadingsController {
      * @return ResponseEntity containing a list of MeterReadingResponseDto representing the meter readings for the specified month and year
      */
     @GetMapping(value = "/forMonth")
-    public List<MeterReadingResponseDto> findMeterReadingsByMonth(@RequestAttribute("username") String username, @RequestParam("month") String monthString, @RequestParam("year") String yearString) {
+    public List<MeterReadingResponseDto> findMeterReadingRecordsByMonth(@RequestAttribute("username") String username, @RequestParam("month") String monthString, @RequestParam("year") String yearString) {
         final User activeUser = securityUtil.findActiveUser(username);
 
-        return meterReadingsFacade.createMeterReadingResponseSpecifiedByMonth(activeUser, monthString, yearString);
+        return meterReadingFacade.createMeterReadingResponseSpecifiedByMonth(activeUser, monthString, yearString);
     }
 
     /**
@@ -75,6 +76,6 @@ public class MeterReadingsController {
     public List<MeterReadingResponseDto> findRelevantMeterReadingRecords(@RequestAttribute("username") String username) {
         final User activeUser = securityUtil.findActiveUser(username);
 
-        return meterReadingsFacade.createRelevantMeterReadingResponse(activeUser);
+        return meterReadingFacade.createRelevantMeterReadingResponse(activeUser);
     }
 }
