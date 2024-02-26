@@ -20,7 +20,7 @@ public class JdbcAuditRepositoryTest extends BaseRepositoryTest {
     private final JdbcAuditRepository auditRepository;
 
     @Test
-    @DisplayName("Should save userEvent successfully")
+    @DisplayName("Test should save userEvent successfully")
     void saveAuditEventTest() {
         UserEvent requiredEvent = new UserEvent(4L, 2L, "Тестовое действие", LocalDate.of(2024, 1, 1));
 
@@ -30,7 +30,7 @@ public class JdbcAuditRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all user events successfully")
+    @DisplayName("Test should find all user events successfully")
     void findAllTest() {
         UserEvent requiredEvent = new UserEvent(1L, 2L, "Тестовое действие", LocalDate.of(2024, 1, 1));
 

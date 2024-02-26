@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-@DisplayName("Tests for AuditControllerTest")
+@DisplayName("Tests for AuditController")
 class AuditControllerTest extends BaseIntegrationTest {
 
     private final MockMvc mockMvc;
@@ -32,11 +32,10 @@ class AuditControllerTest extends BaseIntegrationTest {
 
     @Test
     @DisplayName("Test should return expected json and status 200 for admin")
-    void findAuditSuccessfullyTest() throws Exception {
-
+    void findAuditByAdminTest() throws Exception {
         final User user = new User(1L, "admin", "admin", Role.ADMIN);
-        final UserEventResponseDto firstUserEvent = new UserEventResponseDto(LocalDate.of(2024, 1, 1),2L,"Тестовое действие");
-        final UserEventResponseDto secondUserEvent = new UserEventResponseDto(LocalDate.of(2024, 2, 1),2L,"Тестовое действие");
+        final UserEventResponseDto firstUserEvent = new UserEventResponseDto(LocalDate.of(2024, 1, 1), 2L, "Тестовое действие");
+        final UserEventResponseDto secondUserEvent = new UserEventResponseDto(LocalDate.of(2024, 2, 1), 2L, "Тестовое действие");
 
         final List<UserEventResponseDto> response = new ArrayList<>();
         response.add(firstUserEvent);
@@ -52,8 +51,21 @@ class AuditControllerTest extends BaseIntegrationTest {
 
     @Test
     @DisplayName("Test should return status 401 if no jwt in header")
-    void findAuditTestShouldReturnStatus401() throws Exception {
+    void findAuditWithNoHeaderTest() throws Exception {
         mockMvc.perform(get("/audit"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @DisplayName("Test should return status 403 for user")
+    void findAuditByUserTest() throws Exception {
+        final User user = new User(1L, "user", "user", Role.USER);
+
+        final String token = jwtUtil.createJWT(user.getUsername(), user.getPassword());
+
+        mockMvc.perform(get("/audit")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token)))
+                .andExpect(status().isForbidden());
+    }
+
 }

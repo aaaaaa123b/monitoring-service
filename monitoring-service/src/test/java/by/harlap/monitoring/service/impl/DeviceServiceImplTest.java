@@ -28,7 +28,7 @@ class DeviceServiceImplTest {
     DeviceServiceImpl deviceService;
 
     @Test
-    @DisplayName("Should find all available devices")
+    @DisplayName("Test should find all available devices")
     void listAvailableDevicesTest() {
         List<Device> required = new ArrayList<>();
         Device device = new Device(1L, "холодная вода");
@@ -42,7 +42,7 @@ class DeviceServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should successfully find device by id")
+    @DisplayName("Test should successfully find device by id")
     void findByIdTest() {
         Device device = new Device(1L, "холодная вода");
 
@@ -55,7 +55,7 @@ class DeviceServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should successfully find device by name")
+    @DisplayName("Test should successfully find device by name")
     void findByNameTest() {
         Device device = new Device(1L, "холодная вода");
 
@@ -68,7 +68,7 @@ class DeviceServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should successfully save device")
+    @DisplayName("Test should successfully save device")
     void saveTest() {
         Device device = new Device(1L, "холодная вода");
 

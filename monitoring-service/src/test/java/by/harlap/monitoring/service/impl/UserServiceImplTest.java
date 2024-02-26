@@ -27,7 +27,7 @@ class UserServiceImplTest {
     private UserServiceImpl userService ;
 
     @Test
-    @DisplayName("Should successfully save user")
+    @DisplayName("Test should successfully save user")
     void createUserTest() {
         User expectedUser = new User(1L, "test", "test", Role.USER);
 
@@ -40,7 +40,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should successfully find user by username")
+    @DisplayName("Test should successfully find user by username")
     void findUserByUsernameTest() {
         User expectedUser = new User(1L, "test", "test", Role.USER);
 

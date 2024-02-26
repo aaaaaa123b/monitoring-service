@@ -19,7 +19,7 @@ public class JdbcUserRepositoryTest extends BaseRepositoryTest {
     private final UserRepository userRepository;
 
     @Test
-    @DisplayName("Should save user successfully")
+    @DisplayName("Test should save user successfully")
     void saveTest() {
         User requiredUser = new User(3L, "test", "test", Role.USER);
 
@@ -29,7 +29,7 @@ public class JdbcUserRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find user by username successfully")
+    @DisplayName("Test should find user by username successfully")
     void findByUsernameTest() {
         User requiredUser = new User(2L, "user", "user", Role.USER);
 
@@ -39,7 +39,7 @@ public class JdbcUserRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find user by id successfully")
+    @DisplayName("Test should find user by id successfully")
     void findByIdTest() {
         User requiredUser = new User(2L, "user", "user", Role.USER);
         User actualUser = userRepository.findById(2L);

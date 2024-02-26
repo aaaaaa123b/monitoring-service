@@ -29,8 +29,8 @@ class DeviceControllerTest extends BaseIntegrationTest {
     private final ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("Test creating device by post method")
-    void createDeviceTest() throws Exception {
+    @DisplayName("Test should return expected json and status 200 for admin")
+    void createDeviceByAdminTest() throws Exception {
         final User user = new User(1L, "admin", "admin", Role.ADMIN);
         final CreateDeviceDto createDeviceDto = new CreateDeviceDto("testDevice");
         final DeviceResponseDto deviceResponseDto = new DeviceResponseDto(4L, createDeviceDto.getName());
@@ -42,5 +42,58 @@ class DeviceControllerTest extends BaseIntegrationTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(deviceResponseDto)));
+    }
+
+    @Test
+    @DisplayName("Test should return status 400 if data is incorrect")
+    void registerWithIncorrectDataTest() throws Exception {
+        final User user = new User(1L, "admin", "admin", Role.ADMIN);
+        final CreateDeviceDto createDeviceDto = new CreateDeviceDto("d");
+        final String token = jwtUtil.createJWT(user.getUsername(), user.getPassword());
+
+        mockMvc.perform(post("/devices")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
+                        .content(objectMapper.writeValueAsString(createDeviceDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Test should return status 401 if no jwt in header")
+    void createDeviceWithNoHeaderTest() throws Exception {
+        final CreateDeviceDto createDeviceDto = new CreateDeviceDto("testDevice");
+
+        mockMvc.perform(post("/devices")
+                        .content(objectMapper.writeValueAsString(createDeviceDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("Test should return status 403 for user")
+    void createDeviceByUserTest() throws Exception {
+        final User user = new User(1L, "user", "user", Role.USER);
+        final CreateDeviceDto createDeviceDto = new CreateDeviceDto("testDevice");
+        final String token = jwtUtil.createJWT(user.getUsername(), user.getPassword());
+
+        mockMvc.perform(post("/devices")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
+                        .content(objectMapper.writeValueAsString(createDeviceDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Test should return status 409 if device with that name already exists")
+    void createAlreadyExistsDeviceTest() throws Exception {
+        final User user = new User(1L, "admin", "admin", Role.ADMIN);
+        final CreateDeviceDto createDeviceDto = new CreateDeviceDto("холодная вода");
+        final String token = jwtUtil.createJWT(user.getUsername(), user.getPassword());
+
+        mockMvc.perform(post("/devices")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(token))
+                        .content(objectMapper.writeValueAsString(createDeviceDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isConflict());
     }
 }

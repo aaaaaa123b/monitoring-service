@@ -26,7 +26,7 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     private final MetricsRecordRepository metricsRecordRepository;
 
     @Test
-    @DisplayName("Should save meter reading record successfully")
+    @DisplayName("Test should save meter reading record successfully")
     void saveTest() {
         MeterReadingRecord requiredRecord = new MeterReadingRecord(4L, 3L, 1L, 100.5, LocalDate.of(2023, 1, 1));
 
@@ -36,8 +36,8 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all meter reading records for user successfully")
-    void findAllByUserTest() {
+    @DisplayName("Test should find all meter reading records for user successfully")
+    void findAllForUserTest() {
         User user = new User(2L, "user", "user", Role.USER);
         List<MeterReadingRecord> actualRecord = metricsRecordRepository.findAllByUser(user);
 
@@ -45,7 +45,7 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all meter reading records successfully")
+    @DisplayName("Test should find all meter reading records successfully")
     void findAllTest() {
         MeterReadingRecord requiredRecord = new MeterReadingRecord(1L, 2L, 1L, 100.5, LocalDate.of(2024, 1, 1));
 
@@ -55,7 +55,7 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all meter reading records for user in a certain month successfully")
+    @DisplayName("Test should find all meter reading records for user in a certain month successfully")
     void findAllByUserAndMonthTest() {
         User user = new User(2L, "user", "user", Role.USER);
 
@@ -65,7 +65,7 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all meter reading records in a certain month successfully")
+    @DisplayName("Test should find all meter reading records in a certain month successfully")
     void findAllByMonthTest() {
         List<MeterReadingRecord> actualRecord = metricsRecordRepository.findAllByMonth(Month.JANUARY, Year.of(2024));
 
@@ -73,7 +73,7 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find latest meter reading record successfully")
+    @DisplayName("Test should find latest meter reading record successfully")
     void findLatestTest() {
         MeterReadingRecord requiredRecord = new MeterReadingRecord(1L, 2L, 1L, 100.5, LocalDate.of(2024, 1, 1));
 
@@ -83,7 +83,7 @@ class JdbcMetricsRecordRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find latest meter reading record for user successfully")
+    @DisplayName("Test should find latest meter reading record for user successfully")
     void findLatestForUserTest() {
         List<MeterReadingRecord> actualRecord = metricsRecordRepository.findLatestForUser(2L);
 

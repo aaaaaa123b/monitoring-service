@@ -28,7 +28,7 @@ class AuditServiceImplTest {
     private AuditServiceImpl auditService;
 
     @Test
-    @DisplayName("Should create an audit event")
+    @DisplayName("Test should create an audit event")
     void createEventTest() {
         User testUser = new User(1L, "testUser", "password", Role.USER);
         String message = "Test message";

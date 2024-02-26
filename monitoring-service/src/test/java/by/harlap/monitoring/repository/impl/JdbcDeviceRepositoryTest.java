@@ -20,7 +20,7 @@ class JdbcDeviceRepositoryTest extends BaseRepositoryTest {
     private final DeviceRepository deviceRepository;
 
     @Test
-    @DisplayName("Should save device successfully")
+    @DisplayName("Test should save device successfully")
     void saveTest() {
         Device requiredDevice = new Device(4L, "тестовый счётчик");
 
@@ -30,7 +30,7 @@ class JdbcDeviceRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should find all devices successfully")
+    @DisplayName("Test should find all devices successfully")
     void findAllTest() {
         Device requiredDevice = new Device(3L, "отопление");
 

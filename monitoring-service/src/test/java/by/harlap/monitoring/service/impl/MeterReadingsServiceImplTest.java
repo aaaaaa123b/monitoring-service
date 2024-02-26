@@ -1,7 +1,6 @@
 package by.harlap.monitoring.service.impl;
 
 import by.harlap.monitoring.enumeration.Role;
-import by.harlap.monitoring.model.Device;
 import by.harlap.monitoring.model.MeterReadingRecord;
 import by.harlap.monitoring.model.User;
 import by.harlap.monitoring.repository.MetricsRecordRepository;
@@ -15,15 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests for MeterReadingsServiceImpl")
@@ -36,7 +33,7 @@ class MeterReadingsServiceImplTest {
     private MeterReadingsServiceImpl meterReadingsService;
 
     @Test
-    @DisplayName("Should find all records for user and create such event")
+    @DisplayName("Test should find all records for user and create such event")
     void findAllRecordsForUserTest() {
         User expectedUser = new User(1L, "user", "user", Role.USER);
         MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
@@ -50,7 +47,7 @@ class MeterReadingsServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should find records for specified month for admin")
+    @DisplayName("Test should find records for specified month for admin")
     void findRecordsForSpecifiedMonthForAdminTest() {
         Month month = Month.FEBRUARY;
         Year year = Year.of(2022);
@@ -66,7 +63,7 @@ class MeterReadingsServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should find relevant records for user and create such event")
+    @DisplayName("Test should find relevant records for user and create such event")
     void findRelevantRecordsForUserTest() {
         User expectedUser = new User(1L, "user", "user", Role.USER);
         MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
@@ -80,7 +77,7 @@ class MeterReadingsServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should find relevant records for admin")
+    @DisplayName("Test should find relevant records for admin")
     void findRelevantRecordsForAdminTest() {
         MeterReadingRecord expectedRecord = new MeterReadingRecord(1L, 1L, 100.0, LocalDate.of(2024, 1, 1));
         User admin = new User(2L, "admin", "admin", Role.ADMIN);
@@ -92,7 +89,7 @@ class MeterReadingsServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should check metric reading record existence")
+    @DisplayName("Test should check metric reading record existence")
     void checkMetricReadingRecordExistenceTest() {
         List<MeterReadingRecord> records = List.of();
         User expectedUser = new User(1L, "user", "user", Role.USER);
