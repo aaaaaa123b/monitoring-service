@@ -1,0 +1,62 @@
+###авторизация пользователя (user/admin)
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "password" : "admin"
+}
+
+###регистрация пользователя (user)
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+  "username" : "newUser1",
+  "password" : "password"
+}
+
+###добавление нового счётчика (admin)
+POST http://localhost:8080/devices
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6ImFkbWluIiwiZXhwIjoxNzA4OTEzNzc4LCJpYXQiOjE3MDg5MTAxNzgsInVzZXJuYW1lIjoiYWRtaW4ifQ.2ARA-sjqDfujMZnQb4y55GXHGBYCggEOO-DDebRVO1w
+
+{
+  "name" : "newDevice"
+}
+
+###аудит действий пользователя (admin)
+GET http://localhost:8080/audit
+Authorization: Bearer eyJ0eXAOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InVzZXIiLCJleHAiOjE3MDg5MTEzNDIsImlhdCI6MTcwODkwNzc0MiwidXNlcm5hbWUiOiJ1c2VyIn0.X1jLbLY3nLoPXDeijNdiQRwEW1ZEpvZxQ2qwAvvydiQ
+
+###просмотр истории подачи показаний (admin/user)
+GET http://localhost:8080/meterReadings
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6ImFkbWluIiwiZXhwIjoxNzA4OTE0NzUwLCJpYXQiOjE3MDg5MTExNTAsInVzZXJuYW1lIjoiYWRtaW4ifQ.YK2pXmoBQ3HLaJA5Kw4hGJeOR-mz1VvOPhddyAamrVw
+
+###просмотр актуальных показаний счетчиков (admin/user)
+GET http://localhost:8080/meterReadings/relevant
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6ImFkbWluIiwiZXhwIjoxNzA4OTE1NDE4LCJpYXQiOjE3MDg5MTE4MTgsInVzZXJuYW1lIjoiYWRtaW4ifQ.rSk4yTqXi0yvRBClC_4wEWc00nFfyTOcb7a3gR3Vvcc
+
+###просмотр показаний счетчиков за конкретный месяц (admin/user)
+GET http://localhost:8080/meterReadings/forMonth?month=1&year=2024
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6ImFkbWluIiwiZXhwIjoxNzA4OTE1NDE4LCJpYXQiOjE3MDg5MTE4MTgsInVzZXJuYW1lIjoiYWRtaW4ifQ.rSk4yTqXi0yvRBClC_4wEWc00nFfyTOcb7a3gR3Vvcc
+
+###подача показаний (user)
+POST http://localhost:8080/meterReadings
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXNzd29yZCI6InBhc3N3b3JkIiwiZXhwIjoxNzA4OTE0ODQ1LCJpYXQiOjE3MDg5MTEyNDUsInVzZXJuYW1lIjoibmV3VXNlcjEifQ.u4BrgoC0Kk-MvmL1O8OiiiC0omX9gJFi9eI3bTQnC1g
+
+[
+  {
+    "deviceName": "отопление",
+    "value": 1533.13
+  },
+  {
+    "deviceName": "холодная вода",
+    "value": 1533.13
+  },
+  {
+    "deviceName": "горячая вода",
+    "value": 1533.13
+  }
+]
