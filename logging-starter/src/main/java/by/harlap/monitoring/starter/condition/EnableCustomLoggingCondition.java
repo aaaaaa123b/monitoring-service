@@ -12,8 +12,10 @@ public class EnableCustomLoggingCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         final ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
 
-        if (beanFactory == null) return false;
+        if (beanFactory == null) {
+            return false;
+        }
 
-        return beanFactory.getBeansWithAnnotation(EnableCustomLogging.class).size() > 0;
+        return !beanFactory.getBeansWithAnnotation(EnableCustomLogging.class).isEmpty();
     }
 }

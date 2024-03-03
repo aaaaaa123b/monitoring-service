@@ -28,7 +28,7 @@ public class AuditController implements AuditOpenAPI {
     private final SecurityUtil securityUtil;
 
     /**
-     * Find all audit logs.
+     * Find all audit.
      */
     @GetMapping
     public List<UserEventResponseDto> findAllAudit(@RequestAttribute("username") String username) {
